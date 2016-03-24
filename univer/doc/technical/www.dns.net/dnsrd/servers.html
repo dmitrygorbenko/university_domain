@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<TITLE>DNS server software</TITLE>
+<BASE HREF="http://www.dns.net/dnsrd/servers/">
+<META NAME="copyright" CONTENT="1994-2004, Andras Salamon">
+<LINK REV="made" HREF="/andras/">
+<!-- OWNER_NAME="Andras Salamon" -->
+<!-- OWNER_INFO="andras,spam.not.welcome.dns.net" -->
+<META NAME="description" CONTENT="Domain Name System (DNS) server software">
+<META NAME="keywords"
+CONTENT="DNS, Domain Name System, name server, nameserver, DNS server, domain, server, software">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<H1>DNS server software</H1>
+
+<TABLE>
+<TR>
+<TD VALIGN="top">
+
+<P>
+This survey of DNS servers is organized into sections for each major
+type of operating system for which DNS server software is available.
+In addition to servers listed in this document, there are some
+large-scale IP address management systems available which include a
+DNS server as a component of the system; these are covered in the <A
+HREF="/dnsrd/tools.html">Tools section</A>.
+</P>
+
+<P>
+Functional DNS servers are available for Unix (including Linux, FreeBSD
+and MacOS X), Windows XP/2000/NT/98/95, MacOS, VMS, and OS/2 (see my
+<A HREF="#serverdef">definitions</A>).  The standard implementation
+of a DNS server is BIND on Unix, although BIND has also been ported
+to other platforms.  Some of the other options discussed here may
+also be viable, but an operating system designed for robust servers
+is likely to be a more stable platform for a name server than an
+operating system designed for the desktop.
+</P>
+
+</TD>
+
+
+<TD VALIGN="top">
+<H2>Software Index</H2>
+
+<P>
+The reference DNS server software is
+<A HREF="http://www.isc.org/bind.html">BIND</A>.
+Most production Internet name servers are based on BIND running on
+some form of Unix (including Linux and MacOS X).  Microsoft's DNS
+server for Windows XP/2000/NT is popular in Microsoft environments.
+Other significant options are the various ports of BIND to Windows,
+and several non-BIND servers for Unix, MacOS and VMS.
+</P>
+
+<A NAME="index">DNS servers exist for the following systems.</A>
+
+<DL>
+<DT><A HREF="unix.html">Unix</A>
+<DD>
+<DT><A HREF="windows.html">Windows</A>
+<DD>
+<DT><A HREF="macos.html">MacOS</A>
+<DD>
+<DT><A HREF="misc.html">NetWare, OS/2, VMS, and others</A>
+<DD>
+</DL>
+
+</TD>
+</TR>
+
+
+<TR>
+<TD COLSPAN="2">
+<H2><A NAME="serverdef">About Internet name servers</A></H2>
+
+<P>
+For a name server to be usable on the Internet, it must support either
+zone transfers from other servers, or other servers transferring zones
+from it.  If neither inward nor outward transfers are supported, there
+is no way to link the server into the global DNS hierarchy, and it can
+only be used for caching, to provide an enhanced service to local name
+server clients (called <EM>resolvers</EM>).
+</P>
+
+<P>
+A server will usually need to support recursive queries from stub
+resolvers, which are the most common types of DNS client software.
+In addition, a useful server must support at least the common resource
+record types A, MX, PTR, SOA, CNAME, NS.  For general use, a name
+server should support caching.
+</P>
+
+<P>
+This is realy a minimal list of absolutely required features; modern
+DNS servers should ideally support DNS features beyond these, such
+as dynamic update, incremental zone transfers, DNSSEC, IPv6 operation
+and more.
+</P>
+
+<P>
+By these minimal criteria, there are currently functional name servers
+available for Unix (including Linux), Windows (NT, 2000, XP and 95/98),
+MacOS and MacOS X, VMS, and OS/2.
+The current standard implementation of a DNS server is BIND on Unix
+(including Linux and MacOS X), although BIND has also been ported to
+VMS, Windows, and OS/2.  Some of the other platforms discussed here
+may also be viable, but bear in mind that an operating system designed
+for robust servers is likely to prove a more stable platform for a
+name server than an operating system designed for the desktop.
+</P>
+</TD>
+</TR>
+
+
+<TR>
+<TD COLSPAN="2">
+<H2>Background on name servers</H2>
+
+<P>
+The DNS database is partitioned into sets of related records that are
+replicated on multiple servers; each such set of records is called a
+<EM>zone</EM>.  Name servers transfer zones from each other to maintain
+the consistency of information in the DNS.
+</P>
+
+<P>
+Zone transfers from other servers are `inward transfers', and a server
+performing inward transfers is referred to as a <EM>slave server</EM>
+for these zones.  Zone transfers to other servers are `outward
+transfers'.  It is quite common for a server to perform both inward
+transfers and outward transfers for the same zone.  The unique server
+which performs only outward transfers and no inward transfers for a
+specific zone, is known as the <EM>master server</EM> for that zone.
+The master server for a zone is where changes to the DNS records need
+to be made.  Changes made to a zone on a slave server for that zone,
+will be overwritten during the next inward transfer.
+</P>
+
+<P>
+Most name servers are master for some zones and slave for other zones.
+A server is <EM>authoritative</EM> for the zones that it is either a
+master or a slave for.  A typical name server can be authoritative for
+hundreds of zones, and large servers are authoritative for millions
+of zones.
+</P>
+
+<P>
+A server will usually need to support recursive queries from stub
+resolvers, which are the most common types of DNS client software
+(a <EM>stub resolver</EM> hands off recursive queries to a server to
+resolve, instead of performing the full iterative resolution process
+itself).  Some servers are configured to forward most queries on to
+another name server, much like a stub resolver does.  Name servers
+on a network protected by a firewall typically forward queries to a
+name server running on the firewall.
+</P>
+
+</TD>
+</TR>
+
+
+<TR>
+<TD COLSPAN="2">
+<H2>About this document</H2>
+
+<P>
+This survey of name server software for the Domain Name System
+(DNS) was started in 1995.  It was originally posted to USENET as
+the Exotic Name Servers document, and later became the Name Server
+Software Summary.  Since these are my personal views on the topic,
+some information is likely to be missing or flawed.  Comments and
+suggestions are always welcome.
+</P>
+
+</TD>
+</TR>
+</TABLE>
+
+<HR>
+
+<A HREF="./"><IMG SRC="../img/dnsrd.png" ALT="[Back to DNSRD]"></A>
+
+<HR>
+
+<ADDRESS>Copyright 1994-2004 by Andr&aacute;s Salamon
+<A HREF="/andras/">&lt;andras&#64;dns.net&gt;</A></ADDRESS>
+<BR>Last updated 19-Nov-2004
+</BODY>
+
+</HTML>

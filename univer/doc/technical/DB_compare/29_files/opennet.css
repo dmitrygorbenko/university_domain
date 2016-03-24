@@ -1,0 +1,79 @@
+BODY {
+    font-size : 12pt;
+    margin-left: 4pt; 
+    margin-right: 0pt; 
+    margin-top: 0pt; 
+    padding: 0pt;
+}
+
+TD {
+    font-size : 12pt;
+}
+
+A:link { 
+    text-decoration: none; 
+    color: #0000AD; 
+} 
+
+A:visited { 
+    text-decoration: none; 
+    color: #606090; 
+}
+
+A:hover {
+    color : #0080C0; 
+    text-decoration: underline;
+}
+
+SMALL {
+    font-size : 11pt;
+}
+
+PRE { 
+    font-size: 11pt;
+}
+
+TEXTAREA, INPUT, SELECT { 
+    font-size: 10pt;
+}
+
+BLOCKQUOTE { 
+    margin-bottom: 1pt; 
+    margin-top: 1pt; 
+    margin-left: 20pt; 
+    margin-right: 0pt; 
+}
+
+P.a { 
+	TEXT-ALIGN: left; 
+	TEXT-INDENT: -15pt;
+	margin-bottom: 2pt;
+	margin-top: 2pt;
+	margin-left: 20pt;
+	margin-right: 5pt;
+	font-size: 11pt;
+}
+
+LI.l { 
+	margin-bottom: 10pt;
+	TEXT-ALIGN: left;
+}
+
+P.b { 	
+	TEXT-ALIGN: left;
+	margin-bottom: 3pt;
+	margin-top: 2pt;
+	margin-left: 20pt;
+	margin-right: 5pt;
+	font-size: 12pt;
+}
+
+.h { 	
+    font-size: 10.5pt;
+    color: #0000AD; 
+}
+
+A.h:visited { 
+    text-decoration: none; 
+    color: #0000AD; 
+}

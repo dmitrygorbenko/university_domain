@@ -1,0 +1,10 @@
+! generating configuration for peering between AS3001 -> as4003
+!
+! Setting max pref to 100
+@RtConfig set cisco_max_preference = 100
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT"
+@RtConfig import AS3001 10.3.15.4 AS4003 10.4.192.3
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT"
+@RtConfig export AS3001 10.3.15.4 AS4003 10.4.192.3 

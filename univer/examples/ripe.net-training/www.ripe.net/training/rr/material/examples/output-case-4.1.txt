@@ -1,0 +1,30 @@
+! generating configuration for peering between AS3001 -> as4003
+!
+! Setting max pref to 100
+!
+!
+no ip as-path access-list  1
+ip as-path access-list 1 permit ^(_4003)+(_(4200|4204|4208))*$
+!
+no route-map AS4003-IMPORT
+!
+route-map AS4003-IMPORT permit 1
+ match as-path 1
+!
+router bgp 3001
+neighbor 10.4.192.3 route-map AS4003-IMPORT in
+!
+!
+no ip prefix-list pl100
+ip prefix-list pl100 permit 10.3.0.0/20
+ip prefix-list pl100 permit 10.20.0.0/24
+ip prefix-list pl100 permit 10.187.65.0/24
+ip prefix-list pl100 deny 0.0.0.0/0 le 32
+!
+no route-map AS4003-EXPORT
+!
+route-map AS4003-EXPORT permit 1
+ match ip address prefix-list pl100
+!
+router bgp 3001
+neighbor 10.4.192.3 route-map AS4003-EXPORT out

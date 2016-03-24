@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<TITLE>Name Server Software: MacOS
+</TITLE>
+<META NAME="copyright" CONTENT="1994-2001, Andras Salamon">
+<LINK REV="made" HREF="/andras/">
+<!-- OWNER_NAME="Andras Salamon" -->
+<!-- OWNER_INFO="andras,spam.not.welcome.dns.net" -->
+<META NAME="description" CONTENT="Listing of Domain Name System (DNS) server
+software for MacOS.">
+<META NAME="keywords"
+	CONTENT="DNS, Domain Name System, DNSRD, MacOS, Mac OS,
+	DNS server, name server, nameserver, domain, name, server">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<H1>Name Server Software: MacOS
+</H1>
+
+
+<H3>MacOS 9 and earlier</H3>
+
+<P>
+MacOS 9 and earlier versions were not designed for servers.  Despite this
+MacOS often forms the basis for low to medium range servers when ease
+of administration is more important than that last 0.1% of uptime.
+There is at least one robust DNS server for MacOS.
+</P>
+
+<P>
+QuickDNS from Men and Mice is a commercial fully functional DNS server,
+including a slick GUI configuration frontend.
+High performance is a feature that is stressed by the vendor.
+This product is currently the main choice for sites that wish to use
+MacOS as the platform for DNS.
+<PRE>
+   <A HREF="http://www.menandmice.com/QuickDNS/">http://www.menandmice.com/QuickDNS/</A>
+</PRE>
+</P>
+
+<P>
+MacDNS is a free Apple product, now somewhat dated.
+I have not tested it fully, but it
+appears to satisfactorily support inward and outward transfers, has an
+`Apple interface', and supports stub resolvers by forwarding recursive
+queries to a designated recursive name server in the manner of a slave
+forwarder.  There may be interoperability problems with
+post-8.0 versions of MacOS.
+<PRE>
+   <A HREF="http://cybertech.apple.com/MacDNS.html">http://cybertech.apple.com/MacDNS.html</A>
+</PRE>
+</P>
+
+<P>
+NonSequitur (formerly MIND) is a rather dated free implementation of a
+DNS server for MacOS.  It does not support inward transfers or recursion,
+so its use is probably limited to sites where all resolvers are capable
+of recursion (this is true for MacOS), or as a hidden master server.
+<PRE>
+   <A HREF="http://www.gross.net/sw/nonsequitur/">http://www.gross.net/sw/nonsequitur/</A>
+</PRE>
+</P>
+
+<P>
+Pictorius Net Servers is a set of network servers including a DNS
+server, bundled into a single free application.  The vendor, Pictorius
+Inc, appears to be focusing on selling add-ons to the servers.
+<PRE>
+   <A HREF="http://www.pictorius.com/main/products/net_servers/netservers.html">http://www.pictorius.com/main/products/net_servers/netservers.html</A>
+</PRE>
+</P>
+
+<P>
+Carl Steadman is co-author of the book `Providing Internet Services via
+the Mac OS' which is available on line.  It includes a well-written
+though rapidly aging section on MacOS DNS servers, including a step by
+step introduction.
+<PRE>
+   <A HREF="http://www.pism.com/">http://www.pism.com/</A>
+   <A HREF="http://www.pism.com/dns/">http://www.pism.com/dns/</A>
+</PRE>
+</P>
+
+
+<H3>MacOS X</H3>
+
+<P>
+MacOS X is expected to have a large range of DNS server options, based
+on its Unix roots.  Details would be welcome.
+</P>
+
+<HR>
+<P>
+Back to <A HREF="./">Name Server Software index</A> or
+<A HREF="../">DNSRD</A>.
+</P>
+
+
+<HR>
+
+<ADDRESS>Copyright 1994-2001 by Andr&aacute;s Salamon
+<A HREF="/andras/">&lt;andras&#64;dns.net&gt;</A></ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,37 @@
+!
+! RtConfig template file for the case 5 (multiple peering points)
+! view of the as3033
+!
+! Only EXPORT policy is of interest to us!!
+!
+! multiple export lines are needed, one for every physical link
+!
+! Router1
+!
+!
+no ip prefix-list pl100
+ip prefix-list pl100 permit 10.3.0.0/20
+ip prefix-list pl100 deny 0.0.0.0/0 le 32
+!
+no route-map AS4044-EXPORT-1
+!
+route-map AS4044-EXPORT-1 permit 1
+ match ip address prefix-list pl100
+ set metric 1000
+!
+router bgp 3033
+neighbor 10.4.0.8 route-map AS4044-EXPORT-1 out
+!
+! Example 2 - if there is a full mash (second link to the second router, etc)
+!
+!
+no route-map AS4044-EXPORT-2
+!
+route-map AS4044-EXPORT-2 permit 1
+ match ip address prefix-list pl100
+ set metric 2000
+!
+router bgp 3033
+neighbor 10.4.0.7 route-map AS4044-EXPORT-2 out
+!
+

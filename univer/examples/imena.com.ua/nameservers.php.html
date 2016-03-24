@@ -1,0 +1,236 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+	<title>IMENA ControlPanel</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+	<link href="/img/index.css" rel="stylesheet" type="text/css">
+	<script language="JavaScript" src="/js/functions.js"></script>
+    <script language="JavaScript">
+    //<!--
+    
+    function delDomain(id, domain) {
+        if (window.confirm('Удалить эту запись?')) {
+            location.href = '/domains.php?id='+id+'&act=del';
+        }
+    }
+    
+    function renewDomain(id, domain) {
+        if (window.confirm('продлить?')) {
+            location.href = '/domains.php?id='+id+'&act=renew';
+        }
+    }
+
+    // -->
+    </script>
+</head>
+
+<body bgcolor="#F9F8F8" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000" leftmargin="0" topmargin="0" marginwidth="0">
+<table width="100%" bgcolor="5778D9" border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td background="/img/logo_bg.jpg" style="background-repeat: repeat-y;"><a href="/"><img src="/img/logo.gif" alt="IMENA ControlPanel" width="161" height="41" border="0"></a></td>
+</tr>
+</table>
+<table width="100%" height="2" border="0" cellpadding="0" cellspacing="0" bgcolor="#7083E1">
+  <tr>
+    <td><img width=100 height=2 src="/img/tr.gif"></td>
+  </tr>
+</table>
+<table cellpadding="0" cellspacing="5" border="0" width="100%" bgcolor="#FFFFFF" style="border-bottom: 1px solid #CCCCCC">
+<tr>
+<td class="menus">&nbsp;&nbsp;<b><a href="/domains.php" class="menus">домены</a></b>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/profile.php" class="menus">профайл</a>&nbsp;&nbsp;
+&nbsp;&nbsp;<a href="/accounts.php" class="menus">пароли</a>&nbsp;&nbsp;
+&nbsp;&nbsp;<a href="/logout.php" class="menus">выход</a>&nbsp;&nbsp;
+</td>
+</tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F9F8F8">
+<tr valign="top">
+	<td width=100%>
+		<table width=100% border=0 cellpadding="5" cellspacing="0">
+			<tr valign=top>
+				<td style="padding-left:20px"><BR><BR>
+<style type="text/css">
+a.menu {
+    color: 000000;
+    font-size: 95%
+}
+a.menu:link {
+    color: 000000;
+    font-size: 95%
+}
+a.menu:visited {
+    color: 000000;
+    font-size: 95%
+}
+</style>
+
+<fieldset style="width:100%">
+<legend>
+Управление доменом: <a href=/domains.php?act=manage&id=26044>nkk.dp.ua</a> (139585)
+
+
+:: редактирование неймсерверов
+
+
+
+</legend>
+
+
+<div style="float:left;padding:20px;width:70px;" align="center">
+<a href="/profile.php?id=26044" title="Контакты" class="menu"><img src="/img/contacts.gif" width="32" height="32" border="0"><br>Контакты</a>
+</div>
+
+
+
+<div style="float:left;padding:20px;width:70px;" align="center">
+<a href="/zone.php?id=26044" title="Настройка домена" class="menu"><img src="/img/zone.gif" width="32" height="32" border="0"><br>Настройка домена</a>
+</div>
+
+
+
+
+
+
+<div style="float:left;padding:20px;width:70px;" align="center">
+<a href="/nameservers.php?id=26044" title="NS сервера" class="menu"><img src="/img/nameservers.gif" width="32" height="32" border="0"><br>NS сервера</a>
+</div>
+
+
+<div style="float:left;padding:20px;width:70px;" align="center">
+<a href="/certificate.php?id=26044" title="Заказ сертификата" class="menu"><img src="/img/certificate.gif" width="32" height="32" border="0"><br>Заказ сертификата</a></div>
+
+
+</fieldset>
+<br>
+
+
+<strong>Текущие неймсервера:</strong>
+<table cellpadding=3 cellspacing=0 border=0 align=center width=100% style="border: 1px solid #CCCCCC">
+<tr class=head>
+	<th class=headlink> Имя хоста </th>
+<th class=headlink> IP адрес </th>
+
+</tr>
+
+<tr class="row1" onmouseover="rowPointer(this, 'over', 'row1', 'row_sel', 'row_mark')" onmouseout="rowPointer(this, 'out', 'row1', 'row_sel', 'row_mark')" onmousedown="rowPointer(this, 'down', 'row1', 'row_sel', 'row_mark')">
+	<td align=center><strong>ns3.imena.com.ua</strong></td>
+	<td align=center><strong></strong></td>
+</tr>
+<tr class="row2" onmouseover="rowPointer(this, 'over', 'row2', 'row_sel', 'row_mark')" onmouseout="rowPointer(this, 'out', 'row2', 'row_sel', 'row_mark')" onmousedown="rowPointer(this, 'down', 'row2', 'row_sel', 'row_mark')">
+	<td align=center><strong>ns2.imena.com.ua</strong></td>
+	<td align=center><strong></strong></td>
+</tr>
+<tr class="row1" onmouseover="rowPointer(this, 'over', 'row1', 'row_sel', 'row_mark')" onmouseout="rowPointer(this, 'out', 'row1', 'row_sel', 'row_mark')" onmousedown="rowPointer(this, 'down', 'row1', 'row_sel', 'row_mark')">
+	<td align=center><strong>ns1.imena.com.ua</strong></td>
+	<td align=center><strong></strong></td>
+</tr>
+
+
+</table>
+<br><br>
+
+
+
+
+<table cellpadding=3 cellspacing=0 border=0 align=center width=100% style="border: 1px solid #CCCCCC">
+<form action="/nameservers.php" method="post">
+<input type="hidden" name="act" value="update">
+<input type="hidden" name="id" value="26044">
+<tr class="head">
+    <td colspan="3">&nbsp;&nbsp;<strong>Изменить неймсервера на:</strong></td>
+</tr>
+<tr>    
+    <td class="row1"><strong>NS #1:</strong></td>
+	<td align=center><strong>Имя хоста:</strong> <input type=text name="form[host][1]" value="" size="20"></td>
+	<td align=center><strong>IP адрес:</strong> <input type=text name="form[ip][1]" value="" size="20"></td>
+</tr>
+<tr>
+    <td class="row1"><strong>NS #2:</strong></td>
+	<td align=center><strong>Имя хоста:</strong> <input type=text name="form[host][2]" value="" size="20"></td>
+	<td align=center><strong>IP адрес:</strong> <input type=text name="form[ip][2]" value="" size="20"></td>
+</tr>
+<tr>
+    <td class="row1"><strong>NS #3:</strong></td>
+	<td align=center><strong>Имя хоста:</strong> <input type=text name="form[host][3]" value="" size="20"></td>
+	<td align=center><strong>IP адрес:</strong> <input type=text name="form[ip][3]" value="" size="20"></td>
+</tr>
+<tr>
+    <td class="row1"><strong>NS #4:</strong></td>
+	<td align=center><strong>Имя хоста:</strong> <input type=text name="form[host][4]" value="" size="20"></td>
+	<td align=center><strong>IP адрес:</strong> <input type=text name="form[ip][4]" value="" size="20"></td>
+</tr>
+<tr>
+    <td class="row1"><strong>NS #5:</strong></td>
+	<td align=center><strong>Имя хоста:</strong> <input type=text name="form[host][5]" value="" size="20"></td>
+	<td align=center><strong>IP адрес:</strong> <input type=text name="form[ip][5]" value="" size="20"></td>
+</tr>
+<tr class="foot">
+    <td align="right" colspan="3"><input type="submit" value="Применить"></td>
+</tr>
+</form>
+</table>
+
+<br><br>
+
+
+<BR></td>
+			</tr>
+		</table>
+	</td>
+	<td width=250>
+	
+	<table width="250" border=0 cellpadding="5" cellspacing="0">
+	<tr>
+	<td>
+		<BR><BR>
+        
+        <!-- help start -->
+        <table cellpadding=4 cellspacing=1 border=0 align=center width=100%>
+            <tr>
+                <td><b>домены</b></td>
+            </tr>
+            <tr>
+                <td style="text-align:justify;">
+                Здесь можно просмотреть все доменные имена, которые Вы регистрировали, получить их сервис-коды и даты окончания регистрации. Также здесь можно изменить контакты для домена, прописать IP адрес и MX записи, настроить WEB и MAIL переадресацию, сменить Name Servers.
+                </td>
+            </tr>
+        
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            
+            <tr>
+                <td><b>профайл</b></td>
+            </tr>
+            <tr>
+                <td style="text-align:justify;">
+                Здесь хранится информация, определяющая учетную запись пользователя, регистрирующего все доменные имена, ассоциируемые с данным аккаунтом. Этот контакт может не относится ни к одному домену, он относится к учетной записи, с которой связаны логин и пароль, а также сумма на балансе.
+                </td>
+            </tr>
+            
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            
+            <tr>
+                <td><b>пароли</b></td>
+            </tr>
+            <tr>
+                <td style="text-align:justify;">
+                Здесь можно создать отдельный аккаунт, для управления всеми Вашими Доменами или некоторыми из них. Также можно отключить аккаунт ставший ненужным.
+                </td>
+            </tr>
+        </table>
+        
+        <!-- help stop -->
+	</td>
+	</tr>
+	</table>
+	
+	</td>
+</tr>
+</table>
+<BR><BR>
+</body>
+</html>

@@ -1,0 +1,1823 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<TITLE>DNS related RFCs</TITLE>
+<BASE HREF="http://www.dns.net/dnsrd/rfc/">
+<META NAME="copyright" CONTENT="1994-2004, Andras Salamon">
+<LINK REV="made" HREF="http://www.dns.net/andras/">
+<!-- OWNER_NAME="Andras Salamon" -->
+<!-- OWNER_INFO="andras,spam.not.welcome,dns.net" -->
+<META NAME="description" CONTENT="Annotated listing of RFC documents relevant to the Domain Name System (DNS).">
+<META NAME="keywords"
+ CONTENT="DNS, Domain Name System, DNSRD, RFC, Request for Comments, Requests for Comments, DNS standards">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<H1>DNS related RFCs</H1>
+
+<HR>
+
+<P>
+This is an annotated list of Requests for Comments (RFCs) that are
+directly relevant to DNS, the Domain Name System.  114 DNS-related
+RFC documents are reviewed here.  Inter-document dependencies are
+listed for a further 20 obsolete DNS-related RFC documents, as well as
+to some RFCs that are not directly related to DNS.
+</P>
+
+<P>
+RFCs are distributed in text format, but where available, a link
+is provided to HTML versions of these documents.  In each instance
+the text version is the official one; the HTML versions may contain
+inadvertent mistakes introduced during the conversion process.
+</P>
+
+<HR>
+
+<DL>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3696.txt"
+NAME="rfc3696">RFC 3696</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>Application Techniques for Checking and Transformation of Names</EM>
+by J. Klensin
+<DD>Summarises the syntax of valid DNS names, email addresses, and
+URLs, so that programmers can correctly apply local checking of input.
+Right now, many applications refuse to accept perfectly valid domain
+names, email addresses or URLs because of incorrect assumptions
+about their syntax.  Should be read by overzealous coders everywhere,
+but that's probably a forlorn hope.
+<DD><EM>Feb-2004, checked 19-Mar-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3675.txt"
+NAME="rfc3675">RFC 3675</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>.sex Considered Dangerous</EM>
+by D. Eastlake 3rd
+<DD>Every few weeks someone wants to classify Internet content based
+on domain names.  This is a bad idea, and this document explains why.
+The main technical argument against content labels based on domain
+names, is that nothing can be said about names where administration
+of the directory is distributed: it is trivial to create cross-links
+that either escape the segregation, or that cause harm to innocent
+bystanders.  Instead, labels should be applied using a separate
+non-DNS rating mechanism.  See also <A HREF="#rfc3467">RFC 3467</A>.
+<DD><EM>Feb-2004, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3658.txt"
+NAME="rfc3658">RFC 3658</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc1035">RFC 1035</A>,
+<A HREF="#rfc2535">RFC 2535</A>,
+<A HREF="#rfc3008">RFC 3008</A> and
+<A HREF="#rfc3090">RFC 3090</A>
+</DT>
+<DD><EM>Delegation Signer (DS) Resource Record (RR)</EM>
+by O. Gudmundsson
+<DD>Introduces the DS resource record, a major semantic change to
+the <A HREF="#rfc2535">DNSSEC</A> chain of trust, but one that should
+reduce the need for communication when keys change.
+<DD><EM>Dec-2003, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3655.txt"
+NAME="rfc3655">RFC 3655</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc2535">RFC 2535</A>
+</DT>
+<DD><EM>Redefinition of DNS Authenticated Data (AD) bit</EM>
+by B. Wellington and O. Gudmundsson
+<DD>A step towards giving the AD bit a <A HREF="#rfc2535">DNSSEC</A>
+meaning, but the option to set it if the data "complies with local
+policy" means there is no incentive to change existing name servers.
+I fail to see how this redefinition achieves anything useful.
+<DD><EM>Nov-2003, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3646.txt"
+NAME="rfc3646">RFC 3646</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>DNS Configuration options for Dynamic Host Configuration Protocol for IPv6 (DHCPv6)</EM>
+by R. Droms (editor)
+<DD>Allows an IPv6 resolver to be configured using DHCPv6, by setting
+the list of recursive name servers and the domain search list.
+<DD><EM>Dec-2003, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3645.txt"
+NAME="rfc3645">RFC 3645</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc2845">RFC 2845</A>
+</DT>
+<DD><EM>Generic Security Service Algorithm for Secret Key Transaction
+Authentication for DNS (GSS-TSIG)</EM>
+by S. Kwan, P. Garg, J. Gilroy, L. Esibov, J. Westhead and R. Hall
+<DD>Defines a <A HREF="ftp://ftp.is.co.za/rfc/rfc2743.txt">GSS</A>
+compliant algorithm for <A HREF="#rfc2845">TSIG</A>.  Five of the
+six authors were affiliated with Microsoft when this was published.
+<DD><EM>Oct-2003, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3597.txt"
+NAME="rfc3597">RFC 3597</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc2163">RFC 2163</A> and
+<A HREF="#rfc2535">RFC 2535</A>
+</DT>
+<DD><EM>Handling of Unknown DNS Resource Record (RR) Types</EM>
+by A. Gustafsson
+<DD>Mandates that DNS servers should accept, store and return unknown
+records of unknown type as is.  Long overdue, but increases the
+complexity of implementating <A HREF="#rfc2535">DNSSEC</A> and dynamic updates.
+<DD><EM>Sep-2003, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3596.txt"
+NAME="rfc3596">RFC 3596</A>
+<EM>(Draft Standard)</EM>
+obsoletes
+<A HREF="#rfc1886">RFC 1886</A> and
+<A HREF="#rfc3152">RFC 3152</A>
+</DT>
+<DD><EM>DNS Extensions to Support IP Version 6</EM>
+by S. Thomson, C. Huitema, V. Ksinant and M. Souissi
+<DD>Defines the AAAA record type and domain IP6.ARPA, and specifies
+that AAAA records must also be processed where previously only A
+records were.
+<DD><EM>Oct-2003, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3492.txt"
+NAME="rfc3492">RFC 3492</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>Punycode: A Bootstring encoding of Unicode for
+Internationalized Domain Names in Applications (IDNA)</EM>
+by A. Costello
+<DD>A (relatively) simple mapping of Unicode domain names into DNS hostnames.
+<DD><EM>Mar-2003, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3491.txt"
+NAME="rfc3491">RFC 3491</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>Nameprep: A Stringprep Profile for Internationalized Domain Names (IDN)</EM>
+by P. Hoffman and M. Blanchet
+<DD>A somewhat complex method for mapping Unicode domain names into DNS hostnames.
+<DD><EM>Mar-2003, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3490.txt"
+NAME="rfc3490">RFC 3490</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>Internationalizing Domain Names in Applications (IDNA)</EM>
+by P. Faltstrom, P. Hoffman and A. Costello
+<DD>Overall framework for mapping Unicode domain names into DNS
+hostnames.  See also a <A HREF="#rfc3467">critique</A>.
+<DD><EM>Mar-2003, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3467.txt"
+NAME="rfc3467">RFC 3467</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>Role of the Domain Name System (DNS)</EM>
+by J. Klensin
+<DD>Describes the original motivation for DNS.  Argues that it is
+not appropriate to shoehorn new applications into the DNS simply
+because the DNS infrastructure is widely deployed.  Suggests that
+many applications, such as <A HREF="#rfc3490">IDN</A>, do not fit in
+with the design principles of DNS, and should be done outside of DNS.
+See also <A HREF="#rfc2825">RFC 2825</A>.
+<DD><EM>Feb-2003, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3445.txt"
+NAME="rfc3445">RFC 3445</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc2535">RFC 2535</A>
+</DT>
+<DD><EM>Limiting the Scope of the KEY Resource Record (RR)</EM>
+by D. Massey and S. Rose
+<DD>Limits the use of KEY records to <A HREF="#rfc2535">DNSSEC</A>.
+Removes support for storing arbitrary application keys in KEY records
+(previously these were allowed).
+<DD><EM>Dec-2002, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3425.txt"
+NAME="rfc3425">RFC 3425</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc1035">RFC 1035</A>
+</DT>
+<DD><EM>Obsoleting IQUERY</EM>
+by D. Lawrence
+<DD>Declares the IQUERY query type obsolete, since reverse DNS using
+PTR records achieves the same aims with much better behaviour.
+<DD><EM>Nov-2002, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3405.txt"
+NAME="rfc3405">RFC 3405</A>
+<EM>(BCP 65)</EM>
+</DT>
+<DD><EM>Dynamic Delegation Discovery System (DDDS) Part Five: URI.ARPA Assignment Procedures</EM>
+by M. Mealling
+<DD>Policies and procedures for URI.ARPA and URN.ARPA, as used by
+<A HREF="#rfc3402">RFC 3404</A>.
+<DD><EM>Oct-2002, checked 06-Mar-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3404.txt"
+NAME="rfc3404">RFC 3404</A>
+<EM>(Proposed Standard)</EM>
+obsoletes
+<A HREF="#rfc2915">RFC 2915</A> and
+<A HREF="#rfc2168">RFC 2168</A>
+</DT>
+<DD><EM>Dynamic Delegation Discovery System (DDDS) Part Four: The Uniform Resource Identifiers (URI) Resolution Application</EM>
+by M. Mealling
+<DD>Application of DDDS, using NAPTR records to transform URNs
+and URIs.  Looks like an attempt to rescue the URI/URN endeavour,
+but I think there are too many new layers of indirection here for
+this to succeed.
+<DD><EM>Oct-2002, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3403.txt"
+NAME="rfc3403">RFC 3403</A>
+<EM>(Proposed Standard)</EM>
+obsoletes
+<A HREF="#rfc2915">RFC 2915</A> and
+<A HREF="#rfc2168">RFC 2168</A>
+</DT>
+<DD><EM>Dynamic Delegation Discovery System (DDDS) Part Three: The Domain Name System (DNS) Database</EM>
+by M. Mealling
+<DD>Defines the NAPTR (Naming Authority Pointer) record type, which
+stores DDDS rules in the DNS database.  Very general, but I think
+this is an instance where <A HREF="#rfc3467">RFC 3467</A> applies.
+<DD><EM>Oct-2002, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3402.txt"
+NAME="rfc3402">RFC 3402</A>
+<EM>(Proposed Standard)</EM>
+obsoletes
+<A HREF="#rfc2915">RFC 2915</A> and
+<A HREF="#rfc2168">RFC 2168</A>
+</DT>
+<DD><EM>Dynamic Delegation Discovery System (DDDS) Part Two: The Algorithm</EM>
+by M. Mealling
+<DD>Details of how DDDS transforms its input string, by applying
+rules fetched from a dynamic database.  A nice generalisation of the
+DNS lookup algorithm, which can be viewed as a transformation of a
+domain name into the contents of the associated resource records via
+delegation rules stored in DNS servers.  The level of abstraction is
+maybe too high to catch on with protocol designers.
+<DD><EM>Oct-2002, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3401.txt"
+NAME="rfc3401">RFC 3401</A>
+<EM>(Informational)</EM>
+updates
+<A HREF="#rfc2276">RFC 2276</A>;
+obsoletes
+<A HREF="#rfc2915">RFC 2915</A> and
+<A HREF="#rfc2168">RFC 2168</A>
+</DT>
+<DD><EM>Dynamic Delegation Discovery System (DDDS) Part One: The Comprehensive DDDS</EM>
+by M. Mealling
+<DD>Overview of the documents comprising DDDS, which is an abstract
+method to transform strings using rules stored in a dynamic database.
+<DD><EM>Oct-2002, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3368.txt"
+NAME="rfc3368">RFC 3368</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>The 'go' URI Scheme for the Common Name Resolution Protocol</EM>
+by M. Mealling
+<DD>This seems to be the main purpose of <A HREF="#rfc3367">CNRP</A>:
+a keyword directory service, so that browsers can perform queries of the form
+<CODE>go:Some%20Company%20Name</CODE> and similar.
+The LDAP folks keep on trying to create a new protocol for the
+directory service role that the DNS has been shoehorned into; see also
+<A HREF="#rfc2517">RFC 2517</A>.  DNS isn't a good general directory
+service, but I don't see it being bad enough that alternatives have
+enough room to become established.
+<DD><EM>Aug-2002, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3367.txt"
+NAME="rfc3367">RFC 3367</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>Common Name Resolution Protocol (CNRP)</EM>
+by N. Popp, M. Mealling and M. Moseley
+<DD>CNRP seems to consist of the useful bits of LDAP expressed in XML
+syntax; see also <A HREF="#rfc2168">RFC 2168</A>.
+<DD><EM>Aug-2002, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3364.txt"
+NAME="rfc3364">RFC 3364</A>
+<EM>(Informational)</EM>
+updates
+<A HREF="#rfc2673">RFC 2673</A> and
+<A HREF="#rfc2874">RFC 2874</A>
+</DT>
+<DD><EM>Tradeoffs in Domain Name System (DNS) Support for Internet
+Protocol version 6 (IPv6)</EM>
+by R. Austein
+<DD>A critical comparison of AAAA (<A HREF="#rfc1886">RFC 1886</A>)
+versus A6 (<A HREF="#rfc2874">RFC 2874</A>) records for IPv6.
+See also <A HREF="#rfc3363">RFC 3363</A>.
+<DD><EM>Aug-2002, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3363.txt"
+NAME="rfc3363">RFC 3363</A>
+<EM>(Informational)</EM>
+updates
+<A HREF="#rfc2673">RFC 2673</A> and
+<A HREF="#rfc2874">RFC 2874</A>
+</DT>
+<DD><EM>Representing Internet Protocol version 6 (IPv6) Addresses in the Domain Name System (DNS)</EM>
+edited by R. Bush, A. Durand, B. Fink, O. Gudmundsson and T. Hain
+<DD>Demotes <A HREF="#rfc2673">RFC 2673</A> and
+<A HREF="#rfc2874">RFC 2874</A> to Experimental status, as
+A6 records and binary labels for IPv6 addresses are no longer
+regarded as important.  See also <A HREF="#rfc3364">RFC 3364</A>.
+<DD><EM>Aug-2002, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3352.txt"
+NAME="rfc3352">RFC 3352</A>
+<EM>(Informational)</EM>
+obsoletes
+<A HREF="http://ftp.is.co.za/rfc/rfc1798.txt">RFC 1798</A>
+</DT>
+<DD><EM>Connection-less Lightweight Directory Access Protocol (CLDAP) to Historic Status</EM>
+by K. Zeilenga
+<DD>The original attempt by LDAP to take over DNS failed, as detailed here.
+<DD><EM>Mar-2003, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3263.txt"
+NAME="rfc3263">RFC 3263</A>
+<EM>(Proposed Standard)</EM>
+obsoletes
+<A HREF="http://ftp.is.co.za/rfc/rfc2543.txt">RFC 2543</A>
+</DT>
+<DD><EM>Session Initiation Protocol (SIP): Locating SIP Servers</EM>
+by J. Rosenberg and H. Schulzrinne
+<DD>Details of how SIP uses <A HREF="#rfc3403">NAPTR</A> and
+<A HREF="#rfc2782">SRV</A> records to locate SIP servers.
+<DD><EM>Jun-2002, checked 12-Mar-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3258.txt"
+NAME="rfc3258">RFC 3258</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>Distributing Authoritative Name Servers via Shared Unicast Addresses</EM>
+by T. Hardie
+<DD>How to use a single IP address for several name servers, using
+routing tricks.  In fairly common use at large ISPs around the world.
+I think this deserves the status of a BCP.
+<DD><EM>Apr-2002, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3254.txt"
+NAME="rfc3254">RFC 3254</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>Definitions for talking about directories</EM>
+by H. Alvestrand
+<DD>Defines terms and a framework for classifying different types
+of directory services, and explains how several existing directories
+(such as DNS, the BGP routing information database, and SNMP MIBs),
+fit into this model.
+<DD><EM>Apr-2002, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3245.txt"
+NAME="rfc3245">RFC 3245</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>The History and Context of Telephone Number Mapping (ENUM) Operational Decisions: Informational Documents Contributed to ITU-T Study Group 2 (SG2)</EM>
+by J. Klensin
+<DD>Design decisions behind the ENUM mapping of E.164 telephone
+numbers into the DNS.  See also <A HREF="#rfc2916">RFC 2916</A>.
+<DD><EM>Mar-2002, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3226.txt"
+NAME="rfc3226">RFC 3226</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc2535">RFC 2535</A> and
+<A HREF="#rfc2874">RFC 2874</A>
+</DT>
+<DD><EM>DNSSEC and IPv6 A6 aware server/resolver message size requirements</EM>
+by O. Gudmundsson
+<DD>Requires support for <A HREF="#rfc2671">EDNS0</A> extensions for
+<A HREF="#rfc2535">DNSSEC</A> compliance, and also if A6 records are used
+(but see <A HREF="#rfc3363">RFC 3363</A>).
+<DD><EM>Dec-2001, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3225.txt"
+NAME="rfc3225">RFC 3225</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>Indicating Resolver Support of DNSSEC</EM>
+by D. Conrad
+<DD>Proposes using a bit in the extended <A HREF="#rfc2671">EDNS0</A>
+header for resolvers to explicitly indicate that they support DNSSEC.
+<DD><EM>Dec-2001, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3197.txt"
+NAME="rfc3197">RFC 3197</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>Applicability Statement for DNS MIB Extensions</EM>
+by R. Austein
+<DD>Explains why the SNMP interface to DNS servers and resolvers
+was never implemented, and retires <A HREF="#rfc1611">RFC 1611</A>
+and <A HREF="#rfc1612">RFC 1612</A>.
+<DD><EM>Nov-2001, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3152.txt"
+NAME="rfc3152">RFC 3152</A>
+<EM>(BCP 49)</EM>
+updates
+<A HREF="#rfc1886">RFC 1886</A> and
+<A HREF="#rfc2874">RFC 2874</A>;
+obsoleted by
+<A HREF="#rfc3596">RFC 3596</A>;
+also updates non-DNS related
+<A HREF="ftp://ftp.is.co.za/rfc/rfc2553.txt">RFC 2553</A>,
+<A HREF="ftp://ftp.is.co.za/rfc/rfc2766.txt">RFC 2766</A> and
+<A HREF="ftp://ftp.is.co.za/rfc/rfc2772.txt">RFC 2772</A>
+</DT>
+<DD><EM>Aug-2001, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3123.txt"
+NAME="rfc3123">RFC 3123</A>
+<EM>(Experimental)</EM>
+</DT>
+<DD><EM>A DNS RR Type for Lists of Address Prefixes (APL RR)</EM>
+by P. Koch
+<DD>Defines record type APL, for lists of IP ranges in prefix/length
+notation.  Could be useful when specifying access control lists,
+but not yet widely used.
+<DD><EM>Jun-2001, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3110.txt"
+NAME="rfc3110">RFC 3110</A>
+<EM>(Proposed Standard)</EM>
+obsoletes
+<A HREF="#rfc2537">RFC 2537</A>
+</DT>
+<DD><EM>RSA/SHA-1 SIGs and RSA KEYs in the Domain Name System (DNS)</EM>
+by D. Eastlake 3rd
+<DD>Formats for RSA/SHA-1 SIG and RSA KEY records.  The main change
+from <A HREF="#rfc2537">RFC 2537</A> is replacement of MD5 with
+SHA-1 hashes.
+<DD><EM>May-2001, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3090.txt"
+NAME="rfc3090">RFC 3090</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc2535">RFC 2535</A>;
+updated by
+<A HREF="#rfc3658">RFC 3658</A>
+</DT>
+<DD><EM>DNS Security Extension Clarification on Zone Status</EM>
+by E. Lewis
+<DD>Clarifies what it means for a zone to be secured, in the context of
+<A HREF="#rfc2535">DNSSEC</A>.
+<DD><EM>Mar-2001, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3071.txt"
+NAME="rfc3071">RFC 3071</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>Reflections on the DNS, RFC 1591, and Categories of Domains</EM>
+by J. Klensin
+<DD>A lament for the loss of sanity in DNS delegation close to the root
+of the IN namespace.  Appears to be mostly aimed at
+<A HREF="http://www.icann.org/">ICANN</A> and their often inexplicable
+treatment of TLDs.  See also <A HREF="#rfc1591">RFC 1591</A>.
+<DD><EM>Feb-2001, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3008.txt"
+NAME="rfc3008">RFC 3008</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc2535">RFC 2535</A>;
+updated by
+<A HREF="#rfc3658">RFC 3658</A>
+</DT>
+<DD><EM>Domain Name System Security (DNSSEC) Signing Authority</EM>
+by B. Wellington
+<DD>Requires zone data in a secure zone to be signed by the zone key,
+and restricts how SIG records can be applied by a secure resolver.
+<DD><EM>Nov-2000, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc3007.txt"
+NAME="rfc3007">RFC 3007</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc2136">RFC 2136</A> and
+<A HREF="#rfc2535">RFC 2535</A>;
+obsoletes
+<A HREF="#rfc2137">RFC 2137</A>
+</DT>
+<DD><EM>Secure Domain Name System (DNS) Dynamic Update</EM>
+by B. Wellington
+<DD>Changes how secure dynamic updates should be performed in the
+<A HREF="#rfc2535">DNSSEC</A> framework.
+<DD><EM>Nov-2000, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2972.txt"
+NAME="rfc2972">RFC 2972</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>Context and Goals for Common Name Resolution</EM>
+by N. Popp, M. Mealling, L. Masinter and K. Sollins
+<DD>The philosophy of CNRP: seems sound, but I have reservations
+about practical adoption of the protocol.
+See also <A HREF="#rfc3367">RFC 3367</A>.
+<DD><EM>Oct-2000, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2937.txt"
+NAME="rfc2937">RFC 2937</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>The Name Service Search Option for DHCP</EM>
+by C. Smith
+<DD>An option for DHCP to specify the resolver name service search
+order.  Similar to the way <CODE>nsswitch.conf</CODE> works to specify
+the order in which local host files, NIS, DNS, etc. are consulted.
+<DD><EM>Sep-2000, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2931.txt"
+NAME="rfc2931">RFC 2931</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc2535">RFC 2535</A>
+</DT>
+<DD><EM>DNS Request and Transaction Signatures ( SIG(0)s)</EM>
+by D. Eastlake 3rd
+<DD>Tweaks the extended SIG(0) record type used in
+<A HREF="#rfc2535">DNSSEC</A>.
+<DD><EM>Sep-2000, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2930.txt"
+NAME="rfc2930">RFC 2930</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>Secret Key Establishment for DNS (TKEY RR)</EM>
+by D. Eastlake 3rd
+<DD>A way of distributing keys for <A HREF="#rfc2845">TSIG</A> records.
+<DD><EM>Sep-2000, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2929.txt"
+NAME="rfc2929">RFC 2929</A>
+<EM>(BCP 42)</EM>
+</DT>
+<DD><EM>Domain Name System (DNS) IANA Considerations</EM>
+by D. Eastlake 3rd, E. Brunner-Williams and B. Manning
+<DD>Defines which codes, flags and classes have been allocated, and how
+<A HREF="http://www.iana.org/">IANA</A> will allocate new numbers.
+See also <A HREF="http://www.iana.org/numbers.htm#D">IANA official numbers</A>.
+<DD><EM>Sep-2000, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2916.txt"
+NAME="rfc2916">RFC 2916</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>E.164 number and DNS</EM>
+by P. Faltstrom
+<DD>Specifies a mapping of E.164 telephone numbers into URIs
+using NAPTR records and domain names in the .E164.ARPA domain,
+similar to the way PTR records are used in .IN-ADDR.ARPA.
+Not widely used, and will likely be obsoleted by the Internet-Draft
+<A HREF="../docs/id.html#enum-rfc2916bis">draft-ietf-enum-rfc2916bis</A>.
+See also <A HREF="#rfc3245">RFC 3245</A>.
+<DD><EM>Sep-2000, checked 06-Mar-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2915.txt"
+NAME="rfc2915">RFC 2915</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc2168">RFC 2168</A>;
+obsoleted by
+<A HREF="#rfc3401">RFC 3401</A>,
+<A HREF="#rfc3402">RFC 3402</A>,
+<A HREF="#rfc3403">RFC 3403</A> and
+<A HREF="#rfc3404">RFC 3404</A>
+</DT>
+<DD><EM>Sep-2000</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2874.txt"
+NAME="rfc2874">RFC 2874</A>
+<EM>(Experimental)</EM>
+updated by
+<A HREF="#rfc3152">RFC 3152</A>,
+<A HREF="#rfc3226">RFC 3226</A>,
+<A HREF="#rfc3363">RFC 3363</A> and
+<A HREF="#rfc3364">RFC 3364</A>
+</DT>
+<DD><EM>DNS Extensions to Support IPv6 Address Aggregation and Renumbering</EM>
+by M. Crawford and C. Huitema
+<DD>Introduces A6 records and the IP6.ARPA domain.  See also
+<A HREF="#rfc3363">RFC 3363</A>.
+<DD><EM>Jul-2000</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2870.txt"
+NAME="rfc2870">RFC 2870</A>
+<EM>(BCP 40)</EM>
+obsoletes
+<A HREF="#rfc2010">RFC 2010</A>
+</DT>
+<DD><EM>Root Name Server Operational Requirements</EM>
+by R. Bush, D. Karrenberg, M. Kosters and R. Plzak
+<DD>How to run a root name server.  Elicited some acrimonious debate
+on the <A HREF="../lists.html#dnsop">dnsop</A> mailing list during drafting.
+<DD><EM>Jun-2000</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2845.txt"
+NAME="rfc2845">RFC 2845</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc1035">RFC 1035</A>;
+updated by
+<A HREF="#rfc3645">RFC 3645</A>
+</DT>
+<DD><EM>Secret Key Transaction Authentication for DNS (TSIG)</EM>
+by P. Vixie, O. Gudmundsson, D. Eastlake 3rd and B. Wellington
+<DD>Hashing protocol for authenticating DNS data, assuming that the
+endpoints share secret keys.  These secret keys need to be distributed
+using some other mechanism, for instance <A HREF="#rfc3645">RFC 3645</A>
+or <A HREF="#rfc2930">RFC 2930</A>.
+<DD><EM>May-2000, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2832.txt"
+NAME="rfc2832">RFC 2832</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>NSI Registry Registrar Protocol (RRP) Version 1.1.0</EM>
+by S. Hollenbeck and M. Srivastava
+<DD>Protocol for sharing domain registration information between
+registries and registrars.
+<DD><EM>May-2000</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2826.txt"
+NAME="rfc2826">RFC 2826</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>IAB Technical Comment on the Unique DNS Root</EM>
+by Internet Architecture Board
+<DD>Reiterates that DNS is built on the technical assumption that
+each namespace has a unique root.  Unfortunately, I don't think this
+argument is persuasive enough to deter the anti-ICANN brigade.
+<DD><EM>May-2000</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2825.txt"
+NAME="rfc2825">RFC 2825</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>A Tangled Web: Issues of I18N, Domain Names, and the Other Internet protocols</EM>
+by Internet Architecture Board (L. Daigle, Editor)
+<DD>A warning that internationalized domain names have many pitfalls.
+See also <A HREF="#rfc3467">RFC 3467</A>.
+<DD><EM>May-2000</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2782.txt"
+NAME="rfc2782">RFC 2782</A>
+<EM>(Proposed Standard)</EM>
+obsoletes
+<A HREF="#rfc2052">RFC 2052</A>;
+updates
+<A HREF="#rfc1035">RFC 1035</A>
+</DT>
+<DD><EM>A DNS RR for specifying the location of services (DNS SRV)</EM>
+by A. Gulbrandsen, P. Vixie and L. Esibov
+<DD>Introduced generalised SRV records for indirection, similar to
+MX records, for services other than mail.  Also changed the SRV
+namespace to use leading underscore characters: "_TCP.example"
+instead of "TCP.example".
+<DD><EM>Feb-2000</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2694.txt"
+NAME="rfc2694">RFC 2694</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>DNS extensions to Network Address Translators (DNS_ALG)</EM>
+by P. Srisuresh, G. Tsirtsis, P. Akkiraju and A. Heffernan
+<DD>Proposes an application level gateway for DNS which modifies DNS
+payload to alter address mapping of hosts.  This progressed without
+input from the <A HREF="../docs/id.html#dnsext">DNSEXT</A> community,
+so it is not interoperable with protocols such as
+<A HREF="#rfc2535">DNSSEC</A>.  Widespread deployment of this
+protocol would probably cause a bunch of problems.
+<DD><EM>Sep-1999</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2673.txt"
+NAME="rfc2673">RFC 2673</A>
+<EM>(Experimental)</EM>
+updated by
+<A HREF="#rfc3363">RFC 3363</A> and
+<A HREF="#rfc3364">RFC 3364</A>
+</DT>
+<DD><EM>Binary Labels in the Domain Name System</EM>
+by M. Crawford
+<DD>Defines a Bit-String label, which represents a sequence of single
+bit labels for storing records at any bit-boundary in the name tree.
+See also <A HREF="#rfc3363">RFC 3363</A>.
+<DD><EM>Aug-1999</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2672.txt"
+NAME="rfc2672">RFC 2672</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>Non-Terminal DNS Name Redirection</EM>
+by M. Crawford
+<DD>Defines DNAME record, which maps a subtree of the DNS to another
+domain: like a more general form of CNAME.
+<DD><EM>Aug-1999</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2671.txt"
+NAME="rfc2671">RFC 2671</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>Extension mechanisms for DNS (EDNS0)</EM>
+by P. Vixie
+<DD>Backward compatible mechanisms for growing the DNS protocol,
+to avoid exhaustion of the limited fixed fields.  Note that this
+standard requires that implementations of newer features must also
+support all features of older versions.  After extended discussion,
+a proposal for extensions based on this mechanism was never published.
+Overall, EDNS0 is not being widely used.
+<DD><EM>Aug-1999</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2606.txt"
+NAME="rfc2606">RFC 2606</A>
+<EM>(BCP 32)</EM>
+</DT>
+<DD><EM>Reserved Top Level DNS Names</EM> by
+D. Eastlake 3rd and A. Panitz
+<DD>Reserves new top-level and second-level domain names for testing and
+documentation: .EXAMPLE, .INVALID, .TEST, .LOCALHOST and
+EXAMPLE.{COM,NET,ORG}.
+<DD><EM>Jun-1999</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2541.txt"
+NAME="rfc2541">RFC 2541</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>DNS Security Operational Considerations</EM>
+by D. Eastlake 3rd
+<DD>Recommendations on how to manage <A HREF="#rfc2535">DNSSEC</A>
+extensions, regarding the operational aspects of key and signature
+generation, lifetime, size, and storage, as well as the security of
+the zones close to the root.
+<BR>An <A HREF="rfc2541.html">HTML version</A> is available.
+<DD><EM>Mar-1999</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2540.txt"
+NAME="rfc2540">RFC 2540</A>
+<EM>(Experimental)</EM>
+</DT>
+<DD><EM>Detached Domain Name System (DNS) Information</EM>
+by D. Eastlake 3rd
+<DD>Format for archival and offline storage of DNS information.
+Not widely used, since various packet capture formats seem to do the
+same job, eg. <A HREF="http://www.tcpdump.org/">libpcap</A>.
+<BR>An <A HREF="rfc2540.html">HTML version</A> is available.
+<DD><EM>Mar-1999, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2539.txt"
+NAME="rfc2539">RFC 2539</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>Storage of Diffie-Hellman Keys in the Domain Name System (DNS)</EM>
+by D. Eastlake 3rd
+<DD>KEY records for storing Diffie-Hellman keys.
+<BR>An <A HREF="rfc2539.html">HTML version</A> is available.
+<DD><EM>Mar-1999</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2538.txt"
+NAME="rfc2538">RFC 2538</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>Storing Certificates in the Domain Name System (DNS)</EM>
+by D. Eastlake 3rd and O. Gudmundsson
+<DD>CERT records for storing certificates and related certificate
+revocation lists.
+<BR>An <A HREF="rfc2538.html">HTML version</A> is available.
+<DD><EM>Mar-1999</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2537.txt"
+NAME="rfc2537">RFC 2537</A>
+<EM>(Proposed Standard)</EM>
+obsoleted by
+<A HREF="#rfc3110">RFC 3110</A>
+</DT>
+<DD>An <A HREF="rfc2537.html">HTML version</A> is available.
+<DD><EM>Mar-1999</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2536.txt"
+NAME="rfc2536">RFC 2536</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>DSA KEYs and SIGs in the Domain Name System (DNS)</EM>
+by D. Eastlake 3rd
+<DD>Storing US Government Digital Signature Algorithm keys and signatures
+using KEY and SIG resource records.
+<BR>An <A HREF="rfc2536.html">HTML version</A> is available.
+<DD><EM>Mar-1999</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2535.txt"
+NAME="rfc2535">RFC 2535</A>
+<EM>(Proposed Standard)</EM>
+obsoletes <A HREF="#rfc2065">RFC 2065</A>;
+updates
+<A HREF="#rfc1034">RFC 1034</A>,
+<A HREF="#rfc1035">RFC 1035</A> and
+<A HREF="#rfc2181">RFC 2181</A>;
+updated by
+<A HREF="#rfc2931">RFC 2931</A>,
+<A HREF="#rfc3007">RFC 3007</A>,
+<A HREF="#rfc3008">RFC 3008</A>,
+<A HREF="#rfc3090">RFC 3090</A>,
+<A HREF="#rfc3226">RFC 3226</A>,
+<A HREF="#rfc3445">RFC 3445</A>,
+<A HREF="#rfc3597">RFC 3597</A>,
+<A HREF="#rfc3655">RFC 3655</A> and
+<A HREF="#rfc3658">RFC 3658</A>
+</DT>
+<DD><EM>Domain Name System Security Extensions</EM>
+by D. Eastlake 3rd
+<DD>Updated digital signatures for data integrity and authentication in
+the DNS, incorporating implementation feedback.  Digital signatures are
+included in secured zones as resource records.
+<BR>An <A HREF="rfc2535.html">HTML version</A> is available.
+<DD><EM>Mar-1999, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2517.txt"
+NAME="rfc2517">RFC 2517</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>Building Directories from DNS: Experiences from WWWSeeker</EM>
+by R. Moats and R. Huber
+<DD>Implementation experience from WWWSeeker and Netfind, for those
+considering a keyword-like directory to discover domain names.
+<BR>An <A HREF="rfc2517.html">HTML version</A> is available.
+<DD><EM>Feb-1999</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2377.txt"
+NAME="rfc2377">RFC 2377</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>Naming Plan for Internet Directory-Enabled Applications</EM>
+by A. Grimstad, R. Huber, S. Sataluri and M. Wahl
+<DD>Part 2 of the attempted LDAP takeover of DNS.  A sensible naming
+scheme for LDAP directories, based on the top parts of the DNS name
+space.  See also <A HREF="#rfc2247">RFC 2247</A>.
+<BR>An <A HREF="rfc2377.html">HTML version</A> is available.
+<DD><EM>Sep-1998</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2352.txt"
+NAME="rfc2352">RFC 2352</A>
+<EM>(Informational)</EM>
+obsoletes <A HREF="#rfc2240">RFC 2240</A>
+</DT>
+<DD><EM>A Convention For Using Legal Names as Domain Names</EM>
+by O. Vaughan
+<DD>Proposes creation of uniform second-level domain names for commercial
+organisations, within the country-specific TLD's.  As the editor's
+preface points out, this document (and the earlier version it replaces)
+are pretty pointless due to constraints of the real world (as opposed
+to the fantasy world this document appears to be describing).
+<DD><EM>May-1998</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2345.txt"
+NAME="rfc2345">RFC 2345</A>
+<EM>(Experimental)</EM>
+</DT>
+<DD><EM>Domain Names and Company Name Retrieval</EM>
+by J. Klensin, T. Wolf and G. Oglesby
+<DD>Proposes adding extra WHOIS lookup step to browsers to retrieve URLs
+instead of relying on intuitive domain names.  Similar to the keyword
+feature added by Netscape and Microsoft to their browsers in mid-1998.
+<DD><EM>May-1998</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2317.txt"
+NAME="rfc2317">RFC 2317</A>
+<EM>(BCP 20)</EM>
+</DT>
+<DD><EM>Classless IN-ADDR.ARPA delegation</EM>
+by H. Eidnes, G. de Groot and P. Vixie
+<DD>How to do IN-ADDR.ARPA delegations on arbitrary boundaries, in a
+way compatible with existing software, by using CNAME records and new
+zones.
+<BR>An <A HREF="rfc2317.html">HTML version</A> is available.
+<DD><EM>Mar-1998</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2308.txt"
+NAME="rfc2308">RFC 2308</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc1034">RFC 1034</A> and
+<A HREF="#rfc1035">RFC 1035</A>
+</DT>
+<DD><EM>Negative Caching of DNS Queries (DNS NCACHE)</EM>
+by M. Andrews
+<DD>Recommends that negative caching (the caching of information about
+non-existence of resource records) becomes mandatory in resolvers.
+Also redefines the usage of the TTL field in SOA records to be used for
+negative caching, and adds a $TTL directive to replace its former use.
+<BR>An <A HREF="rfc2308.html">HTML version</A> is available.
+<DD><EM>Mar-1998</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2307.txt"
+NAME="rfc2307">RFC 2307</A>
+<EM>(Experimental)</EM>
+</DT>
+<DD><EM>An Approach for Using LDAP as a Network Information Service</EM>
+by L. Howard
+<DD>Mapping NIS-type information into LDAP: aliases, users, protocols,
+etc.  Not strictly relevant to DNS.
+<DD><EM>Mar-1998</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2276.txt"
+NAME="rfc2276">RFC 2276</A>
+<EM>(Informational)</EM>
+updated by
+<A HREF="#rfc3401">RFC 3401</A>
+</DT>
+<DD><EM>Architectural Principles of Uniform Resource Name Resolution</EM>
+by K. Sollins
+<DD>URNs are meant to be persistent, globally unique identifiers for
+internet documents, like ISBNs for books or UPCs for products for sale.
+This defines the theoretical architecture of mapping URNs to URLs.
+Still largely a pipe-dream, after all these years.
+<DD><EM>Jan-1998</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2247.txt"
+NAME="rfc2247">RFC 2247</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>Using Domains in LDAP/X.500 Distinguished Names</EM>
+by S. Kille, M. Wahl, A. Grimstad, R. Huber and S. Sataluri
+<DD>Representing domain names as distinguished names (using a new
+X.500 attribute called DC) so that LDAP can contain DNS information.
+See also <A HREF="#rfc2377">RFC 2377</A>.
+<BR>An <A HREF="rfc2247.html">HTML version</A> is available.
+<DD><EM>Jan-1998</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2240.txt"
+NAME="rfc2240">RFC 2240</A>
+<EM>(Informational)</EM>
+obsoleted by <A HREF="#rfc2352">RFC 2352</A>
+</DT>
+<DD><EM>Nov-1997</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2230.txt"
+NAME="rfc2230">RFC 2230</A>
+<EM>(Informational)</EM>
+<DD><EM>Key Exchange Delegation Record for the DNS</EM>
+by R. Atkinson
+<DD>KX records for IP security, assuming Secure DNS.  KX defines a host
+willing to act as a key exchanger for a given domain name.
+<BR>An <A HREF="rfc2230.html">HTML version</A> is available.
+</DT>
+<DD><EM>Nov-1997</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2219.txt"
+NAME="rfc2219">RFC 2219</A>
+<EM>(BCP 17)</EM>
+</DT>
+<DD><EM>Use of DNS Aliases for Network Services</EM>
+by M. Hamilton and R. Wright
+<DD>The IANA name for a protocol should be used as the domain name
+for the machine that supports that protocol at a site.
+<BR>An <A HREF="rfc2219.html">HTML version</A> is available.
+<DD><EM>Oct-1997</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2182.txt"
+NAME="rfc2182">RFC 2182</A>
+<EM>(BCP 16)</EM>
+</DT>
+<DD><EM>Selection and Operation of Secondary DNS Servers</EM>
+by R. Elz, R. Bush, S. Bradner and M. Patton
+<DD>How to select secondary (slave) servers.
+<BR>An <A HREF="rfc2182.html">HTML version</A> is available.
+<DD><EM>Jul-1997</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2181.txt"
+NAME="rfc2181">RFC 2181</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc1034">RFC 1034</A>,
+<A HREF="#rfc1035">RFC 1035</A> and
+<A HREF="#rfc1123">RFC 1123</A>;
+updated by
+<A HREF="#rfc2535">RFC 2535</A>
+</DT>
+<DD><EM>Clarifications to the DNS Specification</EM>
+by R. Elz and R. Bush
+<DD>Clarifications regarding multi-homed servers, TTLs, zone cuts,
+SOA records, the TC (truncated) flag, authoritative/canonical names, and
+valid labels.
+<BR>An <A HREF="rfc2181.html">HTML version</A> is available.
+<DD><EM>Jul-1997</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2168.txt"
+NAME="rfc2168">RFC 2168</A>
+<EM>(Experimental)</EM>
+updated by
+<A HREF="#rfc2915">RFC 2915</A>;
+obsoleted by
+<A HREF="#rfc3401">RFC 3401</A>,
+<A HREF="#rfc3402">RFC 3402</A>,
+<A HREF="#rfc3403">RFC 3403</A> and
+<A HREF="#rfc3404">RFC 3404</A>
+</DT>
+<DD><EM>Jun-1997</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2163.txt"
+NAME="rfc2163">RFC 2163</A>
+<EM>(Proposed Standard)</EM>
+obsoletes
+<A HREF="#rfc1664">RFC 1664</A>;
+updated by
+<A HREF="#rfc3597">RFC 3597</A>
+</DT>
+<DD><EM>Using the Internet DNS to Distribute MIXER Conformant Global
+Address Mapping (MCGAM)</EM>
+by C. Allocchio
+<DD>Update to <A HREF="#rfc1664">RFC 1664</A>, on storing information
+in the DNS for mapping between X.400 and RFC 822 email addressing.
+Defines new PX record and .X42D.xx second-level domain names for each
+country-specific TLD xx.
+<DD><EM>Jan-1998</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2146.txt"
+NAME="rfc2146">RFC 2146</A>
+<EM>(Informational)</EM>
+obsoletes <A HREF="#rfc1816">RFC 1816</A>
+</DT>
+<DD><EM>U.S. Government Internet Domain Names</EM>
+by Federal Networking Council
+<DD>Registration procedures in the .GOV top-level domain, and first
+steps in its migration to .FED.US.
+<DD><EM>May-1997</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2142.txt"
+NAME="rfc2142">RFC 2142</A>
+<EM>(Proposed Standard)</EM>
+</DT>
+<DD><EM>Mailbox Names for Common Services, Roles and Functions</EM>
+by D. Crocker
+<DD>Mandates addresses such as ABUSE@domain for complaints to
+ISPs, HOSTMASTER@domain as a standard contact for DNS issues, and
+LIST-REQUEST@domain for all mailing lists.
+<BR>An <A HREF="rfc2142.html">HTML version</A> is available.
+<DD><EM>May-1997</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2137.txt"
+NAME="rfc2137">RFC 2137</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc1035">RFC 1035</A>;
+obsoleted by
+<A HREF="#rfc3007">RFC 3007</A>
+</DT>
+<DD>An <A HREF="rfc2137.html">HTML version</A> is available.
+<DD><EM>Apr-1997, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2136.txt"
+NAME="rfc2136">RFC 2136</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc1035">RFC 1035</A>;
+updated by
+<A HREF="#rfc3007">RFC 3007</A>
+</DT>
+<DD><EM>Dynamic Updates in the Domain Name System (DNS UPDATE)</EM>
+by P. Vixie (editor), S. Thomson, Y. Rekhter and J. Bound
+<DD>Atomic record-level addition and deletion of DNS information: WINS
+done properly.
+<BR>An <A HREF="rfc2136.html">HTML version</A> is available.
+<DD><EM>Apr-1997</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2100.txt"
+NAME="rfc2100">RFC 2100</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>The Naming of Hosts</EM>
+by J. Ashworth
+<DD>A fun pastiche of T. S. Eliot's poem "The Naming of Cats", but
+also makes some cogent points about choice of hostnames.
+See also <A HREF="#rfc1178">RFC 1178</A> for a more serious treatment.
+<DD><EM>01-Apr-1997, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2065.txt"
+NAME="rfc2065">RFC 2065</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc1034">RFC 1034</A> and
+<A HREF="#rfc1035">RFC 1035</A>;
+obsoleted by <A HREF="#rfc2535">RFC 2535</A>
+</DT>
+<DD>An <A HREF="rfc2065.html">HTML version</A> is available.
+<DD><EM>Jan-1997</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2053.txt"
+NAME="rfc2053">RFC 2053</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>The AM (Armenia) Domain</EM>
+by E. Der-Danieliantz
+<DD>Procedures for registering in the AM TLD.
+<DD><EM>Oct-1996</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2052.txt"
+NAME="rfc2052">RFC 2052</A>
+<EM>(Experimental)</EM>
+updates
+<A HREF="#rfc1035">RFC 1035</A> and
+<A HREF="#rfc1183">RFC 1183</A>;
+obsoleted by
+<A HREF="#rfc2782">RFC 2782</A>
+</DT>
+<DD><EM>Oct-1996</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc2010.txt"
+NAME="rfc2010">RFC 2010</A>
+<EM>(Informational)</EM>
+</DT>
+<DD>An <A HREF="rfc2010.html">HTML version</A> is available.
+<DD><EM>Oct-1996</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1996.txt"
+NAME="rfc1996">RFC 1996</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc1035">RFC 1035</A>
+</DT>
+<DD><EM>Notify: a mechanism for prompt notification of authority zone changes</EM>
+by P. Vixie
+<DD>Describes NOTIFY opcode for advising slave servers that the
+master's data has been changed.
+<BR>An <A HREF="rfc1996.html">HTML version</A> is available.
+<DD><EM>Aug-1996</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1995.txt"
+NAME="rfc1995">RFC 1995</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc1035">RFC 1035</A>
+</DT>
+<DD><EM>Incremental Zone Transfer in DNS</EM>
+by M. Ohta
+<DD>A mechanism for use with NOTIFY which allows transferring only that
+part of the zone that changed.
+<BR>An <A HREF="rfc1995.html">HTML version</A> is available.
+<DD><EM>Aug-1996</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1982.txt"
+NAME="rfc1982">RFC 1982</A>
+<EM>(Proposed Standard)</EM>
+updates
+<A HREF="#rfc1034">RFC 1034</A> and
+<A HREF="#rfc1035">RFC 1035</A>
+</DT>
+<DD><EM>Serial Number Arithmetic</EM>
+by R. Elz and R. Bush
+<DD>Defines how serial numbers are compared to determine if a zone has
+been updated.
+<BR>An <A HREF="rfc1982.html">HTML version</A> is available.
+<DD><EM>Aug-1996</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1956.txt"
+NAME="rfc1956">RFC 1956</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>Registration in the MIL Domain</EM>
+by D. Engebretson and R. Plzak
+<DD>Describes the registration policy of the US Department of Defense
+domain.
+<DD><EM>Jun-1996</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1912.txt"
+NAME="rfc1912">RFC 1912</A>
+<EM>(Informational)</EM>
+obsoletes
+<A HREF="#rfc1537">RFC 1537</A>
+</DT>
+<DD><EM>Common DNS Operational and Configuration Errors</EM>
+by D. Barr
+<DD>Errors and common practice in operation of servers and format of
+data.
+<BR>An <A HREF="rfc1912.html">HTML version</A> is available.
+<DD><EM>Feb-1996</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1886.txt"
+NAME="rfc1886">RFC 1886</A>
+updated by
+<A HREF="#rfc3152">RFC 3152</A>;
+obsoleted by
+<A HREF="#rfc3596">RFC 3596</A>
+</DT>
+<DD><EM>Dec-1995</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1876.txt"
+NAME="rfc1876">RFC 1876</A>
+<EM>(Experimental)</EM>
+updates
+<A HREF="#rfc1034">RFC 1034</A> and
+<A HREF="#rfc1035">RFC 1035</A>;
+obsoletes <A HREF="#rfc1712">RFC 1712</A>
+</DT>
+<DD><EM>A Means for Expressing Location Information in the Domain Name
+System</EM>
+by C. Davis, P. Vixie, T. Goodwin and I. Dickinson
+<DD>Geographical location LOC records.
+<DD><EM>Jan-1996</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1816.txt"
+NAME="rfc1816">RFC 1816</A>
+<EM>(Informational)</EM>
+obsoletes <A HREF="#rfc1811">RFC 1811</A>,
+obsoleted by <A HREF="#rfc2146">RFC 2146</A>
+</DT>
+<DD><EM>Aug-1995</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1811.txt"
+NAME="rfc1811">RFC 1811</A>
+<EM>(Informational)</EM>
+obsoleted by <A HREF="#rfc1816">RFC 1816</A>
+</DT>
+<DD><EM>Jun-1995</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1794.txt"
+NAME="rfc1794">RFC 1794</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>DNS Support for Load Balancing</EM>
+by T. Brisco
+<DD>DNS support for balancing loads of many types.
+<DD><EM>Apr-1995</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1713.txt"
+NAME="rfc1713">RFC 1713</A>
+<EM>(Informational: FYI 27)</EM>
+</DT>
+<DD><EM>Tools for DNS debugging</EM>
+by A. Romao
+<DD>Overview of some DNS <A HREF="../tools.html">tools</A>.  Now
+severely out of date; an IETF effort is underway to update it.
+<BR>An <A HREF="rfc1713.html">HTML version</A> is available.
+<DD><EM>Nov-1994</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1712.txt"
+NAME="rfc1712">RFC 1712</A>
+<EM>(Experimental)</EM>
+obsoleted by <A HREF="#rfc1876">RFC 1876</A>
+</DT>
+<DD><EM>DNS Encoding of Geographical Location</EM>
+by C. Farrell, M. Schulze, S. Pleitner and D. Baldoni
+<DD>Paul Vixie wrote: `deprecated and retracted by its authors
+but the RFC editors accidentally published it anyway'.
+<DD><EM>Nov-1994</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1706.txt"
+NAME="rfc1706">RFC 1706</A>
+<EM>(Informational)</EM>
+updates
+<A HREF="#rfc1034">RFC 1034</A> and
+<A HREF="#rfc1035">RFC 1035</A>;
+obsoletes
+<A HREF="#rfc1348">RFC 1348</A> and
+<A HREF="#rfc1637">RFC 1637</A>
+</DT>
+<DD><EM>DNS NSAP Resource Records</EM>
+by B. Manning and R. Colella
+<DD>How to add OSI-style NSAPs to the DNS using PTR records.
+<DD><EM>Oct-1994</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1664.txt"
+NAME="rfc1664">RFC 1664</A>
+<EM>(Experimental)</EM>
+obsoleted by <A HREF="#rfc2163">RFC 2163</A>  
+</DT>
+<DD><EM>Aug-1994</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1637.txt"
+NAME="rfc1637">RFC 1637</A>
+<EM>(Experimental)</EM>
+obsoletes
+<A HREF="#rfc1348">RFC 1348</A>;
+obsoleted by
+<A HREF="#rfc1706">RFC 1706</A>
+</DT>
+<DD><EM>Jun-1994</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1612.txt"
+NAME="rfc1612">RFC 1612</A>
+<EM>(Historic)</EM>
+</DT>
+<DD><EM>DNS Resolver MIB Extensions</EM>
+by R. Austein and J. Saperia
+<DD>Interfacing SNMP to the client side of DNS, waiting to be implemented.
+See also <A HREF="#rfc3197">RFC 3197</A>.
+<DD><EM>May-1994</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1611.txt"
+NAME="rfc1611">RFC 1611</A>
+<EM>(Historic)</EM>
+</DT>
+<DD><EM>DNS Server MIB Extensions</EM>
+by R. Austein and J. Saperia
+<DD>Interfacing SNMP to the server side of DNS, waiting to be implemented.
+See also <A HREF="#rfc3197">RFC 3197</A>.
+<DD><EM>May-1994</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1591.txt"
+NAME="rfc1591">RFC 1591</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>Domain Name System Structure and Delegation</EM>
+by J. Postel
+<DD>Administrative and management details about the DNS name space.
+See also <A HREF="#rfc3071">RFC 3071</A>.
+<DD><EM>Mar-1994, checked 27-Feb-2004</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1537.txt"
+NAME="rfc1537">RFC 1537</A>
+<EM>(Informational)</EM>
+obsoleted by <A HREF="#rfc1912">RFC 1912</A>
+</DT>
+<DD><EM>Oct-1993</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1536.txt"
+NAME="rfc1536">RFC 1536</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>Common DNS Implementation Errors and Suggested Fixes</EM>
+by A.  Kumar, J. Postel, C. Neuman, P. Danzig and S. Miller
+<DD>What to fix and how to fix it, for developers.
+<DD><EM>Oct-1993</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1535.txt"
+NAME="rfc1535">RFC 1535</A>
+<EM>(Informational)</EM>
+</DT>
+<DD><EM>A Security Problem and Proposed Correction With Widely Deployed
+DNS Software</EM>
+by E. Gavron
+<DD>Highlights subversion possibilities with default resolver search
+lists.  In general, resolver search lists should never add domain names to
+a basic search string unless the domains are managed by a trusted party.
+This means that commonly used search string members such as .COM are
+dangerous and should not be used.  Six years later, several large
+software companies still haven't understood this.
+<DD><EM>Oct-1993</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1480.txt"
+NAME="rfc1480">RFC 1480</A>
+<EM>(Informational)</EM>
+obsoletes
+<A HREF="#rfc1386">RFC 1386</A>  
+</DT>
+<DD><EM>The US Domain</EM>
+by A. Cooper and J. Postel
+<DD>Policies and procedures related to the .US top-level domain.
+<DD><EM>Jun-1993</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1464.txt"
+NAME="rfc1464">RFC 1464</A>
+<EM>(Experimental)</EM>
+</DT>
+<DD><EM>Using the Domain Name System To Store Arbitrary String Attributes</EM>
+by R. Rosenbaum
+<DD>Using TXT records to store arbitrary strings in the DNS.
+<DD><EM>May-1993</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1386.txt"
+NAME="rfc1386">RFC 1386</A>
+<EM>(Informational)</EM>
+obsoleted by
+<A HREF="#rfc1480">RFC 1480</A>  
+</DT>
+<DD><EM>Jun-1993</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1348.txt"
+NAME="rfc1348">RFC 1348</A>
+<EM>(Experimental)</EM>
+updates
+<A HREF="#rfc1034">RFC 1034</A> and
+<A HREF="#rfc1035">RFC 1035</A>;
+obsoleted by
+<A HREF="#rfc1706">RFC 1706</A>  
+</DT>
+<DD><EM>Jul-1992</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1183.txt"
+NAME="rfc1183">RFC 1183</A>
+<EM>(Experimental)</EM>
+updates
+<A HREF="#rfc1034">RFC 1034</A> and
+<A HREF="#rfc1035">RFC 1035</A>;
+updated by
+<A HREF="#rfc2052">RFC 2052</A>
+</DT>
+<DD><EM>New DNS RR Definitions</EM>
+by C. Everhart, L. Mamakos and R. Ullmann and edited by P. Mockapetris
+<DD>New resource records, not widely used.
+<DD><EM>Oct-1990</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1178.txt"
+NAME="rfc1178">RFC 1178</A>
+<EM>(Informational: FYI 5)</EM>
+</DT>
+<DD><EM>Choosing a Name for Your Computer</EM> by D. Libes
+<DD>Good advice to keep in mind when naming computers, especially as to
+what names to avoid.
+See also <A HREF="#rfc2100">RFC 2100</A> for a less serious treatment.
+<DD><EM>Aug-1990</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1123.txt"
+NAME="rfc1123">RFC 1123</A>
+<EM>(Standard: STD 3)</EM>
+updated by
+<A HREF="#rfc2181">RFC 2181</A>
+</DT>
+<DD><EM>Requirements for Internet Hosts -- Application and Support</EM>
+edited by R. Braden
+<DD>Includes chapter 6, about DNS.
+<DD><EM>Oct-1989</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1122.txt"
+NAME="rfc1122">RFC 1122</A>
+<EM>(Standard: STD 3)</EM>
+updates
+<A HREF="#rfc1034">RFC 1034</A> and
+<A HREF="#rfc1035">RFC 1035</A>
+</DT>
+<DD><EM>Requirements for Internet Hosts -- Communication Layers</EM>
+edited by R. Braden
+<DD>Section 4 discusses UDP and TCP issues that have important low-level
+effects on DNS.
+<DD><EM>Oct-1989</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1101.txt"
+NAME="rfc1101">RFC 1101</A>
+<EM>(Unknown, Proposed Standard?)</EM>
+updates
+<A HREF="#rfc1034">RFC 1034</A> and
+<A HREF="#rfc1035">RFC 1035</A>
+</DT>
+<DD><EM>DNS Encoding of Network Names and Other Types</EM>
+by P. Mockapetris
+<DD>Storage of network names and netmasks in the reverse tree,
+using PTR and A records.  Unfortunately, this scheme only works
+for classful networks, and is therefore a historical curiosity.
+Instead, see <A HREF="#rfc2317">RFC 2317</A> for classless networks.
+<DD><EM>Apr-1989</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1035.txt"
+NAME="rfc1035">RFC 1035</A>
+<EM>(Standard: STD 13)</EM>
+updated by RFCs
+<A HREF="#rfc1101">1101</A>,
+<A HREF="#rfc1122">1122</A>,
+<A HREF="#rfc1183">1183</A>,
+<A HREF="#rfc1706">1706</A>,
+<A HREF="#rfc1876">1876</A>,
+<A HREF="#rfc1982">1982</A>,
+<A HREF="#rfc1995">1995</A>,
+<A HREF="#rfc1996">1996</A>,
+<A HREF="#rfc2136">2136</A>,
+<A HREF="#rfc2137">2137</A>,
+<A HREF="#rfc2181">2181</A>,
+<A HREF="#rfc2308">2308</A>,
+<A HREF="#rfc2535">2535</A>,
+<A HREF="#rfc2782">2782</A>,
+<A HREF="#rfc2845">2845</A>,
+<A HREF="#rfc3425">3425</A> and
+<A HREF="#rfc3658">RFC 3658</A>;
+obsoletes RFCs
+<A HREF="#rfc882">882</A>,
+<A HREF="#rfc883">883</A> and
+<A HREF="#rfc973">973</A>
+</DT>
+<DD><EM>Domain Names--Implementation and Specification</EM>
+by P. Mockapetris
+<DD>Mechanics of the DNS.
+An <A HREF="http://www.crynwr.com/crynwr/rfc1035/">HTML version</A> with
+graphic illustrations is available (thanks to Russ Nelson).
+<BR>A <A HREF="rfc1035/rfc1035.html">local copy</A> is also available.
+<DD><EM>Nov-1987</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1034.txt"
+NAME="rfc1034">RFC 1034</A>
+<EM>(Standard: STD 13)</EM>
+updated by RFCs
+<A HREF="#rfc1101">1101</A>,
+<A HREF="#rfc1122">1122</A>,
+<A HREF="#rfc1183">1183</A>,
+<A HREF="#rfc1706">1706</A>,
+<A HREF="#rfc1876">1876</A>,
+<A HREF="#rfc1982">1982</A>,
+<A HREF="#rfc2181">2181</A>,
+<A HREF="#rfc2308">2308</A> and
+<A HREF="#rfc2535">2535</A>;
+obsoletes RFCs
+<A HREF="#rfc882">882</A>,
+<A HREF="#rfc883">883</A> and
+<A HREF="#rfc973">973</A>
+</DT>
+<DD><EM>Domain Names--Concepts and Facilities</EM>
+by P. Mockapetris
+<DD>Reference guide, covers just about everything.
+<DD><EM>Nov-1987</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1033.txt"
+NAME="rfc1033">RFC 1033</A>
+updated by
+<A HREF="#rfc1912">RFC 1912</A>
+</DT>
+<DD><EM>Domain Administrators Operations Guide</EM>
+by M. Lottor
+<DD>How-to guide, now somewhat out of date.
+<DD><EM>Nov-1987</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc1032.txt"
+NAME="rfc1032">RFC 1032</A>
+</DT>
+<DD><EM>Domain Administrator's Guide</EM>
+by M. Stahl
+<DD>Explains role of domain administrator.
+<DD><EM>Nov-1987</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc974.txt"
+NAME="rfc974">RFC 974</A>
+<EM>(Standard: STD 14)</EM>
+</DT>
+<DD><EM>Mail Routing and the Domain System</EM>
+by Craig Partridge
+<DD>Describes MX record processing.
+<DD><EM>Jan-1986</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc973.txt"
+NAME="rfc973">RFC 973</A>
+updates
+<A HREF="#rfc882">RFC 882</A> and
+<A HREF="#rfc883">RFC 883</A>;
+obsoleted by
+<A HREF="#rfc1034">RFC 1034</A> and
+<A HREF="#rfc1035">RFC 1035</A>
+</DT>
+<DD><EM>Jan-1986</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc921.txt"
+NAME="rfc921">RFC 921</A>
+updates
+<A HREF="#rfc897">RFC 897</A> and
+<A HREF="#rfc881">RFC 881</A>
+</DT>
+<DD><EM>Domain name system implementation schedule - revised</EM>
+by J. Postel
+<DD>Documents the 1983-4 plan to switch over to DNS.
+<DD><EM>Oct-1984</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc920.txt"
+NAME="rfc920">RFC 920</A>
+</DT>
+<DD><EM>Domain Requirements</EM>
+by J. Postel and J. Reynolds
+<DD>Administrative document about domains.  Will become historical
+shortly.
+<DD><EM>Oct-1984</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc897.txt"
+NAME="rfc897">RFC 897</A>
+updates
+<A HREF="#rfc881">RFC 881</A>;
+updated by
+<A HREF="#rfc921">RFC 921</A>
+</DT>
+<DD><EM>Domain name system implementation schedule</EM>
+by J. Postel
+<DD>Documents the 1983-4 plan to switch over to DNS.
+<DD><EM>Feb-1984</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc883.txt"
+NAME="rfc883">RFC 883</A>
+updated by
+<A HREF="#rfc973">RFC 973</A>;
+obsoleted by
+<A HREF="#rfc1034">RFC 1034</A> and
+<A HREF="#rfc1035">RFC 1035</A>
+</DT>
+<DD><EM>Nov-1983</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc882.txt"
+NAME="rfc882">RFC 882</A>
+updated by
+<A HREF="#rfc973">RFC 973</A>;
+obsoleted by
+<A HREF="#rfc1034">RFC 1034</A> and
+<A HREF="#rfc1035">RFC 1035</A>
+</DT>
+<DD><EM>Nov-1983</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc881.txt"
+NAME="rfc881">RFC 881</A>
+updated by
+<A HREF="#rfc897">RFC 897</A> and
+<A HREF="#rfc921">RFC 921</A>
+</DT>
+<DD><EM>The Domain Names Plan and Schedule</EM>
+by J. Postel
+<DD>Documents the 1983-4 plan to switch over to DNS.
+<DD><EM>Nov-1983</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc819.txt"
+NAME="rfc819">RFC 819</A>
+</DT>
+<DD><EM>The Domain Naming Convention for Internet User Applications</EM>
+by Z. Su and J. Postel
+<DD>Documents the original structural ideas of DNS.
+<DD><EM>Aug-1982</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc811.txt"
+NAME="rfc811">RFC 811</A>
+</DT>
+<DD><EM>Hostnames Server</EM>
+by K. Harrenstien, V. White and E. Feinler
+<DD>The original centralised hostname lookup server.
+<DD><EM>Mar-1982</EM>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/rfc/rfc805.txt"
+NAME="rfc805">RFC 805</A>
+</DT>
+<DD><EM>Computer Mail Meeting Notes</EM>
+by J. Postel
+<DD>The decision to introduce DNS-type names for mail addressing.
+<DD><EM>Feb-1982</EM>
+
+</DL>
+
+<P>
+The following DNS-related RFCs have not yet been reviewed:
+</P>
+
+<DL>
+<DT>(None at present)
+</DT>
+<DD>Please let me know of any omissions.
+</DL>
+
+<HR>
+
+<A HREF="../"><IMG SRC="../img/dnsrd.png" ALT="[Back to DNSRD]"></A>
+
+<HR>
+
+<ADDRESS>Copyright 1994-2004 by Andr&aacute;s Salamon
+<A HREF="/andras/">&lt;andras&#64;dns.net&gt;</A></ADDRESS>
+<BR>Last updated 13-Apr-2004
+</BODY>
+
+</HTML>

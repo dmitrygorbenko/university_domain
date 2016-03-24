@@ -1,0 +1,368 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.5 [en] (WinNT; I) [Netscape]">
+   <meta name="Author" content="Mark Symons (bliksim9@yahoo.com)">
+   <title>RFC1996: A Mechanism for Prompt Notification of Zone Changes</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+This RFC has
+been HTMLized by hand by <a href="mailto:bliksim9@yahoo.com">Mark
+Symons</a>, and word-for-word correspondence to the source has not been
+<br>verified.&nbsp; A table of contents has been added. The <a href="ftp://ftp.is.co.za/rfc/rfc1996.txt">original
+RFC</a> should be regarded as being authoritative.
+<br>
+<hr WIDTH="100%">
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=3 WIDTH="100%" >
+<tr>
+<td>Network Working Group</td>
+
+<td></td>
+
+<td>P. Vixie</td>
+</tr>
+
+<tr>
+<td>Request for Comments: 1996</td>
+
+<td></td>
+
+<td>ISC</td>
+</tr>
+
+<tr>
+<td>Updates: <a href="rfc1035/rfc1035.html">1035</a></td>
+
+<td></td>
+
+<td>August 1996</td>
+</tr>
+
+<tr>
+<td>Category: Standards Track</td>
+
+<td></td>
+
+<td>.</td>
+</tr>
+</table>
+
+<center>
+<h1>
+A Mechanism for Prompt Notification of Zone Changes (DNS NOTIFY)</h1></center>
+
+<h2>
+Status of this Memo</h2>
+This document specifies an Internet standards track protocol for the Internet
+community, and requests discussion and&nbsp; suggestions for improvements.&nbsp;
+Please refer to the current edition of the "Internet Official Protocol
+Standards" (STD 1) for the standardization state and status of this protocol.&nbsp;
+Distribution of this memo is unlimited.
+<br>&nbsp;
+<h2>
+Abstract</h2>
+This memo describes the NOTIFY opcode for DNS, by which a master server
+advises a set of slave servers that the master's data has been changed
+and that a query should be initiated to discover the new data.
+<br>&nbsp;
+<h2>
+Contents</h2>
+<b><a href="#1">1. Rationale and Scope</a></b>
+<br><b><a href="#2">2. Definitions and Invariants</a></b>
+<br><b><a href="#3">3. NOTIFY Message</a></b>
+<br><b><a href="#4">4. Details and Examples</a></b>
+<br><b><a href="#5">5. Security Considerations</a></b>
+<br><b><a href="#6">6. References</a></b>
+<br><b><a href="#7">7. Author's Address</a></b>
+<br>&nbsp;
+<h2>
+<a NAME="1"></a>1. Rationale and Scope</h2>
+1.1. Slow propagation of new and changed data in a DNS zone can be due
+to a zone's relatively long refresh times.&nbsp; Longer refresh times are
+beneficial in that they reduce load on the master servers, but that benefit
+comes at the cost of long intervals of incoherence among authority servers
+whenever the zone is updated.
+<p>1.2. The DNS NOTIFY transaction allows master servers to inform slave
+servers when the zone has changed -- an interrupt as opposed to poll model
+-- which it is hoped will reduce propagation delay while not unduly increasing
+the masters' load.&nbsp; This specification only allows slaves to be notified
+of SOA RR changes, but the architechture of NOTIFY is intended to be&nbsp;
+extensible to other RR types.
+<p>1.3. This document intentionally gives more definition to the roles
+of "Master," "Slave" and "Stealth" servers, their enumeration in NS RRs,
+and the SOA MNAME field.&nbsp; In that sense, this document can be considered
+an addendum to [<a href="rfc1035/rfc1035.html">RFC1035</a>].
+<br>&nbsp;
+<h2>
+<a NAME="2"></a>2. Definitions and Invariants</h2>
+2.1. The following definitions are used in this document:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER=0 COLS=2 WIDTH="100%" >
+<tr>
+<td ALIGN=LEFT VALIGN=TOP WIDTH="10%">Slave</td>
+
+<td>an authoritative server which uses zone transfer to retrieve the zone.&nbsp;
+All slave servers are named in the NS RRs for the zone.</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP>Master</td>
+
+<td>any authoritative server configured to be the source of zone transfer
+for one or more slave servers.</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP>Primary Master</td>
+
+<td>master server at the root of the zone transfer dependency graph.&nbsp;
+The primary master is named in the zone's SOA MNAME field and optionally
+by an NS RR.&nbsp; There is by definition only one primary master server
+per zone.</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP>Stealth</td>
+
+<td>like a slave server except not listed in an NS RR for the zone.&nbsp;
+A stealth server, unless explicitly configured to do otherwise, will set
+the AA bit in responses and be capable of acting as a master.&nbsp; A stealth
+server will only be known by other servers if they are given static configuration
+data indicating its existence.</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP>Notify Set</td>
+
+<td>set of servers to be notified of changes to some zone.&nbsp; Default
+is all servers named in the NS RRset, except for any server also named
+in the SOA MNAME. Some implementations will permit the name server administrator
+to override this set or add elements to it (such as, for example, stealth
+servers).</td>
+</tr>
+</table>
+
+<p>2.2. The zone's servers must be organized into a dependency graph such
+that there is a primary master, and all other servers must use AXFR or
+IXFR either from the primary master or from some slave which is also a
+master.&nbsp; No loops are permitted in the AXFR dependency graph.
+<br>&nbsp;
+<h2>
+<a NAME="3"></a>3. NOTIFY Message</h2>
+3.1. When a master has updated one or more RRs in which slave servers may
+be interested, the master may send the changed RR's name, class, type,
+and optionally, new RDATA(s), to each known slave server using a best efforts
+protocol based on the NOTIFY opcode.
+<p>3.2. NOTIFY uses the DNS Message Format, although it uses only a subset
+of the available fields.&nbsp; Fields not otherwise described herein are
+to be filled with binary zero (0), and implementations must ignore all
+messages for which this is not the case.
+<p>3.3. NOTIFY is similar to QUERY in that it has a request message with
+the header QR flag "clear" and a response message with QR "set".&nbsp;
+The response message contains no useful information, but its reception
+by the master is an indication that the slave has received the NOTIFY and
+that the master can remove the slave from any retry queue for this NOTIFY
+event.
+<p>3.4. The transport protocol used for a NOTIFY transaction will be UDP
+unless the master has reason to believe that TCP is necessary; for example,
+if a firewall has been installed between master and slave, and only TCP
+has been allowed; or, if the changed RR is too large to fit in a UDP/DNS
+datagram.
+<p>3.5. If TCP is used, both master and slave must continue to offer name
+service during the transaction, even when the TCP transaction is not making
+progress.&nbsp; The NOTIFY request is sent once, and a "timeout" is said
+to have occurred if no NOTIFY response is received within a reasonable
+interval.
+<p>3.6. If UDP is used, a master periodically sends a NOTIFY request to
+a slave until either too many copies have been sent (a "timeout"), an ICMP
+message indicating that the port is unreachable, or until a NOTIFY response
+is received from the slave with a matching query ID, QNAME, IP source address,
+and UDP source port number.
+<p>Note:
+<blockquote>The interval between transmissions, and the total number of
+retransmissions, should be operational parameters specifiable by the name
+server administrator, perhaps on a per-zone basis. Reasonable defaults
+are a 60 second interval (or timeout if using TCP), and a maximum of 5
+retransmissions (for UDP).&nbsp; It is&nbsp;&nbsp;&nbsp; considered reasonable
+to use additive or exponential backoff for&nbsp; the retry interval.</blockquote>
+
+<p><br>3.7. A NOTIFY request has QDCOUNT>0, ANCOUNT>=0, AUCOUNT>=0, ADCOUNT>=0.&nbsp;
+If ANCOUNT>0, then the answer section represents an unsecure hint at the
+new RRset for this &lt;QNAME,QCLASS,QTYPE>.&nbsp; A slave receiving such
+a hint is free to treat equivilence of this answer section with its local
+data as a "no further work needs to be done" indication.&nbsp; If ANCOUNT=0,
+or ANCOUNT>0 and the answer section differs from the slave's local data,
+then the slave should query its known masters to retrieve the new data.
+<p>3.8. In no case shall the answer section of a NOTIFY request be used
+to update a slave's local data, or to indicate that a zone transfer needs
+to be undertaken, or to change the slave's zone refresh timers.
+<p>Only a "data present; data same" condition can lead a slave to act differently
+if ANCOUNT>0 than it would if ANCOUNT=0.
+<p>3.9. This version of the NOTIFY specification makes no use of the authority
+or additional data sections, and so conforming implementations should set
+AUCOUNT=0 and ADCOUNT=0 when transmitting requests.&nbsp; Since a future
+revision of this specification may define a backwards compatible use for
+either or both of these sections, current implementations must ignore these
+sections, but not the entire message, if AUCOUNT>0 and/or ADCOUNT>0.
+<p>3.10. If a slave receives a NOTIFY request from a host that is not a
+known master for the zone containing the QNAME, it should ignore the request
+and produce an error message in its operations log.
+<p>Note:
+<blockquote>This implies that slaves of a multihomed master must either
+know their master by the "closest" of the master's interface addresses,
+or must know all of the master's interface addresses. Otherwise, a valid
+NOTIFY request might come from an address that is not on the slave's state
+list of masters for the zone, which would be an error.</blockquote>
+
+<p><br>3.11. The only defined NOTIFY event at this time is that the SOA
+RR has changed.&nbsp; Upon completion of a NOTIFY transaction for QTYPE=SOA,
+the slave should behave as though the zone given in the QNAME had reached
+its REFRESH interval (see [RFC1035]), i.e., it should query its masters
+for the SOA of the zone given in the NOTIFY QNAME, and
+<br>check the answer to see if the SOA SERIAL has been incremented since
+the last time the zone was fetched.&nbsp; If so, a zone transfer (either
+AXFR or IXFR) should be initiated.
+<p>Note:
+<blockquote>Because a deep server dependency graph may have multiple paths
+from the primary master to any given slave, it is possible that a slave
+will receive a NOTIFY from one of its known masters even though the rest
+of its known masters have not yet updated their copies of the zone.&nbsp;
+Therefore, when issuing a QUERY for the zone's SOA, the query should be
+directed at the known master who was the source of the NOTIFY event, and
+not at any of the other known masters.&nbsp; This represents a departure
+from [RFC1035], which specifies that upon expiry of the SOA REFRESH interval,
+all known masters should be queried in turn.</blockquote>
+
+<p><br>3.12. If a NOTIFY request is received by a slave who does not implement
+the NOTIFY opcode, it will respond with a NOTIMP (unimplemented feature
+error) message.&nbsp; A master server who receives such a NOTIMP should
+consider the NOTIFY transaction complete for that slave.
+<br>&nbsp;
+<h2>
+<a NAME="4"></a>4. Details and Examples</h2>
+4.1. Retaining query state information across host reboots is optional,
+but it is reasonable to simply execute an SOA NOTIFY transaction on each
+authority zone when a server first starts.
+<p>4.2. Each slave is likely to receive several copies of the same NOTIFY
+request:&nbsp; One from the primary master, and one from each other slave
+as that slave transfers the new zone and notifies its potential peers.&nbsp;
+The NOTIFY protocol supports this multiplicity by requiring that NOTIFY
+be sent by a slave/master only AFTER it has updated the SOA RR or has determined
+that no update is necessary, which in practice means after a successful
+zone transfer.&nbsp; Thus, barring delivery reordering, the last NOTIFY
+any slave receives will be the one indicating the latest change.&nbsp;
+Since a slave always requests SOAs and AXFR/IXFRs only from its known masters,
+it will have an opportunity to retry its QUERY for the SOA after each of
+its masters have completed each zone update.
+<p>4.3. If a master server seeks to avoid causing a large number of simultaneous
+outbound zone transfers, it may delay for an arbitrary length of time before
+sending a NOTIFY message to any given slave. It is expected that the time
+will be chosen at random, so that each slave will begin its transfer at
+a unique time.&nbsp; The delay shall not in any case be longer than the
+SOA REFRESH time.
+<p>Note:
+<blockquote>This delay should be a parameter that each primary master name
+server can specify, perhaps on a per-zone basis.&nbsp; Random delays of
+between 30 and 60 seconds would seem adequate if the servers share a LAN
+and the zones are of moderate size.</blockquote>
+
+<p><br>4.4. A slave which receives a valid NOTIFY should defer action on
+any subsequent NOTIFY with the same&nbsp; &lt;QNAME,QCLASS,QTYPE> until
+it has completed the transaction begun by the first NOTIFY.&nbsp; This
+duplicate rejection is necessary to avoid having multiple notifications
+lead to pummeling the master server.
+<p>4.5 Zone has Updated on Primary Master
+<p>Primary master sends a NOTIFY request to all servers named in Notify
+Set.&nbsp; The NOTIFY request has the following characteristics:
+<p><tt>&nbsp;&nbsp; query ID:&nbsp;&nbsp; (new)</tt>
+<br><tt>&nbsp;&nbsp; op:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NOTIFY (4)</tt>
+<br><tt>&nbsp;&nbsp; resp:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NOERROR</tt>
+<br><tt>&nbsp;&nbsp; flags:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AA</tt>
+<br><tt>&nbsp;&nbsp; qcount:&nbsp;&nbsp;&nbsp;&nbsp; 1</tt>
+<br><tt>&nbsp;&nbsp; qname:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (zone name)</tt>
+<br><tt>&nbsp;&nbsp; qclass:&nbsp;&nbsp;&nbsp;&nbsp; (zone class)</tt>
+<br><tt>&nbsp;&nbsp; qtype:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T_SOA</tt>
+<p>4.6 Zone has Updated on a Slave that is also a Master
+<p>As above in 4.5, except that this server's Notify Set may be different
+from the Primary Master's due to optional static specification of local
+stealth servers.
+<p>4.7 Slave Receives a NOTIFY Request from a Master
+<p>When a slave server receives a NOTIFY request from one of its locally
+designated masters for the zone enclosing the given QNAME, with QTYPE=SOA
+and QR=0, it should enter the state it would if the zone's refresh timer
+had expired.&nbsp; It will also send a NOTIFY response back to the NOTIFY
+request's source, with the following characteristics:
+<p><tt>&nbsp;&nbsp; query ID:&nbsp;&nbsp; (same)</tt>
+<br><tt>&nbsp;&nbsp; op:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NOTIFY (4)</tt>
+<br><tt>&nbsp;&nbsp; resp:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NOERROR</tt>
+<br><tt>&nbsp;&nbsp; flags:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; QR AA</tt>
+<br><tt>&nbsp;&nbsp; qcount:&nbsp;&nbsp;&nbsp;&nbsp; 1</tt>
+<br><tt>&nbsp;&nbsp; qname:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (zone name)</tt>
+<br><tt>&nbsp;&nbsp; qclass:&nbsp;&nbsp;&nbsp;&nbsp; (zone class)</tt>
+<br><tt>&nbsp;&nbsp; qtype:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T_SOA</tt>
+<p>This is intended to be identical to the NOTIFY request, except that
+the QR bit is also set.&nbsp; The query ID of the response must be the
+same as was received in the request.
+<p>4.8 Master Receives a NOTIFY Response from Slave
+<p>When a master server receives a NOTIFY response, it deletes this query
+from the retry queue, thus completing the "notification
+<br>process" of "this" RRset change to "that" server.
+<br>&nbsp;
+<h2>
+<a NAME="5"></a>5. Security Considerations</h2>
+We believe that the NOTIFY operation's only security considerations are:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER=0 COLS=2 WIDTH="100%" >
+<tr>
+<td ALIGN=LEFT VALIGN=TOP WIDTH="5%">1.</td>
+
+<td>That a NOTIFY request with a forged IP/UDP source address can cause
+a slave to send spurious SOA queries to its masters, leading to a benign
+denial of service attack if the forged requests are sent very often.</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP>2.</td>
+
+<td>That TCP spoofing could be used against a slave server given NOTIFY
+as a means of synchronizing an SOA query and UDP/DNS spoofing as a means
+of forcing a zone transfer.</td>
+</tr>
+</table>
+
+<h2>
+<a NAME="6"></a>6. References</h2>
+&nbsp;
+<table BORDER=0 COLS=2 WIDTH="100%" >
+<tr>
+<td ALIGN=LEFT VALIGN=TOP WIDTH="5%">[RFC1035]</td>
+
+<td>Mockapetris, P., "Domain Names - Implementation and Specification",
+STD 13, <a href="rfc1035/rfc1035.html">RFC 1035</a>, November 1987.</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP>[IXFR]</td>
+
+<td>Ohta, M., "Incremental Zone Transfer", <a href="rfc1995.html">RFC 1995</a>,
+August 1996&nbsp;</td>
+</tr>
+</table>
+
+<h2>
+<a NAME="7"></a>7. Author's Address</h2>
+Paul Vixie
+<br>Internet Software Consortium
+<br>Star Route Box 159A
+<br>Woodside, CA 94062
+<p>Phone: +1 415 747 0204
+<br>EMail: <a href="mailto:paul@vix.com">paul@vix.com</a>
+</body>
+</html>

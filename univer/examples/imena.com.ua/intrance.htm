@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+	<title>IMENA ControlPanel</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+	<link href="/img/index.css" rel="stylesheet" type="text/css">
+	<script language="JavaScript" src="/js/functions.js"></script>
+    <script language="JavaScript">
+    //<!--
+    
+    function delDomain(id, domain) {
+        if (window.confirm('Delete this entry?')) {
+            location.href = '/domains.php?id='+id+'&act=del';
+        }
+    }
+    
+    function renewDomain(id, domain) {
+        if (window.confirm('?')) {
+            location.href = '/domains.php?id='+id+'&act=renew';
+        }
+    }
+
+    // -->
+    </script>
+</head>
+
+<body bgcolor="#F9F8F8" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000" leftmargin="0" topmargin="0" marginwidth="0">
+<table width="100%" bgcolor="5778D9" border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td background="/img/logo_bg.jpg" style="background-repeat: repeat-y;"><a href="/"><img src="/img/logo.gif" alt="IMENA ControlPanel" width="161" height="41" border="0"></a></td>
+</tr>
+</table>
+<table width="100%" height="2" border="0" cellpadding="0" cellspacing="0" bgcolor="#7083E1">
+  <tr>
+    <td><img width=100 height=2 src="/img/tr.gif"></td>
+  </tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F9F8F8">
+<tr valign="top">
+	<td width=100%>
+		<table width=100% border=0 cellpadding="5" cellspacing="0">
+			<tr valign=top>
+				<td style="padding-left:20px"><BR><BR>
+<table width=400 align=center cellpadding=2 cellspacing=0 border=0 style="border: 1px solid #CCCCCC">
+<form action="/index.php" method=post name=lform>
+
+<tr height="42px">
+	<td colspan=2 bgcolor=CCCCCC class=head>&nbsp;<b style="font-size:150%;color:ffffff;">Entrance for clients:</b></td>
+</tr>
+<tr height="22px">
+	<td><b></td>
+	<td align=center >&nbsp;</td></tr>
+
+<tr height="32px">
+	<td>&nbsp;&nbsp;&nbsp;<b style="color:777777;">Login:</b></td>
+	<td><input type="text" name="auth[login]" id="login" value="" maxlength="50" size="30"></td></tr>
+<tr height="32px">
+	<td >&nbsp;&nbsp;&nbsp;<b style="color:777777;">Password:</b></td>
+	<td><input type="password" name="auth[password]" maxlength="50" size="30"></td>
+</tr>
+<tr height="32px">
+	<td >&nbsp;&nbsp;&nbsp;<b style="color:777777;">Language:</b></td>
+	<td><select name="auth[lng]">
+<option value="1">English</option><option value="2" selected>Russian</option></select>
+</td>
+</tr>
+<tr height="32px">
+    <td>&nbsp;&nbsp;&nbsp;<a href="http://www.imena.com.ua/remind.php" style="color:777777;">remind password</a></td>
+	<td align=right><input type=submit value="  Login  " class="button"> &nbsp;&nbsp;</td>
+</tr>
+</form>
+</table> 
+<script language=javascript>
+//<!--
+document.lform.login.focus();
+//-->
+</script><BR></td>
+			</tr>
+		</table>
+	</td>
+	<td width=250>
+	
+	</td>
+</tr>
+</table>
+<BR><BR>
+</body>
+</html>

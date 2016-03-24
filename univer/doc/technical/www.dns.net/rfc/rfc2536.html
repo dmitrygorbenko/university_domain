@@ -1,0 +1,304 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (WinNT; I) [Netscape]">
+   <meta name="Author" content="Mark Symons (bliksim9@yahoo.com)">
+   <title>RFC2536: DSA KEYs and SIGs in the Domain Name System (DNS)</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+This RFC has
+been HTMLized by hand by <a href="mailto:bliksim9@yahoo.com">Mark Symons</a>,
+and word-for-word correspondence to the source has not been verified.&nbsp;
+The <a href="ftp://ftp.is.co.za/rfc/rfc2536.txt">original RFC</a> should
+be regarded as being authoritative.
+<br>
+<hr WIDTH="100%">
+<br>&nbsp;
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=3 WIDTH="100%" >
+<tr>
+<td>Network Working Group</td>
+
+<td></td>
+
+<td>D. Eastlake</td>
+</tr>
+
+<tr>
+<td>Request for Comments: 2536</td>
+
+<td></td>
+
+<td>IBM</td>
+</tr>
+
+<tr>
+<td>Category: Standards Track</td>
+
+<td></td>
+
+<td>March 1999</td>
+</tr>
+</table>
+
+<center>
+<h1>
+DSA KEYs and SIGs in the Domain Name System (DNS)</h1></center>
+
+<h2>
+Status of this Memo</h2>
+This document specifies an Internet standards track protocol for the Internet
+community, and requests discussion and suggestions for improvements.&nbsp;
+Please refer to the current edition of the "Internet Official Protocol
+Standards" (STD 1) for the standardization state and status of this protocol.&nbsp;
+Distribution of this memo is unlimited.
+<br>&nbsp;
+<h2>
+Copyright Notice</h2>
+Copyright (C) The Internet Society (1999).&nbsp; All Rights Reserved.
+<br>&nbsp;
+<h2>
+<a NAME="Abstract"></a>Abstract</h2>
+A standard method for storing US Government Digital Signature Algorithm
+keys and signatures in the Domain Name System is described which utilizes
+DNS KEY and SIG resource records.
+<br>&nbsp;
+<h2>
+Table of Contents</h2>
+<b><a href="#Abstract">Abstract</a></b>
+<br><b><a href="#1">1. Introduction</a></b>
+<br><b><a href="#2">2. DSA KEY Resource Records</a></b>
+<br><b><a href="#3">3. DSA SIG Resource Records</a></b>
+<br><b><a href="#4">4. Performance Considerations</a></b>
+<br><b><a href="#5">5. Security Considerations</a></b>
+<br><b><a href="#6">6. IANA Considerations</a></b>
+<br><b><a href="#References">References</a></b>
+<br><b><a href="#Author">Author's Address</a></b>
+<br><b><a href="#Copyright">Full Copyright Statement</a></b>
+<br>&nbsp;
+<h2>
+<a NAME="1"></a>1. Introduction</h2>
+The Domain Name System (DNS) is the global hierarchical replicated distributed
+database system for Internet addressing, mail proxy, and other information.
+The DNS has been extended to include digital signatures and cryptographic
+keys as described in [<a href="rfc2535.html">RFC 2535</a>].&nbsp; Thus
+the DNS can now be secured and can be used for secure key distribution.
+<p>This document describes how to store US Government Digital Signature
+Algorithm (DSA) keys and signatures in the DNS.&nbsp; Familiarity with
+the US Digital Signature Algorithm is assumed [Schneier].&nbsp; Implementation
+of DSA is mandatory for DNS security.
+<br>&nbsp;
+<h2>
+<a NAME="2"></a>2. DSA KEY Resource Records</h2>
+DSA public keys are stored in the DNS as KEY RRs using algorithm number
+3 [<a href="rfc2535.html">RFC 2535</a>].&nbsp; The structure of the algorithm
+specific portion of the RDATA part of this RR is as shown below.&nbsp;
+These fields, from Q through Y are the "public key" part of the DSA KEY
+RR.
+<p>The period of key validity is not in the KEY RR but is indicated by
+the SIG RR(s) which signs and authenticates the KEY RR(s) at that domain
+name.
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Field&nbsp;&nbsp;&nbsp;&nbsp;
+Size</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -----&nbsp;&nbsp;&nbsp;&nbsp;
+----</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1&nbsp; octet</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Q&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+20&nbsp; octets</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+64 + T*8&nbsp; octets</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+64 + T*8&nbsp; octets</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+64 + T*8&nbsp; octets</tt>
+<p>As described in [FIPS 186] and [Schneier]: T is a key size parameter
+chosen such that 0 &lt;= T &lt;= 8.&nbsp; (The meaning for algorithm 3
+if the T octet is greater than 8 is reserved and the remainder of the RDATA
+portion may have a different format in that case.)&nbsp; Q is a prime number
+selected at key generation time such that 2**159 &lt; Q &lt; 2**160 so
+Q is always 20 octets long and, as with all other fields, is stored in
+"big-endian" network order.&nbsp; P, G, and Y are calculated as directed
+by the FIPS 186 key generation algorithm [Schneier].&nbsp; P is in the
+range 2**(511+64T) &lt; P &lt; 2**(512+64T) and so is 64 + 8*T octets long.&nbsp;
+G and Y are quantities modulus P and so can be up to the same length as
+P and are allocated fixed size fields with the same number of octets as
+P.
+<p>During the key generation process, a random number X must be generated
+such that 1 &lt;= X &lt;= Q-1.&nbsp; X is the private key and is used in
+the final step of public key generation where Y is computed as
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Y = G**X
+mod P</tt>
+<br>&nbsp;
+<h2>
+<a NAME="3"></a>3. DSA SIG Resource Records</h2>
+The signature portion of the SIG RR RDATA area, when using the US Digital
+Signature Algorithm, is shown below with fields in the order they occur.&nbsp;
+See [<a href="rfc2535.html">RFC 2535</a>] for fields in the SIG RR RDATA
+which precede the signature itself.
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Field&nbsp;&nbsp;&nbsp;&nbsp;
+Size</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -----&nbsp;&nbsp;&nbsp;&nbsp;
+----</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1 octet</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+20 octets</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+20 octets</tt>
+<p>The data signed is determined as specified in [<a href="rfc2535.html">RFC
+2535</a>].&nbsp; Then the following steps are taken, as specified in [FIPS
+186], where Q, P, G, and Y are as specified in the public key [Schneier]:
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hash = SHA-1 ( data )
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Generate a random K such
+that 0 &lt; K &lt; Q.
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R = ( G**K mod P ) mod Q
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S = ( K**(-1) * (hash + X*R)
+) mod Q
+<p>Since Q is 160 bits long, R and S can not be larger than 20 octets,
+which is the space allocated.
+<p>T is copied from the public key.&nbsp; It is not logically necessary
+in the SIG but is present so that values of T > 8 can more conveniently
+be used as an escape for extended versions of DSA or other algorithms as
+later specified.
+<br>&nbsp;
+<h2>
+<a NAME="4"></a>4. Performance Considerations</h2>
+General signature generation speeds are roughly the same for RSA [<a href="rfc2537.html">RFC
+2537</a>] and DSA.&nbsp; With sufficient pre-computation, signature generation
+with DSA is faster than RSA.&nbsp; Key generation is also faster for DSA.
+However, signature verification is an order of magnitude slower than RSA
+when the RSA public exponent is chosen to be small as is recommended for
+KEY RRs used in domain name system (DNS) data authentication.
+<p>Current DNS implementations are optimized for small transfers, typically
+less than 512 bytes including overhead.&nbsp; While larger transfers will
+perform correctly and work is underway to make larger transfers more efficient,
+it is still advisable at this time to make reasonable efforts to minimize
+the size of KEY RR sets stored within the DNS consistent with adequate
+security.&nbsp; Keep in mind that in a secure zone, at least one authenticating
+SIG RR will also be returned.
+<br>&nbsp;
+<h2>
+<a NAME="5"></a>5. Security Considerations</h2>
+Many of the general security consideration in [<a href="rfc2535.html">RFC
+2535</a>] apply.&nbsp; Keys retrieved from the DNS should not be trusted
+unless (1) they have been securely obtained from a secure resolver or independently
+verified by the user and (2) this secure resolver and secure obtainment
+or independent verification conform to security policies acceptable to
+the user.&nbsp; As with all cryptographic algorithms, evaluating the necessary
+strength of the key is essential and dependent on local policy.
+<p>The key size limitation of a maximum of 1024 bits ( T = 8 ) in the current
+DSA standard may limit the security of DSA.&nbsp; For particularly critical
+applications, implementors are encouraged to consider the range of available
+algorithms and key sizes.
+<p>DSA assumes the ability to frequently generate high quality random numbers.&nbsp;
+See [<a href="ftp://ftp.is.co.za/rfc/rfc1750.txt">RFC 1750</a>] for guidance.&nbsp;
+DSA is designed so that if manipulated rather than random numbers are used,
+very high bandwidth covert channels are possible.&nbsp; See [Schneier]
+and more recent research.&nbsp; The leakage of an entire DSA private key
+in only two DSA signatures has been demonstrated.&nbsp; DSA provides security
+only if trusted implementations, including trusted random number generation,
+<br>are used.
+<br>&nbsp;
+<h2>
+<a NAME="6"></a>6. IANA Considerations</h2>
+Allocation of meaning to values of the T parameter that are not defined
+herein requires an IETF standards actions.&nbsp; It is intended that values
+unallocated herein be used to cover future extensions of the DSS standard.
+<br>&nbsp;
+<h2>
+<a NAME="References"></a>References</h2>
+
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=2 WIDTH="100%" >
+<tr ALIGN=LEFT VALIGN=TOP>
+<td WIDTH="10%">[FIPS 186]</td>
+
+<td>U.S. Federal Information Processing Standard: Digital Signature Standard.
+<br>&nbsp;</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP>[<a href="ftp://ftp.is.co.za/rfc/rfc1034.txt">RFC
+1034</a>]</td>
+
+<td>Mockapetris, P., "Domain Names - Concepts and&nbsp; Facilities", STD
+13, RFC 1034, November 1987.
+<br>&nbsp;</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>[<a href="rfc1035/rfc1035.html">RFC 1035</a>]</td>
+
+<td>Mockapetris, P., "Domain Names - Implementation and Specification",
+STD 13, RFC 1035, November 1987.
+<br>&nbsp;</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>[<a href="ftp://ftp.is.co.za/rfc/rfc1750.txt">RFC 1750</a>]</td>
+
+<td>Eastlake, D., Crocker, S. and J. Schiller, "Randomness Recommendations
+for Security", RFC 1750, December 1994.
+<br>&nbsp;</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>[<a href="rfc2535.html">RFC 2535</a>]</td>
+
+<td>Eastlake, D., "Domain Name System Security Extensions", RFC 2535, March
+1999.
+<br>&nbsp;</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>[<a href="rfc2537.html">RFC 2537</a>]</td>
+
+<td>Eastlake, D., "RSA/MD5 KEYs and SIGs in the Domain Name System (DNS)",
+RFC 2537, March 1999.
+<br>&nbsp;</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP>[Schneier]</td>
+
+<td>Schneier, B., "Applied Cryptography Second Edition: protocols, algorithms,
+and source code in C", 1996.
+<br>&nbsp;</td>
+</tr>
+</table>
+
+<h2>
+<a NAME="Author"></a>Author's Address</h2>
+Donald E. Eastlake 3rd
+<br>IBM
+<br>65 Shindegan Hill Road, RR #1
+<br>Carmel, NY 10512
+<p>Phone:&nbsp;&nbsp; +1-914-276-2668(h)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +1-914-784-7913(w)
+<br>Fax:&nbsp;&nbsp;&nbsp;&nbsp; +1-914-784-3833(w)
+<br>EMail:&nbsp;&nbsp; dee3@us.ibm.com
+<br>&nbsp;
+<h2>
+<a NAME="Copyright"></a>Full Copyright Statement</h2>
+Copyright (C) The Internet Society (1999).&nbsp; All Rights Reserved.
+<p>This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it or
+assist in its implementation may be prepared, copied, published and distributed,
+in whole or in part, without restriction of any kind, provided that the
+above copyright notice and this paragraph are included on all such copies
+and derivative works.&nbsp; However, this document itself may not be modified
+in any way, such as by removing the copyright notice or references to the
+Internet Society or other Internet organizations, except as needed for
+the purpose of developing Internet standards in which case the procedures
+for copyrights defined in the Internet Standards process must be followed,
+or as required to translate it into languages other than English.
+<p>The limited permissions granted above are perpetual and will not be
+revoked by the Internet Society or its successors or assigns.
+<p>This document and the information contained herein is provided on an
+"AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING TASK
+FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE
+ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR
+A PARTICULAR PURPOSE.
+</body>
+</html>

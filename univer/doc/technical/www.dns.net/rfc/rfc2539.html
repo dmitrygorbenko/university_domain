@@ -1,0 +1,338 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (WinNT; I) [Netscape]">
+   <meta name="Author" content="Mark Symons (bliksim9@yahoo.com)">
+   <title>RFC2539: Storage of Diffie-Hellman Keys in the Domain Name System (DNS)</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+This
+RFC has been HTMLized by hand by <a href="mailto:bliksim9@yahoo.com">Mark
+Symons</a>, and word-for-word correspondence to the source has not been
+verified. The <a href="ftp://ftp.is.co.za/rfc/rfc2539.txt">original RFC</a>
+should be regarded as being authoritative.
+<br>
+<hr WIDTH="100%">
+<br>&nbsp;
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=3 WIDTH="100%" >
+<tr>
+<td>Network Working Group</td>
+
+<td></td>
+
+<td>D. Eastlake</td>
+</tr>
+
+<tr>
+<td>Request for Comments: 2539</td>
+
+<td></td>
+
+<td>IBM</td>
+</tr>
+
+<tr>
+<td>Category: Standards Track</td>
+
+<td></td>
+
+<td>March 1999</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<center>
+<h1>
+Storage of Diffie-Hellman Keys in the Domain Name System (DNS)</h1></center>
+
+<h2>
+Status of this Memo</h2>
+This document specifies an Internet standards track protocol for the Internet
+community, and requests discussion and suggestions for improvements.&nbsp;
+Please refer to the current edition of the "Internet Official Protocol
+Standards" (STD 1) for the standardization state and status of this protocol.&nbsp;
+Distribution of this memo is unlimited.
+<br>&nbsp;
+<h2>
+Copyright Notice</h2>
+Copyright (C) The Internet Society (1999).&nbsp; All Rights Reserved.
+<br>&nbsp;
+<h2>
+<a NAME="Abstract"></a>Abstract</h2>
+A standard method for storing Diffie-Hellman keys in the Domain Name System
+is described which utilizes DNS KEY resource records.
+<br>&nbsp;
+<h2>
+<a NAME="Acknowledgements"></a>Acknowledgements</h2>
+Part of the format for Diffie-Hellman keys and the description thereof
+was taken from a work in progress by:
+<p>&nbsp;&nbsp; Ashar Aziz &lt;ashar.aziz@eng.sun.com>
+<br>&nbsp;&nbsp; Tom Markson &lt;markson@incog.com>
+<br>&nbsp;&nbsp; Hemma Prafullchandra &lt;hemma@eng.sun.com>
+<p>In addition, the following person provided useful comments that have
+been incorporated:
+<p>&nbsp;&nbsp; Ran Atkinson &lt;rja@inet.org>
+<br>&nbsp;&nbsp; Thomas Narten &lt;narten@raleigh.ibm.com>
+<br>&nbsp;
+<h2>
+Table of Contents</h2>
+<b><a href="#Abstract">Abstract</a></b>
+<br><b><a href="#Acknowledgements">Acknowledgements</a></b>
+<br><b><a href="#1">1. Introduction</a></b>
+<br>&nbsp;&nbsp;&nbsp; <a href="#1.1">1.1 About This Document</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#1.2">1.2 About Diffie-Hellman</a>
+<br><b><a href="#2">2. Diffie-Hellman KEY Resource Records</a></b>
+<br><b><a href="#3">3. Performance Considerations</a></b>
+<br><b><a href="#4">4. IANA Considerations</a></b>
+<br><b><a href="#5">5. Security Considerations</a></b>
+<br><b><a href="#References">References</a></b>
+<br><b><a href="#Author">Author's Address</a></b>
+<br><b><a href="#Appendix A">Appendix A: Well known prime/generator pairs</a></b>
+<br>&nbsp;&nbsp; <a href="#A.1">A.1. Well-Known Group 1:&nbsp; A 768 bit
+prime</a>
+<br>&nbsp;&nbsp; <a href="#A.2">A.2. Well-Known Group 2:&nbsp; A 1024 bit
+prime</a>
+<br><b><a href="#Copyright">Full Copyright Notice</a></b>
+<br>&nbsp;
+<h2>
+<a NAME="1"></a>1. Introduction</h2>
+The Domain Name System (DNS) is the current global hierarchical replicated
+distributed database system for Internet addressing, mail proxy, and similar
+information. The DNS has been extended to include digital signatures and
+cryptographic keys as described in [<a href="rfc2535.html">RFC 2535</a>].
+Thus the DNS can now be used for secure key distribution.
+<br>&nbsp;
+<h3>
+<a NAME="1.1"></a>1.1 About This Document</h3>
+This document describes how to store Diffie-Hellman keys in the DNS. Familiarity
+with the Diffie-Hellman key exchange algorithm is assumed [Schneier].
+<br>&nbsp;
+<h3>
+<a NAME="1.2"></a>1.2 About Diffie-Hellman</h3>
+Diffie-Hellman requires two parties to interact to derive keying information
+which can then be used for authentication.&nbsp; Since DNS SIG RRs are
+primarily used as stored authenticators of zone information for many different
+resolvers, no Diffie-Hellman algorithm SIG RR is defined. For example,
+assume that two parties have local secrets "i" and "j".&nbsp; Assume they
+each respectively calculate X and Y as follows:
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+X = g**i ( mod p ) Y = g**j ( mod p )
+<p>They exchange these quantities and then each calculates a Z as follows:
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Zi = Y**i ( mod p ) Zj = X**j ( mod p )
+<p>shared secret between the two parties that an adversary who does not
+know i or j will not be able to learn from the exchanged messages (unless
+the adversary can derive i or j by performing a discrete logarithm mod
+p which is hard for strong p and g).
+<p>The private key for each party is their secret i (or j).&nbsp; The public
+key is the pair p and g, which must be the same for the parties, and their
+individual X (or Y).
+<br>&nbsp;
+<h2>
+<a NAME="2"></a>2. Diffie-Hellman KEY Resource Records</h2>
+Diffie-Hellman keys are stored in the DNS as KEY RRs using algorithm number
+2.&nbsp; The structure of the RDATA portion of this RR is as shown below.&nbsp;
+The first 4 octets, including the flags, protocol, and algorithm fields
+are common to all KEY RRs as described in [<a href="rfc2535.html">RFC 2535</a>].&nbsp;
+The remainder, from prime length through public value is the "public key"
+part of the KEY RR. The period of key validity is not in the KEY RR but
+is indicated by the SIG RR(s) which signs and authenticates the KEY RR(s)
+at that domain name.
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3</tt>
+<br><tt>&nbsp; 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
+8 9 0 1</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</tt>
+<br><tt>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+KEY flags&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
+protocol&nbsp;&nbsp; |&nbsp; algorithm=2&nbsp; |</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</tt>
+<br><tt>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; prime length (or flag)&nbsp;&nbsp;&nbsp;
+|&nbsp; prime (p) (or special)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</tt>
+<br><tt>&nbsp;/&nbsp; prime (p)&nbsp; (variable length) |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+generator length&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</tt>
+<br><tt>&nbsp;| generator (g) (variable length)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</tt>
+<br><tt>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; public value length&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| public value (variable length)/</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</tt>
+<br><tt>&nbsp;/&nbsp; public value (g^i mod p)&nbsp;&nbsp;&nbsp; (variable
+length)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</tt>
+<p>Prime length is length of the Diffie-Hellman prime (p) in bytes if it
+is 16 or greater.&nbsp; Prime contains the binary representation of the
+Diffie-Hellman prime with most significant byte first (i.e., in network
+order). If "prime length" field is 1 or 2, then the "prime" field is actually
+an unsigned index into a table of 65,536 prime/generator pairs and the
+generator length SHOULD be zero.&nbsp; See Appedix A for defined table
+entries and Section 4 for information on allocating additional table entries.&nbsp;
+The meaning of a zero or 3 through 15 value for "prime length" is reserved.
+<p>Generator length is the length of the generator (g) in bytes. Generator
+is the binary representation of generator with most significant byte first.&nbsp;
+PublicValueLen is the Length of the Public Value (g**i (mod p)) in bytes.&nbsp;
+PublicValue is the binary representation of the DH public value with most
+significant byte first.
+<p>The corresponding algorithm=2 SIG resource record is not used so no
+format for it is defined.
+<br>&nbsp;
+<h2>
+<a NAME="3"></a>3. Performance Considerations</h2>
+Current DNS implementations are optimized for small transfers, typically
+less than 512 bytes including overhead.&nbsp; While larger transfers will
+perform correctly and work is underway to make larger transfers more efficient,
+it is still advisable to make reasonable efforts to minimize the size of
+KEY RR sets stored within the DNS consistent with adequate security.&nbsp;
+Keep in mind that in a secure zone, an authenticating SIG RR will also
+be returned.
+<br>&nbsp;
+<h2>
+<a NAME="4"></a>4. IANA Considerations</h2>
+Assignment of meaning to Prime Lengths of 0 and 3 through 15 requires an
+IETF consensus.
+<p>Well known prime/generator pairs number 0x0000 through 0x07FF can only
+be assigned by an IETF standards action and this Proposed Standard assigns
+0x0001 through 0x0002. Pairs number 0s0800 through 0xBFFF can be assigned
+based on RFC documentation.&nbsp; Pairs number 0xC000 through 0xFFFF are
+available for private use and are not centrally coordinated. Use of such
+private pairs outside of a closed environment may result in conflicts.
+<br>&nbsp;
+<h2>
+<a NAME="5"></a>5. Security Considerations</h2>
+Many of the general security consideration in [<a href="rfc2535.html">RFC
+2535</a>] apply.&nbsp; Keys retrieved from the DNS should not be trusted
+unless (1) they have been securely obtained from a secure resolver or independently
+verified by the user and (2) this secure resolver and secure obtainment
+or independent verification conform to security policies acceptable to
+the user.&nbsp; As with all cryptographic algorithms, evaluating the necessary
+strength of the key is important and dependent on local policy.
+<p>In addition, the usual Diffie-Hellman key strength considerations apply.
+(p-1)/2 should also be prime, g should be primitive mod p, p should be
+"large", etc.&nbsp; [Schneier]
+<br>&nbsp;
+<br>&nbsp;
+<h2>
+<a NAME="References"></a>References</h2>
+
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=2 WIDTH="100%" >
+<tr ALIGN=LEFT VALIGN=TOP>
+<td WIDTH="10%">[<a href="ftp://ftp.is.co.za/rfc/rfc1034.txt">RFC1034</a>]</td>
+
+<td>Mockapetris, P., "Domain Names - Concepts and Facilities", STD 13,
+RFC 1034, November 1987.</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>[<a href="rfc1035/rfc1035.html">RFC1035</a>]&nbsp;</td>
+
+<td>Mockapetris, P., "Domain Names - Implementation and Specifications",
+STD 13, RFC 1035, November 1987.</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>[<a href="rfc2535.html">RFC2535</a>]</td>
+
+<td>Eastlake, D., "Domain Name System Security Extensions", RFC 2535, March
+1999.&nbsp;</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP>[Schneier]</td>
+
+<td>Bruce Schneier, "Applied Cryptography: Protocols, Algorithms, and Source
+Code in C", 1996, John Wiley and Sons</td>
+</tr>
+</table>
+
+<h2>
+<a NAME="Author"></a>Author's Address</h2>
+Donald E. Eastlake 3rd
+<br>IBM
+<br>65 Shindegan Hill Road, RR #1
+<br>Carmel, NY 10512
+<p>Phone:&nbsp;&nbsp; +1-914-276-2668(h)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +1-914-784-7913(w)
+<br>Fax:&nbsp;&nbsp;&nbsp;&nbsp; +1-914-784-3833(w)
+<br>EMail:&nbsp;&nbsp; <a href="mailto:dee3@us.ibm.com">dee3@us.ibm.com</a>
+<br>&nbsp;
+<br>&nbsp;
+<h2>
+<a NAME="Appendix A"></a>Appendix A: Well known prime/generator pairs</h2>
+These numbers are copied from the IPSEC effort where the derivation of
+these values is more fully explained and additional information is available.&nbsp;
+Richard Schroeppel performed all the mathematical and computational work
+for this appendix.
+<br>&nbsp;
+<h3>
+<a NAME="A.1"></a>A.1. Well-Known Group 1:&nbsp; A 768 bit prime</h3>
+The prime is 2^768 - 2^704 - 1 + 2^64 * { [2^638 pi] + 149686 }.&nbsp;
+Its decimal value is
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 155251809230070893513091813125848175563133404943451431320235</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 119490296623994910210725866945387659164244291000768028886422</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 915080371891804634263272761303128298374438082089019628850917</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0691316593175367469551763119843371637221007210577919</tt>
+<p>Prime modulus: Length (32 bit words): 24, Data (hex):
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FFFFFFFF FFFFFFFF
+C90FDAA2 2168C234 C4C6628B 80DC1CD1</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 29024E08 8A67CC74
+020BBEA6 3B139B22 514A0879 8E3404DD</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EF9519B3 CD3A431B
+302B0A6D F25F1437 4FE1356D 6D51C245</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; E485B576 625E7EC6
+F44C42E9 A63A3620 FFFFFFFF FFFFFFFF</tt>
+<p>Generator: Length (32 bit words): 1, Data (hex): 2
+<br>&nbsp;
+<h3>
+<a NAME="A.2"></a>A.2. Well-Known Group 2:&nbsp; A 1024 bit prime</h3>
+The prime is 2^1024 - 2^960 - 1 + 2^64 * { [2^894 pi] + 129093 }. Its decimal
+value is
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 179769313486231590770839156793787453197860296048756011706444</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 423684197180216158519368947833795864925541502180565485980503</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 646440548199239100050792877003355816639229553136239076508735</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 759914822574862575007425302077447712589550957937778424442426</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 617334727629299387668709205606050270810842907692932019128194</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 467627007</tt>
+<p>Prime modulus:&nbsp; Length (32 bit words): 32, Data (hex):
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FFFFFFFF FFFFFFFF
+C90FDAA2 2168C234 C4C6628B 80DC1CD1</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 29024E08 8A67CC74
+020BBEA6 3B139B22 514A0879 8E3404DD</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EF9519B3 CD3A431B
+302B0A6D F25F1437 4FE1356D 6D51C245</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; E485B576 625E7EC6
+F44C42E9 A637ED6B 0BFF5CB6 F406B7ED</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EE386BFB 5A899FA5
+AE9F2411 7C4B1FE6 49286651 ECE65381</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FFFFFFFF FFFFFFFF</tt>
+<p>Generator: Length (32 bit words):&nbsp; 1, Data (hex): 2
+<br>&nbsp;
+<br>&nbsp;
+<h2>
+<a NAME="Copyright"></a>Full Copyright Statement</h2>
+Copyright (C) The Internet Society (1999).&nbsp; All Rights Reserved.
+<p>This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it or
+assist in its implementation may be prepared, copied, published and distributed,
+in whole or in part, without restriction of any kind, provided that the
+above copyright notice and this paragraph are included on all such copies
+and derivative works.&nbsp; However, this document itself may not be modified
+in any way, such as by removing the copyright notice or references to the
+Internet Society or other Internet organizations, except as needed for
+the purpose of developing Internet standards in which case the procedures
+for copyrights defined in the Internet Standards process must be followed,
+or as required to translate it into languages other than
+<br>English.
+<p>The limited permissions granted above are perpetual and will not be
+revoked by the Internet Society or its successors or assigns.
+<p>This document and the information contained herein is provided on an
+"AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING TASK
+FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE
+ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR
+A PARTICULAR PURPOSE.
+</body>
+</html>

@@ -1,0 +1,62 @@
+! Configuration for AS2030, customer of 3007 & 4007
+! preferes all trafic through 3007 (even from 4007 & customers),
+! asking 3007 to announce him to peers;
+! using 4007 as backup only - by using the "localpref"
+!
+! Setting max pref to 100
+!
+! The Import Policy
+!
+!
+no ip prefix-list pl100
+ip prefix-list pl100 permit 0.0.0.0/0 le 32
+!
+no route-map AS3007-IMPORT
+!
+route-map AS3007-IMPORT permit 1
+ match ip address prefix-list pl100
+ set local-preference 90
+!
+router bgp 2030
+neighbor 10.3.15.2 route-map AS3007-IMPORT in
+!
+!
+no ip prefix-list pl101
+ip prefix-list pl101 permit 10.4.192.0/19
+ip prefix-list pl101 deny 0.0.0.0/0 le 32
+!
+no route-map AS4007-IMPORT
+!
+route-map AS4007-IMPORT permit 1
+ match ip address prefix-list pl101
+ set local-preference 10
+!
+router bgp 2030
+neighbor 10.4.192.2 route-map AS4007-IMPORT in
+!
+! The Export Policy
+!
+!
+no ip prefix-list pl102
+ip prefix-list pl102 permit 10.20.0.0/24
+ip prefix-list pl102 permit 10.187.65.0/24
+ip prefix-list pl102 deny 0.0.0.0/0 le 32
+!
+no route-map AS3007-EXPORT
+!
+route-map AS3007-EXPORT permit 1
+ match ip address prefix-list pl102
+ set community  3007:20
+!
+router bgp 2030
+neighbor 10.3.15.2 route-map AS3007-EXPORT out
+!
+!
+no route-map AS4007-EXPORT
+!
+route-map AS4007-EXPORT permit 1
+ match ip address prefix-list pl102
+ set community  4007:30
+!
+router bgp 2030
+neighbor 10.4.192.2 route-map AS4007-EXPORT out

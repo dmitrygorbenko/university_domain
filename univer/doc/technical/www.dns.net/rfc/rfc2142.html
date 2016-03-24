@@ -1,0 +1,425 @@
+<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+
+   <META NAME="Author" CONTENT="Mark Symons (bliksim9@yahoo.com)">
+   <TITLE>RFC2142: Mailbox Names For Common Services, Roles &amp; Functions</TITLE>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#FF0000">
+This RFC
+has been HTMLized by hand by <A HREF="mailto:bliksim9@yahoo.com">Mark
+Symons</A>, and word-for-word correspondence to the source has not been
+<BR>verified.&nbsp; A table of contents has been added.&nbsp; One typo
+has been corrected - a reference to RFC1034 that should be to RFC1035.
+However, the <A HREF="ftp://ftp.is.co.za/rfc/rfc2142.txt">original RFC</A>
+should still be regarded as being authoritative.
+<BR>
+<HR WIDTH="100%">
+<BR>&nbsp;
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=3 WIDTH="100%">
+<TR>
+<TD>Network Working Group</TD>
+
+<TD></TD>
+
+<TD>D. Crocker</TD>
+</TR>
+
+<TR>
+<TD>Request for Comments: 2142</TD>
+
+<TD></TD>
+
+<TD>Internet Mail Consortium</TD>
+</TR>
+
+<TR>
+<TD>Category: Standards Track</TD>
+
+<TD></TD>
+
+<TD>May 1997</TD>
+</TR>
+</TABLE>
+
+
+<H1>
+MAILBOX NAMES FOR COMMON SERVICES, ROLES AND FUNCTIONS</H1>
+
+<H2>
+Status of this Memo</H2>
+This document specifies an Internet standards track protocol for the Internet
+community, and requests discussion and&nbsp; suggestions for improvements.&nbsp;
+Please refer to the current edition of the "Internet Official Protocol
+Standards" (STD 1) for the standardization state and status of this protocol.&nbsp;
+Distribution of this memo is unlimited.
+<BR>&nbsp;
+<H2>
+ABSTRACT</H2>
+This specification enumerates and describes Internet mail addresses (mailbox
+name @ host reference) to be used when contacting personnel at an organization.&nbsp;
+Mailbox names are provided for both operations and business functions.&nbsp;
+Additional mailbox names and aliases are not prohibited, but organizations
+which support email exchanges with the Internet are encouraged to support
+AT LEAST each mailbox name for which the associated function exists within
+the organization.
+<BR>&nbsp;
+<H2>
+CONTENTS</H2>
+<A HREF="#1">1.&nbsp; RATIONALE AND SCOPE</A>
+<BR><A HREF="#2">2.&nbsp; INVARIANTS</A>
+<BR><A HREF="#3">3.&nbsp; BUSINESS-RELATED MAILBOX NAMES</A>
+<BR><A HREF="#4">4.&nbsp; NETWORK OPERATIONS MAILBOX NAMES</A>
+<BR><A HREF="#5">5.&nbsp; SUPPORT MAILBOX NAMES FOR SPECIFIC INTERNET SERVICES</A>
+<BR><A HREF="#6">6.&nbsp; MAILING LIST ADMINISTRATION MAILBOX</A>
+<BR><A HREF="#7">7.&nbsp; DOMAIN NAME SERVICE ADMINISTRATION MAILBOX</A>
+<BR><A HREF="#8">8.&nbsp; AUTONOMOUS SYSTEM MAILBOX</A>
+<BR><A HREF="#9">9.&nbsp; SECURITY CONSIDERATIONS</A>
+<BR><A HREF="#10">10. REFERENCES</A>
+<BR><A HREF="#11">11. ACKNOWLEDGEMENTS</A>
+<BR><A HREF="#12">12. AUTHOR'S ADDRESS</A>
+<BR>&nbsp;
+<H2>
+<A NAME="1"></A>1.&nbsp; RATIONALE AND SCOPE</H2>
+Various Internet documents have specified mailbox names to be used when
+reaching the operators of the new service; for example, [<A HREF="ftp://ftp.is.co.za/rfc/rfc822.txt">RFC822</A>
+6.3, C.6] requires the presence of a &lt;POSTMASTER@domain> mailbox name
+on all hosts that have an SMTP server.&nbsp; Other protocols have defacto
+standards for well known mailbox names, such as &lt;USENET@domain> for
+NNTP (see [<A HREF="ftp://ftp.is.co.za/rfc/rfc977.txt">RFC977</A>]), and
+&lt;WEBMASTER@domain> for HTTP (see [HTTP]). Defacto standards also exist
+for well known mailbox names which have nothing to do with a particular
+protocol, e.g., &lt;ABUSE@domain> and &lt;TROUBLE@domain>.
+
+<P>
+The purpose of this memo is to aggregate and specify the basic set of
+mailbox names which organizations need to support.&nbsp; Most organizations
+do not need to support the full set of mailbox names defined here, since
+not every organization will implement the all of the associated services.&nbsp;
+However, if a given service is offerred, then the associated mailbox name(es)
+must be supported, resulting in delivery to a recipient appropriate for
+the referenced service or role.
+
+<P>
+If a host is not configured to accept mail directly, but it implements
+a service for which this specification defines a mailbox name, that host
+must have an MX RR set (see [<A HREF="ftp://ftp.is.co.za/rfc/rfc974.txt">RFC974</A>])
+and the mail exchangers specified by this RR set must recognize the referenced
+host's domain name as "local" for the purpose of accepting mail bound for
+the defined mailbox name.&nbsp; Note that this is true even if the advertised
+domain name is not the same as the host's domain name; for example, if
+an NNTP server's host name is DATA.RAMONA.VIX.COM yet it advertises the
+domain name VIX.COM in its "Path:" headers, then mail must be deliverable
+to both &lt;USENET@VIX.COM> and &lt;USENET@DATA.RAMONA.VIX.COM>, even though
+these addresses might be delivered to different final destinations.
+
+<P>
+The scope of a well known mailbox name is its domain name.&nbsp; Servers
+accepting mail on behalf of a domain must accept and correctly process
+mailbox names for that domain, even if the server, itself, does not support
+the associated service.&nbsp; So, for example, if an NNTP server advertises
+the organization's top level domain in "Path:" headers (see [RFC977]) the
+mail exchangers for that top level domain must accept mail to &lt;USENET@domain>
+even if the mail exchanger hosts do not, themselves, serve the NNTP protocol.
+<BR>&nbsp;
+<H2>
+<A NAME="2"></A>2.&nbsp; INVARIANTS</H2>
+For well known names that are not related to specific protocols, only the
+organization's top level domain name are required to be valid.  For example,
+if an Internet service provider's domain name is COMPANY.COM, then the
+&lt;ABUSE@COMPANY.COM> address must be valid and supported, even though
+the customers whose activity generates complaints use hosts with more specific
+domain names like SHELL1.COMPANY.COM.&nbsp; Note, however, that it is valid
+and encouraged to support mailbox names for sub-domains, as appropriate.
+
+<P>
+Mailbox names must be recognized independent of character case.&nbsp;
+For example, POSTMASTER, postmaster, Postmaster, PostMaster, and even PoStMaStEr
+are to be treated the same, with delivery to the same mailbox.
+
+<P>
+Implementations of these well known names need to take account of the
+expectations of the senders who will use them.&nbsp; Sending back an automatic
+mail acknowledgement is usually helpful (though we suggest caution against
+the possibility of "duelling mail robots" and the resulting mail loops).
+<BR>&nbsp;
+<H2>
+<A NAME="3"></A>3.&nbsp; BUSINESS-RELATED MAILBOX NAMES</H2>
+
+
+<P>
+<BR>These names are related to an organization's line-of-business activities.&nbsp;
+The INFO name is often tied to an autoresponder, with a range of standard
+files available.
+
+<P>
+<tt>MAILBOX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AREA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+USAGE</tt>
+<BR><tt>-----------&nbsp;&nbsp;&nbsp; ----------------&nbsp;&nbsp;&nbsp;
+---------------------------</tt>
+<BR><tt>INFO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Marketing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Packaged
+information about the</tt>
+<BR><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+organization, products, and/or</tt>
+<BR><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+services, as appropriate</tt>
+<BR><tt>MARKETING&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Marketing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Product marketing and</tt>
+<BR><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+marketing communications</tt>
+<BR><tt>SALES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sales&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Product purchase information</tt>
+<BR><tt>SUPPORT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Customer Service&nbsp;&nbsp;&nbsp;
+Problems with product or</tt>
+<BR><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+service</tt>
+<BR>&nbsp;
+<BR>&nbsp;
+<H2>
+<A NAME="4"></A>4.&nbsp; NETWORK OPERATIONS MAILBOX NAMES</H2>
+Operations addresses are intended to provide recourse for customers, providers
+and others who are experiencing difficulties with the organization's Internet
+service.
+
+<P>
+<tt>MAILBOX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AREA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+USAGE</tt>
+<BR><tt>-----------&nbsp;&nbsp;&nbsp; ----------------&nbsp;&nbsp;&nbsp;
+---------------------------</tt>
+<BR><tt>ABUSE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Customer
+Relations&nbsp; Inappropriate public behaviour</tt>
+<BR><tt>NOC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Network Operations&nbsp; Network infrastructure</tt>
+<BR><tt>SECURITY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Network Security&nbsp;&nbsp;&nbsp;
+Security bulletins or queries</tt>
+<BR>&nbsp;
+<BR>&nbsp;
+<H2>
+<A NAME="5"></A>5.&nbsp; SUPPORT MAILBOX NAMES FOR SPECIFIC INTERNET SERVICES</H2>
+For major Internet protocol services, there is a mailbox defined for receiving
+queries and reports.&nbsp; (Synonyms are included, here, due to their extensive
+installed base.)
+
+<P>
+<tt>MAILBOX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SERVICE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SPECIFICATIONS</tt>
+<BR><tt>-----------&nbsp;&nbsp;&nbsp; ----------------&nbsp;&nbsp;&nbsp;
+---------------------------</tt>
+<BR><tt>POSTMASTER&nbsp;&nbsp;&nbsp;&nbsp; SMTP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[<A HREF="ftp://ftp.is.co.za/rfc/rfc821.txt">RFC821</A>], [<A HREF="ftp://ftp.is.co.za/rfc/rfc822.txt">RFC822</A>]</tt>
+<BR><tt>HOSTMASTER&nbsp;&nbsp;&nbsp;&nbsp; DNS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[<A HREF="ftp://ftp.is.co.za/rfc/rfc1033.txt">RFC1033</A>-<A HREF="rfc1035/rfc1035.html">RFC1035</A>]</tt>
+<BR><tt>USENET&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NNTP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[<A HREF="ftp://ftp.is.co.za/rfc/rfc977.txt">RFC977</A>]</tt>
+<BR><tt>NEWS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NNTP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Synonym for USENET</tt>
+<BR><tt>WEBMASTER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[<A HREF="ftp://ftp.is.co.za/rfc/rfc2068.txt">RFC2068</A>]</tt>
+<BR><tt>WWW&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+HTTP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Synonym for WEBMASTER</tt>
+<BR><tt>UUCP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+UUCP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[<A HREF="ftp://ftp.is.co.za/rfc/rfc976.txt">RFC976</A>]</tt>
+<BR><tt>FTP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+FTP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[<A HREF="ftp://ftp.is.co.za/rfc/rfc959.txt">RFC959</A>]</tt>
+<BR>&nbsp;
+<H2>
+<A NAME="6"></A>6.&nbsp; MAILING LIST ADMINISTRATION MAILBOX</H2>
+Mailing lists have an administrative mailbox name to which add/drop requests
+and other meta-queries can be sent.
+
+<P>
+For a mailing list whose submission mailbox name is:
+
+<P>
+&nbsp;&nbsp; &lt;LIST@DOMAIN>
+
+<P>
+there MUST be the administrative mailbox name:
+
+<P>
+&nbsp;&nbsp; &lt;LIST-REQUEST@DOMAIN>
+
+<P>
+Distribution List management software, such as MajorDomo and Listserv,
+also have a single mailbox name associated with the software on that system
+-- usually the name of the software -- rather than a particular list on
+that system.&nbsp; Use of such mailbox names requires participants to know
+the type of list software employed at the site.&nbsp; This is problematic.&nbsp;
+Consequently:
+
+<P>
+&nbsp;&nbsp; LIST-SPECIFIC (-REQUEST) MAILBOX NAMES ARE REQUIRED,
+<BR>&nbsp;&nbsp; INDEPENDENT OF THE AVAILABILITY OF GENERIC LIST SOFTWARE
+<BR>&nbsp;&nbsp; MAILBOX NAMES.
+<BR>&nbsp;
+<H2>
+<A NAME="7"></A>7.&nbsp; DOMAIN NAME SERVICE ADMINISTRATION MAILBOX</H2>
+In DNS (see [<A HREF="ftp://ftp.is.co.za/rfc/rfc1033.txt">RFC1033</A>],
+[<A HREF="ftp://ftp.is.co.za/rfc/rfc1034.txt">RFC1034</A>] and [<A HREF="rfc1035/rfc1035.html">RFC1035</A>]),
+the Start Of Authority record (SOA RR) has a field for specifying the mailbox
+name of the zone's administrator.
+
+<P>
+This field must be a simple word without metacharacters (such as "%"
+or "!" or "::"), and a mail alias should be used on the relevant mail exchanger
+hosts to direct zone administration mail to the appropriate mailbox.
+
+<P>
+For simplicity and regularity, it is strongly recommended that the well
+known mailbox name HOSTMASTER always be used &lt;HOSTMASTER@domain>.
+<BR>&nbsp;
+<BR>&nbsp;
+<H2>
+<A NAME="8"></A>8.&nbsp; AUTONOMOUS SYSTEM MAILBOX</H2>
+Several Internet registries implement mailing lists for Autonomous System
+contacts.&nbsp; So, for example, mail sent to &lt;AS3557@RA.NET> will at
+the time of this writing reach the technical contact for Autonomous System
+3557 in the BGP4 (see [<A HREF="ftp://ftp.is.co.za/rfc/rfc1654.txt">RFC1654</A>],
+[<A HREF="ftp://ftp.is.co.za/rfc/rfc1655.txt">RFC1655</A>] and [<A HREF="ftp://ftp.is.co.za/rfc/rfc1656.txt">RFC1656</A>]).
+
+<P>
+Not all Autonomous Systems are registered with all registries, however,
+and so undeliverable mailbox names under this scheme should be treated
+as an inconvenience rather than as an error or a standards violation.
+<BR>&nbsp;
+<H2>
+<A NAME="9"></A>9.&nbsp; SECURITY CONSIDERATIONS</H2>
+Denial of service attacks (flooding a mailbox with junk) will be easier
+after this document becomes a standard, since more systems will support
+the same set of mailbox names.
+<BR>&nbsp;
+<H2>
+<A NAME="10"></A>10. REFERENCES</H2>
+&nbsp;
+<TABLE BORDER=0 CELLSPACING=0 COLS=2 WIDTH="100%">
+<TR>
+<TD ALIGN=LEFT VALIGN=TOP WIDTH="10%">[RFC821]</TD>
+
+<TD>Postel, J., "Simple Mail Transfer Protocol", STD 10, <A HREF="ftp://ftp.is.co.za/rfc/rfc821.txt">RFC
+821</A>, Information Sciences Institute, August 1982.</TD>
+</TR>
+
+<TR>
+<TD ALIGN=LEFT VALIGN=TOP>[RFC822]</TD>
+
+<TD>Crocker, D., "Standard for the format of ARPA Internet text messages",
+STD 11, <A HREF="ftp://ftp.is.co.za/rfc/rfc822.txt">RFC 822</A>, University
+of Delaware, August 1982.</TD>
+</TR>
+
+<TR>
+<TD ALIGN=LEFT VALIGN=TOP>[RFC959]</TD>
+
+<TD>Postel, J., and J. Reynolds, "File Transfer Protocol (FTP)", STD 9,
+<A HREF="ftp://ftp.is.co.za/rfc/rfc959.txt">RFC 959</A>, Information Sciences
+Institute, October 1985.</TD>
+</TR>
+
+<TR>
+<TD ALIGN=LEFT VALIGN=TOP>[RFC974]</TD>
+
+<TD>Partridge, C., "Mail routing and the domain system", STD 14, <A HREF="ftp://ftp.is.co.za/rfc/rfc974.txt">RFC
+974</A>, CSNET CIC BBN Laboratories Inc, January 1986.</TD>
+</TR>
+
+<TR>
+<TD ALIGN=LEFT VALIGN=TOP>[RFC976]</TD>
+
+<TD>Horton, M., "UUCP mail interchange format standard", <A HREF="ftp://ftp.is.co.za/rfc/rfc976.txt">RFC
+976</A>, Bell Laboratories, February 1986.
+<BR>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD ALIGN=LEFT VALIGN=TOP>[RFC977]</TD>
+
+<TD>Kantor, B., et al, "Network News Transfer Protocol: A Proposed Standard
+for the Stream-Based Transmission of News", <A HREF="ftp://ftp.is.co.za/rfc/rfc977.txt">RFC
+977</A>, University of California, February 1986.
+<BR>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD ALIGN=LEFT VALIGN=TOP>[RFC1033]
+<BR>&nbsp;</TD>
+
+<TD ALIGN=LEFT VALIGN=TOP>Lottor, M., "Domain administrators operations
+guide", <A HREF="ftp://ftp.is.co.za/rfc/rfc1033.txt">RFC 1033</A>, SRI
+International, November 1987</TD>
+</TR>
+
+<TR>
+<TD ALIGN=LEFT VALIGN=TOP>[RFC1034]</TD>
+
+<TD>Mockapetris, P., "Domain names - concepts and facilities", STD 13,
+<A HREF="ftp://ftp.is.co.za/rfc/rfc1034.txt">RFC 1034</A>, USC/Information
+Sciences Institute, November 1987.
+<BR>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD ALIGN=LEFT VALIGN=TOP>[RFC1035]</TD>
+
+<TD>Mockapetris, P., "Domain Names - Implementation and Specification"
+STD 13, <A HREF="ftp://ftp.is.co.za/rfc/rfc1035.txt">RFC 1035</A>, USC/Information
+Sciences Institute, November 1987.
+<BR>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD ALIGN=LEFT VALIGN=TOP>[RFC1654]</TD>
+
+<TD>Rekhter, Y., et al, "A Border Gateway Protocol 4 (BGP- 4)", <A HREF="ftp://ftp.is.co.za/rfc/rfc1654.txt">RFC
+1654</A>, T.J. Watson Research Center, IBM Corp., July 1994.
+<BR>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD ALIGN=LEFT VALIGN=TOP>[RFC1655]</TD>
+
+<TD>Rekhter, Y., et al, "Application of the Border Gateway Protocol in
+the Internet", <A HREF="ftp://ftp.is.co.za/rfc/rfc1655.txt">RFC 1655</A>,
+T.J. Watson Research Center, IBM Corp., July 1994.
+<BR>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD ALIGN=LEFT VALIGN=TOP>[RFC1656]</TD>
+
+<TD>Traina, P., "BGP-4 Protocol Document Roadmap and Implementation Experience",
+RFC 1656, cisco Systems, July 1994.</TD>
+</TR>
+
+<TR>
+<TD>[HTTP]</TD>
+
+<TD>Berners-Lee, T., et al, "Hypertext Transfer Protocol -- HTTP/1.0",
+<A HREF="ftp://ftp.is.co.za/rfc/rfc1945.txt">RFC 1945</A>, May 1996.</TD>
+</TR>
+</TABLE>
+
+<H2>
+<A NAME="11"></A>11. ACKNOWLEDGEMENTS</H2>
+This specification derived from an earlier draft written by Paul Vixie.&nbsp;
+Thanks to Stan Barber, Michael Dillon, James Aldridge, J.&nbsp; D. Falk,
+Peter Kaminski, Brett Watson, Russ Wright, Neal McBurnett, and Ed Morin
+for their comments on that draft.
+<BR>&nbsp;
+<H2>
+<A NAME="12"></A>12. AUTHOR'S ADDRESS</H2>
+Dave Crocker
+<BR>Internet Mail Consortium
+<BR>127 Segre Ave.
+<BR>Santa Cruz, CA
+
+<P>
+Phone: +1 408 246 8253
+<BR>EMail: <A HREF="mailto:dcrocker@imc.org">dcrocker@imc.org</A>
+</BODY>
+</HTML>

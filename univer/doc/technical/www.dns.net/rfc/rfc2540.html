@@ -1,0 +1,295 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (WinNT; I) [Netscape]">
+   <meta name="Author" content="Mark Symons (bliksim9@yahoo.com)">
+   <title>RFC2540: Detached Domain Name System (DNS) Information</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+This RFC has been
+HTMLized by hand by <a href="mailto:bliksim9@yahoo.com">Mark Symons</a>,
+and word-for-word correspondence to the source has not been verified.&nbsp;
+The <a href="ftp://ftp.is.co.za/rfc/rfc2540.txt">original RFC</a> should
+be regarded as being authoritative.
+<br>
+<hr WIDTH="100%">
+<br>&nbsp;
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=3 WIDTH="100%" >
+<tr>
+<td>Network Working Group</td>
+
+<td></td>
+
+<td>D. Eastlake</td>
+</tr>
+
+<tr>
+<td>Request for Comments: 2540</td>
+
+<td></td>
+
+<td>IBM</td>
+</tr>
+
+<tr>
+<td>Category: Experimental</td>
+
+<td></td>
+
+<td>March 1999</td>
+</tr>
+</table>
+
+<center>
+<h1>
+Detached Domain Name System (DNS) Information</h1></center>
+
+<h2>
+Status of this Memo</h2>
+This memo defines an Experimental Protocol for the Internet community.&nbsp;
+It does not specify an Internet standard of any kind. Discussion and suggestions
+for improvement are requested. Distribution of this memo is unlimited.
+<br>&nbsp;
+<h2>
+Copyright Notice</h2>
+Copyright (C) The Internet Society (1999).&nbsp; All Rights Reserved.
+<br>&nbsp;
+<h2>
+<a NAME="Abstract"></a>Abstract</h2>
+A standard format is defined for representing detached DNS information.&nbsp;
+This is anticipated to be of use for storing information retrieved from
+the Domain Name System (DNS), including security information, in archival
+contexts or contexts not connected to the Internet.
+<br>&nbsp;
+<h2>
+Table of Contents</h2>
+<b><a href="#Abstract">Abstract</a></b>
+<br><b><a href="#1">1. Introduction</a></b>
+<br><b><a href="#2">2. General Format</a></b>
+<br>&nbsp;&nbsp;&nbsp; <a href="#2.1">2.1 Binary Format</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#2.2">2.2. Text Format</a>
+<br><b><a href="#3">3. Usage Example</a></b>
+<br><b><a href="#4">4. IANA Considerations</a></b>
+<br><b><a href="#5">5. Security Considerations</a></b>
+<br><b><a href="#References">References</a></b>
+<br><b><a href="#Author">Author's Address</a></b>
+<br><b><a href="#Copyright">Full Copyright Statement</a></b>
+<br>&nbsp;
+<h2>
+<a NAME="1"></a>1. Introduction</h2>
+The Domain Name System (DNS) is a replicated hierarchical distributed database
+system [RFC <a href="ftp://ftp.is.co.za/rfc/rfc1034.txt">1034</a>, <a href="rfc1035/rfc1035.html">1035</a>]
+that can provide highly available service.&nbsp; It provides the operational
+basis for Internet host name to address translation, automatic SMTP mail
+routing, and other basic Internet functions.&nbsp; The DNS has been extended
+as described in [<a href="rfc2535.html">RFC 2535</a>] to permit the general
+storage of public cryptographic keys in the DNS and to enable the authentication
+of information retrieved from the DNS though digital signatures.
+<p>The DNS was not originally designed for storage of information outside
+of the active zones and authoritative master files that are part of the
+connected DNS.&nbsp; However there may be cases where this is useful, particularly
+in connection with archived security information.
+<br>&nbsp;
+<h2>
+<a NAME="2"></a>2. General Format</h2>
+The formats used for detached Domain Name System (DNS) information are
+similar to those used for connected DNS information. The primary difference
+is that elements of the connected DNS system (unless they are an authoritative
+server for the zone containing the information) are required to count down
+the Time To Live (TTL) associated with each DNS Resource Record (RR) and
+discard them (possibly fetching a fresh copy) when the TTL reaches zero.&nbsp;
+In contrast to this, detached information may be stored in a off-line file,
+where it can not be updated, and perhaps used to authenticate historic
+data or it might be received via non-DNS protocols long after it was retrieved
+from the DNS.&nbsp; Therefore, it is not practical to count down detached
+DNS information TTL and it may be necessary to keep the data beyond the
+point where the TTL (which is defined as an unsigned field) would underflow.&nbsp;
+To preserve information as to the freshness of this detached data, it is
+accompanied by its retrieval time.
+<p>Whatever retrieves the information from the DNS must associate this
+retrieval time with it.&nbsp; The retrieval time remains fixed thereafter.
+When the current time minus the retrieval time exceeds the TTL for any
+particular detached RR, it is no longer a valid copy within the normal
+connected DNS scheme.&nbsp; This may make it invalid in context for some
+detached purposes as well.&nbsp; If the RR is a SIG (signature) RR it also
+has an expiration time.&nbsp; Regardless of the TTL, it and any RRs it
+signs can not be considered authenticated after the signature expiration
+time.
+<br>&nbsp;
+<h3>
+<a NAME="2.1"></a>2.1 Binary Format</h3>
+The standard binary format for detached DNS information is as follows:
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3</tt>
+<br><tt>&nbsp; 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
+8 9 0 1</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</tt>
+<br><tt>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+first retrieval time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</tt>
+<br><tt>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RR
+count&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&nbsp;&nbsp;&nbsp;&nbsp;
+Resource Records (RRs)&nbsp;&nbsp;&nbsp; |</tt>
+<br><tt>&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-|</tt>
+<br><tt>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+next retrieval time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</tt>
+<br><tt>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RR
+count&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&nbsp;&nbsp;&nbsp;&nbsp;
+Resource Records (RRs)&nbsp;&nbsp;&nbsp; |</tt>
+<br><tt>&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</tt>
+<br><tt>&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</tt>
+<br><tt>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; hex 20&nbsp;&nbsp;&nbsp; |</tt>
+<br><tt>&nbsp;+-+-+-+-+-+-+-+-+</tt>
+<p><b>Retrieval time</b> - the time that the immediately following information
+was obtained from the connected DNS system.&nbsp; It is an unsigned number
+of seconds since the start of 1 January 1970, GMT, ignoring leap seconds,
+in network (big-endian) order.&nbsp; Note that this time can not be before
+the initial proposal of this standard.&nbsp; Therefore, the initial byte
+of an actual retrieval time, considered as a 32 bit unsigned quantity,
+would always be larger than 20 hex.&nbsp; The end of detached DNS information
+is indicated by a "retrieval time" field initial byte equal to 0x20. Use
+of a "retrieval time" field with a leading unsigned byte of zero indicates
+a 64 bit (actually 8 leading zero bits plus a 56 bit quantity).&nbsp; This
+64 bit format will be required when retrieval time is larger than 0xFFFFFFFF,
+which is some time in&nbsp; the year 2106.&nbsp; The meaning of retrieval
+times with an initial byte between 0x01 and 0x1F is reserved (see <a href="#5">section
+5</a>). Retrieval times will not generally be 32 bit aligned with respect
+to each other due to the variable length nature of RRs.
+<p><b>RR count</b> - an unsigned integer number (with bytes in network
+order) of following resource records retrieved at the preceding retrieval
+time.
+<p><b>Resource Records</b> - the actual data which is in the same format
+as if&nbsp; it were being transmitted in a DNS response.&nbsp; In particular,
+name compression via pointers is permitted with the origin at the beginning
+of the particular detached information data section,&nbsp; just after the
+RR count.
+<br>&nbsp;
+<h3>
+<a NAME="2.2"></a>2.2. Text Format</h3>
+The standard text format for detached DNS information is as prescribed
+for zone master files [<a href="rfc1035/rfc1035.html">RFC 1035</a>] except
+that the $INCLUDE control entry is prohibited and the new $DATE entry is
+required (unless the information set is empty). $DATE is followed by the
+date and time that the following information was obtained from the DNS
+system as described for retrieval time in <a href="#2.1">section 2.1</a>
+above.&nbsp; It is in the text format YYYYMMDDHHMMSS where YYYY is the
+year (which may
+<br>be more than four digits to cover years after 9999), the first MM is
+the month number (01-12), DD is the day of the month (01-31), HH is the
+hour in 24 hours notation (00-23), the second MM is the minute (00-59),
+and SS is the second (00-59).&nbsp; Thus a $DATE must appear before the
+first RR and at every change in retrieval time through the detached information.
+<br>&nbsp;
+<h2>
+<a NAME="3"></a>3. Usage Example</h2>
+A document might be authenticated by a key retrieved from the DNS in a
+KEY resource record (RR).&nbsp; To later prove the authenticity of this
+document, it would be desirable to preserve the KEY RR for that public
+key, the SIG RR signing that KEY RR, the KEY RR for the key used to authenticate
+that SIG, and so on through SIG and KEY RRs until a well known trusted
+key is reached, perhaps the key for the DNS root or some third party authentication
+service. (In some cases these KEY RRs will actually be sets of KEY RRs
+with the same owner and class because SIGs actually sign such record sets.)
+<p>This information could be preserved as a set of detached DNS information
+blocks.
+<br>&nbsp;
+<h2>
+<a NAME="4"></a>4. IANA Considerations</h2>
+Allocation of meanings to retrieval time fields with a initial byte of
+between 0x01 and 0x1F requires an IETF consensus.
+<br>&nbsp;
+<h2>
+<a NAME="5"></a>5. Security Considerations</h2>
+The entirety of this document concerns a means to represent detached DNS
+information.&nbsp; Such detached resource records may be security relevant
+and/or secured information as described in [<a href="rfc2535.html">RFC
+2535</a>].&nbsp; The detached format provides no overall security for sets
+of detached information or for the association between retrieval time and
+information.&nbsp; This can be provided by wrapping the detached information
+format with some other form of signature.&nbsp; However, if the detached
+information is accompanied by SIG RRs, its validity period is indicated
+in those SIG RRs so the retrieval time might be of secondary importance.
+<br>&nbsp;
+<h2>
+<a NAME="References"></a>References</h2>
+
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=2 WIDTH="100%" >
+<tr ALIGN=LEFT VALIGN=TOP>
+<td WIDTH="10%">[<a href="ftp://ftp.is.co.za/rfc/rfc1034.txt">RFC1034</a>]</td>
+
+<td>Mockapetris, P., "Domain Names - Concepts and Facilities", STD 13,
+RFC 1034, November 1987.
+<br>&nbsp;</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>[<a href="rfc1035/rfc1035.html">RFC1035</a>]&nbsp;</td>
+
+<td>Mockapetris, P., "Domain Names - Implementation and Specifications",
+STD 13, RFC 1035, November 1987.
+<br>&nbsp;</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>[<a href="rfc2535.html">RFC2535</a>]</td>
+
+<td>Eastlake, D., "Domain Name System Security Extensions", RFC 2535, March
+1999.&nbsp;
+<br>&nbsp;</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<h2>
+<a NAME="Author"></a>Author's Address</h2>
+Donald E. Eastlake 3rd
+<br>IBM
+<br>65 Shindegan Hill Road, RR #1
+<br>Carmel, NY 10512
+<p>Phone:&nbsp;&nbsp; +1-914-276-2668(h)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +1-914-784-7913(w)
+<br>Fax:&nbsp;&nbsp;&nbsp;&nbsp; +1-914-784-3833(w)
+<br>EMail:&nbsp;&nbsp; <a href="mailto:dee3@us.ibm.com">dee3@us.ibm.com</a>
+<br>&nbsp;
+<h2>
+<a NAME="Copyright"></a>Full Copyright Statement</h2>
+Copyright (C) The Internet Society (1999).&nbsp; All Rights Reserved.
+<p>This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it or
+assist in its&nbsp; implementation may be prepared, copied, published and
+distributed, in whole or in part, without restriction of any kind, provided
+that the above copyright notice and this paragraph are included on all
+such copies and derivative works.&nbsp; However, this document itself may
+not be modified in any way, such as by removing the copyright notice or
+references to the Internet Society or other Internet organizations, except
+as needed for the purpose of developing Internet standards in which case
+the procedures for copyrights defined in the Internet Standards process
+must be followed, or as required to translate it into languages other than
+English.
+<p>The limited permissions granted above are perpetual and will not be
+revoked by the Internet Society or its successors or assigns.
+<p>This document and the information contained herein is provided on an
+"AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING TASK
+FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE
+ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR
+A PARTICULAR PURPOSE.
+</body>
+</html>

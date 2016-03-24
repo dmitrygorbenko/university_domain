@@ -1,0 +1,421 @@
+<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="Author" CONTENT="Mark Symons (bliksim9@yahoo.com)">
+   <META NAME="Description" CONTENT="Reviews of DNS tools and utilities for Win95 and NT.">
+   <META NAME="KeyWords" CONTENT="DNS,NSlookup,Ping,Traceroute">
+
+   <TITLE>Mark's Reviews of DNS Tools for Windows</TITLE>
+<!-- OWNER_NAME="Andras Salamon" -->
+<LINK REV="made" HREF="/andras/">
+<!-- OWNER_INFO="andras,dns.net" -->
+</HEAD>
+<BODY>
+
+<H1>Mark's reviews of DNS tools for Windows</H1>
+
+These reviews are by <A HREF="mark.html">Mark Symons</A>.  Mark says:
+
+<BLOCKQUOTE>
+The views and opinions expressed here are my own.  They do not necessarily
+state or reflect those of my employer, my friends, my cats, or the little
+pixies who live at the bottom of my garden.
+</BLOCKQUOTE>
+
+<P>
+This is a totally non-comprehensive compilation of reviews of software
+that I have found to be useful when working with DNS in the Windows 95/98
+and Windows NT environments.  The definition of "useful" comes from my own
+dictionary...
+
+<HR>
+<H2>Contents</H2>
+<A HREF="#DNSExpert">DNS Expert v1.3</A>
+<BR><A HREF="#Cyberkit22">Cyberkit v2.2</A>
+<BR><A HREF="#cyberkit24">Cyberkit v2.4</A>
+<BR><A HREF="#DNS Workshop">DNS Workshop Build 104</A>
+<BR><A HREF="#NetInfo">NetInfo v3.0</A>
+<BR><A HREF="#Ping Plotter">Ping Plotter v1.00.2</A>
+<BR><A HREF="#PPing">PPing v0.4</A>
+<BR><A HREF="#TJPing">TJPing v2.0 &amp; TJPingPro v1.2.1</A>
+
+<P>
+<A HREF="#upcoming">To be Reviewed</A>
+<HR>
+<H3><A
+NAME="DNSExpert"
+HREF="http://www.menandmice.com/infobase/mennmys/vefsidur.nsf/index/2.1">DNS Expert v1.3</A></H3>
+
+<H4><EM>Reviewed: 11-Feb-1999</EM></H4>
+
+DNS Expert comes from Men&amp;Mice of Iceland, who's goal is to produce
+the only DNS checking tool a DNS administrator will ever need.  They
+are not there yet - but I would go as far as to say that DNS Expert is
+already by far the best tool of its kind available on ANY platform.
+At $295, it's not cheap - but busy administrators will find that it pays
+for itself in the first few days.
+
+<P>
+DNS Expert works only with "live" DNS data - nslint-style pre-checking
+of zones is not possible.  The power comes from the ability to customise
+analysis for checking nearly 70 DNS problems,  ranging from "more
+than one A record with the same IP address" to "same mail server listed
+with a different preference value".
+
+<P>
+<IMG SRC="dnsexp.gif" ALT="DNS Expert - Analysis Settings" BORDER=1 height=361 width=359>
+
+<P>
+The miscellaneous checks include reporting on experimental, obsolete,
+&amp; unknown RRs.  There are some omissions: useful ones like sanity
+checking on the hostmaster info in the SOA record, and obscure ones such
+as checking to ensure that RP records point to TXT records.  (However,
+I happen to like RP records!)
+
+<P>
+Checking itself proceeds very quickly.  There's no option to specify
+recursive checking, but this problem can be sidestepped by providing DNS
+Expert with a list of zones to be checked.  Whilst DNS Expert usefully
+understands the difference between Internet &amp; Intranet DNS, it does
+not seem to be able to analysis both types in a single checking operation.
+
+<P>
+Another strength of DNS Expert is in reporting, which can be done to
+screen/printer/file with a choice of three levels of detail.
+<BR>
+
+<P>
+<IMG SRC="bad-dns.gif" ALT="DNS Expert v1.3 Report" height=572 width=509>
+
+<P>
+The detailed report type comes with a lot of explanatory information
+that is of great use in troubleshooting.
+
+<P>
+DNS Expert would benefit from the addition of a scheduler or support
+for execution with command line parameters, thereby allowing checking
+to be carried via a cron job.  I would also like to see support for
+emailing of reports.  With such features missing, I cannot yet retire
+my <A HREF="http://www.cis.ohio-state.edu/~barr/dnswalk/">dnswalk</A>
+but even so, DNS Expert is already providing far more information than
+anything I currently use on Unix (and it hurts a bit to say that).
+
+<P>
+Rating 10/10
+
+<H3><A
+NAME="Cyberkit22"
+HREF="http://www.cyberkit.net/">Cyberkit v2.2</A></H3>
+
+<H4><EM>Reviewed: 03-Jun-1998</EM></H4>
+
+A very useful utility for users of Windows 95. Cyberkit v2.2 include Ping,
+TraceRoute, Finger, WhoIs, Name Server LookUp, Quote of the Day, Check
+for New Mail and Keep Alive.  Every individual tool works well.  Cyberkit
+v2.2's main attraction is its great value (postcardware) and the 16 query
+types available in the Lookup module:
+
+<BLOCKQUOTE>Winsock Function GetHostByX
+<BR>A - Host address
+<BR>ALL - All records
+<BR>CNAME - Canonical name for an alias
+<BR>HINFO - Host information
+<BR>MAILB - Mailbox related records
+<BR>MB - Mailbox domain name
+<BR>MG - Mail group member
+<BR>MINFO - Mailbox or mail list information
+<BR>MR - Mail rename domain name
+<BR>MX - Mail exchange
+<BR>NS - Authoritative name server
+<BR>PTR - Domain name pointer
+<BR>SOA - Start of a zone of authority
+<BR>TXT - Text strings
+<BR>WKS - Well known service description</BLOCKQUOTE>
+
+Rating 8/10
+
+<H3><A
+NAME="cyberkit24"
+HREF="http://www.cyberkit.net/">Cyberkit v2.4</A></H3>
+
+<H4><EM>Reviewed: 17-Dec-1998</EM></H4>
+
+A great utility just gets better and better.  Cyberkit v2.3 &amp; higher
+use Winsock 2 and add features such as DBScanner and Time Synchronization
+modules to the tools found in Cyberkit v2.2.
+
+<P>
+The Ping and Traceroute functions have been improved and the Lookup
+module now supports AXFR (zone transfer) and RP (Responsible Person)
+queries - the latter making the TXT query rather more useful than it
+was in Cyberkit v2.2. It can be noted that all Cyberkit output is now
+shown in Rich text, thereby breaking the 30,000 character limit that
+constrains many competing tools.  Perform a Zone Transfer of your ISP's
+domain and you'll likely discover why this is important...
+
+<P>
+The time client is rather basic, supporting Time, Daytime, &amp; SNTP
+protocols.  What makes this module extremely useful is the complete ntp
+packet decode - everything from Leap Indicator to Reference ID, and all
+shown in an understandable form.
+
+<P>
+Probably the most important new features introduced since Cyberkit v2.2
+are the command-line parameters.  Almost every Cyberkit feature can be
+kicked off in this way.  This makes Cyberkit perfect for integration
+into network monitoring packages such as Whats Up Gold or CA Unicentre.
+Right-click on a router icon and perform a PTR Lookup query; right-click
+on your DNS server icon and check that it iscorrectly time-synchronised.
+
+<P>
+All this and Cyberkit is still postcardware!
+
+<P>
+Rating 10/10
+
+<H3><A
+NAME="DNS Workshop"
+HREF="http://www.evolve.co.uk/dns/">DNS Workshop Build 104</A></H3>
+
+<H4><EM>Reviewed: 30-Oct-1997. Updated: 08-Jun-1998</EM></H4>
+
+This tool operates on Windows 95 &amp; on Windows NT. It performs only
+A and PTR DNS queries, and cannot query any but the DNS server configured
+in your TCP/IP config.  The simple DNS lookup allows use of wildcards to
+query a range of IP addresses in a single operation, within the limit of
+a C-class address.  Unfortunately, the results of a wildcard search are not
+sorted.
+
+<P>
+The strength of DNSWS lies in its ability to process files such as webserver
+logs, replacing IP addresses by host or WINS names.  Query responses are
+cached, but only for the course of the session.  Even so, the caching can
+be very useful.  In tests, DNSWS processed a 12 Mb firewall log file in
+5 hours.  Immediately processing a duplicate file cut the time to 10 minutes.
+
+<P>
+The lack of a configurable time-out is a drawback.  Processing can be
+very fast indeed when all addresses are resolvable, but slows to a crawl
+when many addresses have neither a PTR nor WINS record.  There are no command
+line parameters which would allow log processing to be automated.  Corrupt
+WINS responses can cause problems (such as consumption of 100% of CPU)
+but no crashes occur.
+
+<P>
+DNSWS is rather expensive at 24.95 Pounds Sterling, but is almost unique
+in its ability to process files.  It has potential and should be considered
+a utility to keep an eye on.
+
+<P>
+Rating: 6/10
+
+<H3><A
+NAME="NetInfo"
+HREF="http://www.netinfo.co.il/">NetInfo v3.0 (Build 1208)</A></H3>
+
+<H4><EM>Reviewed: 17-Dec-1998</EM></H4>
+
+Freeware Internet utility that seems to have replaced the PingPlus utility
+written by the same author.  Has Ping, Traceroute, &amp; Simple NSLookup
+(A &amp; PTR queries), and Local Host Info.  NetInfo also has the ability
+to scan a range of IP addresses for the presence of hosts and a service
+scanner which will detect DNS, HTTP, etc on a particular host. v3.0 introduces
+a system tray utility for monitoring the up/down status of IP connected
+computers.
+
+<P>
+NetInfo uses Tree and List controls for its output, using an Explorer-style
+tree format that can be "exploded". This is attractive but does not offer
+the ability to cut &amp; paste results.  However, support has now been added
+for printing.
+
+<P>
+<IMG SRC="netinfo.gif" ALT="NetInfo v2.10 Traceroute Output" HSPACE=1 VSPACE=1 BORDER=1 height=261 width=356>
+
+<P>
+The scanner can examine a single C Class address range at a time. v2.x
+added the ability to scan a portion of a C Class address.  However, the
+scan module is single-threaded and therefore rather slow.  The mechanism
+for entering the "seed" scan address was originally badly conceived and
+very buggy...it was much too easy to enter a bogus address which thoroughly
+confuses NetInfo.  Things do now seem to be fixed with v3.0.
+
+<P>
+The service scanner was greatly improved in v2.x.  It now strobes a range
+of ports and the list of ports that are scanned can be customised.  Twelve
+well-known services are scanned by default.  The scanner is not suitable
+for scanning all ports in a given range - unless you want to spend a few
+hours on customising. v2.1 adds the ability to specify whether TCP or UDP
+should be checked...a feature that is not found in many other utilities.
+
+<P>
+The "IPMonitor" Tool uses simple ping and seems quite functional.  However,
+the ability to edit the list of monitored hosts extends only to scan interval,
+timeout, and number of retries - one cannot edit the hostname/IP address
+without deleting the entry and then recreating it.
+
+<P>
+NetInfo compares badly with utilities such as WS_Ping ProPack - but
+it is free.
+
+<P>
+Rating: 6/10
+
+<H3><A
+NAME="Ping Plotter"
+HREF="http://www.nessoft.com/pingplotter/">Ping Plotter v1.00.2</A></H3>
+
+<H4><EM>Reviewed: 16-Jun-1998</EM></H4>
+
+A very interesting freeware Trace Route utility that displays the response
+time along the route in an easy-to-read graph.  Individual hops are coloured
+green (normal), yellow (warning), or red (critical), depending on the response
+time - and the "time-width" of each band can be customised.  Ping Plotter
+can perform a trace any number of times, with a configurable trace delay
+of between 1 second and 1 hour - or longer, if you want.  The graph itself
+is drawn based on the average of the most recent 10 samples (configurable)
+and also displays the range of response times for each hop.  All of this
+adds together to make a utility that is very useful for getting an idea
+of the performance of a single link over a period of time.
+
+<P>
+<IMG SRC="pingplot.gif" ALT="Ping Plotter Output" height=389 width=616>
+
+<P>
+Additionally, Ping Plotter uses multiple threads so all points in the
+sample are gathered at the same time.  This works very well - the speed
+of DNS name resolution for multiple hops in a trace is particularly impressive.
+
+<P>
+There are only a couple of small drawbacks in Ping Plotter v
+<UL>
+<LI>
+The graph does not display information such as time-stamps (to indicate
+the period over which the trace(s) were conducted) or the number of Trace
+Routes included.</LI>
+
+<LI>
+There is no other way of exporting the graph other than by using a copy
+to clipboard function.  It's easy to pop this output into "Paint" and then
+save in bitmap format, but it would be nice to be able to save in gif format
+straight from Ping Plotter.</LI>
+</UL>
+However, both of these shortfalls are addressed in the shareware version
+of Ping Plotter, v2.03, that I hope to review shortly.
+
+<P>
+Rating: 8/10
+
+<H3><A
+NAME="PPing"
+HREF="http://www.intsoft.com/software.html#pping">PPing v0.4</A></H3>
+
+<H4><EM>Reviewed: 25-Oct-1997. Updated: 8-Jun-1998</EM></H4>
+
+A freeware multi-threaded console ping utility for Win 95 and NT. Can give
+a simple go/no-go response that is suitable for checking if a remote machine
+is responding.  It's strength lies in its abiity to accept multiple remote
+machine names as well as 'wild-cards' for IP addresses.  A verbose option
+additionally performs a reverse DNS/WINS lookup and gives packet Round
+Trip Time.  In tests on a local subnet, 254 hosts were scanned in 3.5 seconds.
+Using the verbose option the same test took some 50 seconds, being slowed
+down only by time-outs on unresolvable addresses.  A useful complement to
+one's toolkit...no matter that it is now three years old.
+
+<P>
+Rating: 8/10.
+
+<H3><A
+NAME="TJPing"
+HREF="http://www.topjimmy.net/tjs/">TJPing v2.0 &amp; TJPingPro v1.2.1</A></H3>
+
+<H4><EM>Reviewed: 06-Jan-1998. Updated 18-Dec-1998</EM></H4>
+
+Ping/Lookup/Traceroute utilities for Win 95/NT. Multithreaded and very
+fast.  Ping &amp; Traceroute is slightly more configurable than in most
+other similar utilities.  One nice feature (shared by both versions) is
+the ability to customise the packet data that is sent.. Thus, the user
+can insert an email address in each packet as a form of netiquette.  The
+Ping function allows one to show the returned data....another reason to
+have data that is in a readable form.  The only minor gripe is that parameters
+can only be changed by switching to another screen.
+
+<P>
+The lookup functionality is very basic, supporting only A record queries.
+However, this does fit in with the overall aim of these two utilities.
+
+<P>
+All output is in Rich Text Format, which looks great.  All output can
+be logged to a user-specified file.  Right mouse button functionality is
+supported for all windows.
+
+<P>
+The Pro version has a useful host manager that allows the user to give
+a Profile Name to each IP address/DNS name.  Double-clicking on a Profile
+Name pings the corresponding address.  Items in the host manager can be
+sorted by Profile Name or by IP address/DNS Name.  The host manager makes
+a pleasant change from the usual drop down list of addresses - lists that
+often end up with duplicate or blank entries.
+
+<P>
+Additionally, the Pro version has an ISPinger feature that keeps your
+Internet Service Provider connection from being disconnected due to inactivity.
+TJPingPro can run in the System Tray under Win 95/NT 4.0.
+
+<P>
+TJPing Pro v1.1 adds an on-line registration capability and scanners
+that can ping either a sequence of IP addresses or a user-defined list
+of addresses.  With v1.2.1 comes the ability to add sequence scan groups,
+and perform DNS lookups for scans.  However, the scans are much slower than
+WS_Ping's.
+
+<P>
+TJPing is freeware and TJPing Pro is shareware, costing $US 12.50.
+
+<P>
+Both rate 8/10.
+
+<H3><A NAME="upcoming">To Be Reviewed</A></H3>
+
+There are several other excellent utilities that I use on a daily basis
+and for which I have not yet written reviews.  However, I can still give
+some preliminary ratings:
+
+<H3><A
+HREF="http://www.ipswitch.com/Products/WS_Ping/index.html">Ping Plotter v2.03</A></H3>
+
+Rating: 9/10
+
+<H3><A
+HREF="http://www.ipswitch.com/Products/WS_Ping/index.html">WS_Ping ProPack v2.10</A></H3>
+
+Rating: 9/10
+
+<H3><A
+HREF="http://www.searchandreplace.com/search_replace.htm">Search and Replace v2.92</A></H3>
+
+Not a TCP/IP utility at all.  But it's an incredibly useful toy when
+you need to work with your DNS (or any other) log files.
+
+<P>
+Rating: 9/10
+
+<H3><A
+HREF="http://www.textpad.com/">Textpad v3.2.5</A></H3>
+
+I love this editor! And it's never yet broken any of my Unix-format
+zone files.
+
+<P>
+Rating: 10/10
+
+<HR>
+<A HREF="../"><IMG SRC="../img/dnsrd.png" ALT="[Back to DNSRD]"></A>
+<HR>
+<ADDRESS>
+<A HREF="mark.html">Mark Symons</A>
+</ADDRESS>
+
+</BODY>
+</HTML>

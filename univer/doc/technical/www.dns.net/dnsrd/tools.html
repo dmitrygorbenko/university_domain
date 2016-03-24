@@ -1,0 +1,526 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<TITLE>DNS tools</TITLE>
+<META NAME="copyright" CONTENT="1994-2004, Andras Salamon">
+<LINK REV="made" HREF="/andras/">
+<!-- OWNER_NAME="Andras Salamon" -->
+<!-- OWNER_INFO="andras,spam.not.welcome.dns.net" -->
+<META NAME="description" CONTENT="Tools to manage DNS and diagnose DNS problems">
+<META NAME="keywords"
+ CONTENT="DNS, Domain Name System, DNSRD, error, diagnostic, diagnostics, errors, problem, problems, tool, tools, help">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<H1>Tools to manage DNS</H1>
+
+<HR>
+
+<P>
+This is a listing of tools to manage DNS and diagnose DNS problems.
+Many are primarily Unix, Linux and MacOS X tools, but the
+<A HREF="#tool-perl">Perl</A> scripts are mostly cross-platform.
+For primarily Windows tools, see the <A HREF="mark/wintools.html">Windows
+Tools</A> listing from <A HREF="mark/mark.html">Mark Symons</A> (now
+seriously out of date).
+</P>
+
+<P>
+If you know of a DNS tool that is not listed here, please let us know.
+</P>
+
+<P>
+MD5 checksums are provided for the some of the freely available packages.
+The star (<A NAME="star">*</A>) means that a recent version is included as
+a part of the <A HREF="servers.html">BIND</A> distribution.
+</P>
+
+<P>
+See also the <A HREF="programming.html">resources for DNS
+programming</A> for tools useful to those writing code.
+</P>
+
+<HR>
+
+
+<H3>Basic diagnostics</H3>
+
+<P>
+These packages are (or should be) part of every DNS troubleshooting kit.
+Some of these have overlapping functionality; choose those that suit
+your needs.  Personally I use <A HREF="#tool-dig">dig</A> whenever
+available, otherwise <A HREF="#tool-nslookup">nslookup</A>.
+</P>
+
+<DL>
+
+<DT><A NAME="tool-nslookup">nslookup</A>
+(<A HREF="#star">*</A>)</DT>
+<DD>Query name servers.  Installed on many systems by default, which
+is why it is still hanging around.  Watch out for old and broken
+versions (like the one that comes with Windows NT 4 and older versions
+of SunOS).  Can be used in both interactive or batch mode.  Most people
+prefer <A HREF="#tool-dig">dig</A> or <A HREF="#tool-host">host</A>,
+given the choice, since nslookup output is more difficult to parse.</DD>
+
+<DT><A NAME="tool-dig">dig</A>
+(<A HREF="#star">*</A>)</DT>
+<DD>Query name servers -- more general than nslookup, it
+is used by many other tools because its consistent output format is easy
+to parse automatically.
+</DD>
+
+<DT><A
+HREF="ftp://ftp.nikhef.nl/pub/network/host.tar.Z"
+NAME="tool-host">host</A>
+(<A HREF="#star">*</A>)</DT>
+<DD>By Eric Wassenaar, meant as an evolution of
+<A HREF="#tool-nslookup">nslookup</A> and <A HREF="#tool-dig">dig</A>.
+</DD>
+
+</DL>
+
+
+<H3>Overall diagnostics</H3>
+
+<P>
+These systems help in diagnosing problems by testing DNS data against
+heuristics of what DNS information should look like.  No system will
+pick up all problems, but the most frequent problems will be easily
+spotted by tools such as <A HREF="#tool-dnswalk">dnswalk</A>.
+</P>
+
+<DL>
+
+<DT><A
+HREF="http://www.menandmice.com/2000/2100_dns_expert.html"
+NAME="tool-dnsexpert">DNS Expert</A></DT>
+<DD>Commercial DNS diagnostic utility from
+<A HREF="http://www.menandmice.com/">Men &amp; Mice</A>.
+This is the most comprehensive all-in-one diagnostic tool for DNS,
+and the reports it produces are also the easiest to understand.
+For Windows and MacOS only at this stage.</DD>
+
+<DT><A
+HREF="http://www.visi.com/~barr/dnswalk/"
+NAME="tool-dnswalk">dnswalk</A>
+(<A HREF="#star">*</A>)</DT>
+<DD>A massively useful <A HREF="#tool-perl">Perl</A> script by David Barr,
+for top-down checking of zone file information.  Relies on being able to
+do zone transfers.  See also
+<A HREF="rfc/#rfc1912">RFC 1912</A>, which was developed
+concurrently with this tool and which describes most of the kinds of
+problems it detects.
+<EM>(version 2.0.2 of 06-Oct-1997, checked 08-Sep-2004)</EM></DD>
+
+<DT><A
+HREF="ftp://ftp.shub-internet.org/pub/shub/brad/dns/doc-2.2.3.tar.bz2"
+NAME="tool-doc">DOC</A>
+(<A HREF="#star">*</A>)</DT>
+<DD>Checks the integrity of a domain; maintained by Brad Knowles.  This
+version works with <A HREF="servers/">BIND 9</A>, but there is also a
+<A HREF="ftp://ftp.shub-internet.org/pub/shub/brad/dns/doc-2.1.6.tar.bz2">version</A> for <A HREF="servers/">BIND 8</A>.
+<EM>(version 2.2.3 of 25-Jul-2001, checked 08-Sep-2004)</EM></DD>
+
+<DT><A
+HREF="ftp://ftp.shub-internet.org/pub/shub/brad/dns/lamers.tar.bz2"
+NAME="tool-lamers">lamers</A>
+(<A HREF="#star">*</A>)</DT>
+<DD>Originally by Bryan Beecher, to send out notices to servers that
+are generating lame delegations.  Now maintained by Brad Knowles.
+<EM>(version of 14-Jul-1995, checked 08-Sep-2004)</EM></DD>
+
+<DT><A HREF="ftp://ftp.ee.lbl.gov/nslint.tar.gz">nslint</A></DT>
+<DD>By Craig Leres, to find problems in
+<A HREF="servers.html">BIND</A> style configuration files, including
+mismatched A/PTR records, missing trailing dots, and names with both
+CNAME and other records.
+<EM>(version 2.1a3 of 27-Nov-2001, checked 19-Nov-2004)</EM></DD>
+
+<DT><A
+HREF="ftp://atrey.karlin.mff.cuni.cz/pub/local/mj/net/sleuth-1.4-pre1.tar.gz"
+NAME="tool-sleuth">Sleuth</A></DT>
+<DD>Checks DNS zones for errors, by
+<A HREF="http://atrey.karlin.mff.cuni.cz/~mj/">Martin Mares</A>.
+An <A HREF="#online-sleuth">online version of Sleuth</A> is also available.
+<EM>(version 1.4-pre1 of 11-Feb-2004, checked 08-Sep-2004)</EM></DD>
+
+<DT><A
+HREF="http://www.zonecheck.fr/download.shtml"
+NAME="tools-zonecheck">ZoneCheck</A></DT>
+<DD>Source code for the
+<A HREF="#tools-zonecheck-online">ZoneCheck online zone checking tool</A>
+from <A HREF="http://www.nic.fr/">NIC France</A>.
+<EM>(version 2.0.3 released 08-Mar-2004, checked 08-Sep-2004)</EM></DD>
+
+</DL>
+
+
+<H3>Network information management systems</H3>
+
+<P>
+These systems are designed for maintaining information about a network.
+DNS is generally an important part of their functionality, but most have
+strong features in IP address management and other areas also.  Tools such
+as these are probably most suitable for larger, well-structured networks
+where the administrative overhead is more than justified by the reduced
+incidence of conflicts for IP addresses, DHCP leases and domain names.
+</P>
+
+<DL>
+
+<DT><A
+HREF="http://www.cisco.com/warp/public/cc/cisco/mkt/enm/cap/cnr/"
+NAME="tool-networkregistrar">Cisco Network Registrar</A></DT>
+<DD>A commercial IP address space management system,
+from <A HREF="http://www.cisco.com/">Cisco</A>.
+Includes a non-BIND DNS server and comprehensive DHCP support.
+<A
+HREF="http://www.cisco.com/univercd/cc/td/doc/product/rtrmgmt/ciscoasu/nr/">Online
+documentation</A> is also available.
+<EM>(checked 28-Dec-1999)</EM></DD>
+
+<DT><A
+HREF="http://tools.arlut.utexas.edu/gash2/"
+NAME="tool-ganymede">Ganymede</A></DT>
+<DD>Flexible directory management system, written in Java.  This is
+<A HREF="#tool-gash">GASH</A> version 2, and was last updated 01-Mar-2004.
+<EM>(checked 08-Sep-2004)</EM></DD>
+
+<DT><A
+HREF="http://www.arlut.utexas.edu/csd/gash_docs/gash.html"
+NAME="tool-gash">GASH</A></DT>
+<DD>A prototype system administration framework including DNS administration.
+Last updated in 1995.  See <A HREF="#tool-ganymede">Ganymede</A> for
+further work on this project.</DD>
+
+<DT><A HREF="http://www.via-it.com/init.htm">INIT</A></DT>
+<DD>IP management system including DNS administration from
+<A HREF="http://www.via-it.com/">VIA</A>, using
+an <A HREF="http://www.oracle.com/">Oracle</A> backend database.
+<EM>(checked 28-Dec-1999)</EM></DD>
+
+<DT><A
+HREF="http://www.menandmice.com/2000/2300_enterprise.html"
+NAME="tool-mmsuite">Men &amp; Mice DNS and IP Address Management
+Suite</A></DT>
+<DD>Multi-platform enterprise-class DNS and IP address management
+system, from <A HREF="http://www.menandmice.com/">Men &amp; Mice</A>.
+Integrates with Microsoft Active Directory.  Performs full analysis
+and monitoring; includes <A HREF="#tool-dnsexpert">DNS Expert</A>
+for troubleshooting.
+See <A HREF="#tool-qdns">QuickDNS</A> for a description of the DNS
+management functions of the Men &amp; Mice Suite.
+<EM>(checked 11-Apr-2004)</EM></DD>
+
+<DT><A
+HREF="http://www.namesurfer.com/"
+NAME="tool-namesurfer">NameSurfer</A></DT>
+<DD>Commercial DNS management software with a web based interface from
+<A HREF="http://www.nixu.com/">Nixu</A>.
+<EM>(checked 08-Sep-2004)</EM></DD>
+
+<DT><A
+HREF="http://www.nortelnetworks.com/products/01/optivity/opt_netid/index.html"
+NAME="tool-netid">Optivity NetID</A></DT>
+<DD>Enterprise-scale software from
+<A HREF="http://www.nortelnetworks.com/">Nortel Networks</A>
+to manage IP addresses, DNS and DHCP, with a browser based interface.
+The DNS server component is based on <A HREF="servers/">BIND 8</A>
+running on Windows or Unix.
+<EM>(checked 08-Sep-2004)</EM></DD>
+
+<DT><A
+HREF="http://www.menandmice.com/2000/2200_quick_dns.html"
+NAME="tool-qdns">QuickDNS</A></DT>
+<DD>Multi-platform DNS management system, from
+<A HREF="http://www.menandmice.com/">Men &amp; Mice</A>.
+Allows adding and deleting zones as well as zone information.
+Manages multiple <A HREF="servers/">BIND</A> and
+<A HREF="servers/windows.html">Microsoft DNS server</A> installations
+at one time.  The user interface is well-thought out and helpful,
+and far superior to the user interface Microsoft supplies to manage
+their own DNS server.  See also <A HREF="#tool-mmsuite">Men &amp;
+Mice Suite</A> for an even more comprehensive system.
+<EM>(checked 08-Sep-2004)</EM></DD>
+
+<DT><A
+HREF="http://www.lucent.com/solutions/netops_enter.html"
+NAME="tool-qip">VitalQIP</A></DT>
+<DD>Enterprise scale (ie. expensive) all-in-one system from <A
+HREF="http://www.lucent.com/">Lucent</A> for IP address space
+management, using a database engine to store address allocations.
+Integrates DHCP with DNS, providing realtime update of DNS information
+from DHCP.  Built on top of the <A HREF="servers/">BIND DNS server</A>.
+<EM>(checked 11-Apr-2004)</EM></DD>
+
+<DT><A
+HREF="http://www.webmin.com/"
+NAME="tool-webmin">Webmin</A></DT>
+<DD>Very popular free browser-based system administration
+package for Unix (including Linux and MacOS X).  Includes
+modules to manage and maintain BIND 4.x or 8.x servers.  The <A
+HREF="http://sourceforge.net/projects/b9ddns">b9ddns</A> module is
+available separately; this manages BIND 9 servers and supports dynamic
+zones.  The Webmin system is built using <A HREF="#tool-perl">Perl</A>.
+<EM>(checked 11-Apr-2004)</EM></DD>
+
+</DL>
+
+
+<H3>Zone maintenance aids</H3>
+
+<P>
+These tools are useful in maintaining zone files.  Their scope ranges
+from small-and-handy to substantial integrated zone management systems.
+Every site running a significant DNS installation will tend to accumulate
+tools like these; many sites write their own but it is worth looking at
+what others have produced before reinventing the wheel.
+</P>
+
+<DL>
+
+<DT><A
+HREF="ftp://ftp.meme.com/pub/software/bpp/"
+NAME="tool-bpp">BPP</A></DT>
+<DD>Macro package to allow host-IP mappings to be defined more
+easily.</DD>
+
+<DT><A
+HREF="http://www.dnsboss.com/"
+NAME="tool-dnsboss">DNS Boss</A></DT>
+<DD>Commercial zone maintenance tool for Solaris and Linux running BIND.
+Eccentric pricing policy: free for slave-only servers but
+starts at $4995 for servers that are master for some zones.
+<EM>(checked 13-Apr-2004)</EM></DD>
+
+<DT><A
+HREF="http://www.gormand.com.au/tools/dnstool/guide.html"
+NAME="tool-dnstool">DNStool 2.0</A></DT>
+<DD>Zone maintenance framework from Gordon Rowell at
+<A HREF="http://www.gormand.com.au/">Gormand</A>.
+<A HREF="http://www.gormand.com.au/tools/dnstool/">Source code</A>
+is available.</DD>
+
+<DT><A
+HREF="ftp://ftp.is.co.za/networking/ip/dns/gencidrzone/gencidrzone"
+NAME="tool-gencidrzone">gencidrzone</A></DT>
+<DD>Generates CIDRised reverse zones.  Does anyone have a copy of this?
+It seems to have disappeared off the net.</DD>
+
+<DT><A
+HREF="ftp://ftp.ora.com/published/oreilly/dns4/dns.4ed.tar.Z"
+NAME="tool-h2n">h2n</A>
+(<A HREF="#star">*</A>)</DT>
+<DD>Generates forward and reverse zone files from /etc/hosts; described in
+the <A HREF="books.html#book-cricket">cricket book</A>.
+<EM>(checked 08-Oct-2004)</EM></DD>
+
+<DT><A
+HREF="ftp://ftp.cus.cam.ac.uk/pub/software/programs/DNS/makezones-0.33"
+NAME="tool-makezones">makezones</A></DT>
+<DD><A HREF="#tool-perl">Perl</A> based zone file maintenance aid from
+Philip Hazel.  Creates forward and reverse zones from an input file
+containing directives; supports IPv6 AAAA records.
+<EM>(version 0.33 of 16-Oct-2000, checked 19-Nov-2004)</EM></DD>
+
+<DT><A
+HREF="ftp://atrey.karlin.mff.cuni.cz/pub/local/mj/net/nsc-2.99b.tar.gz"
+NAME="tool-nsc">NSC</A></DT>
+<DD>Utilities and M4 scripts for maintenance of zones, reverse zones
+(including classless delegations) and BIND configuration files by
+<A HREF="http://atrey.karlin.mff.cuni.cz/~mj/">Martin Mares</A>.
+<EM>(version 2.99b of 21-Dec-2003, checked 22-Feb-2004)</EM></DD>
+
+<DT>nsupdate</DT>
+<DD>Sends UPDATE requests to name servers (see
+<A HREF="rfc/rfc.html#rfc2136">RFC 2136</A>).
+This program is currently distributed with <A
+HREF="servers.html">BIND</A> without documentation.  Here is brief <A
+HREF="docs/nsupdate.txt">documentation for nsupdate</A>, courtesy of
+Ravindra R. Iyer.
+<EM>(checked 25-Feb-1999)</EM></DD>
+
+<DT><A
+HREF="ftp://ftp.vix.com/pub/vixie/SENDS/"
+NAME="tool-sends">SENDS</A></DT>
+<DD>By Paul Vixie, for managing a large namespace.</DD>
+
+<DT><A
+HREF="ftp://ftp.tic.com/pub/updatehosts/"
+NAME="tool-updatehosts">updatehosts</A></DT>
+<DD>Generates DNS zone files and NIS tables from an ASCII host database,
+from Smoot Carl-Mitchell.  Requires <A HREF="#tool-perl">Perl</A>.
+<EM>(checked 26-Feb-1999)</EM></DD>
+
+<DT><A
+HREF="http://www.cc.utah.edu/~keide/Software/UofU_DNS_Tools/"
+NAME="tool-utahtools">Utah Tools</A></DT>
+<DD>A set of DNS management tools in use at the University of Utah.</DD>
+
+<DT><A
+HREF="http://hem.passagen.se/hno/webdns/"
+NAME="tool-webdns">webdns</A></DT>
+<DD>Web-based DNS maintenance tool, written in <A
+HREF="#tool-perl">Perl</A>, by Henrik Nordstr&ouml;m.
+This is based on code from
+<A HREF="ftp://ftp.lcs.mit.edu/pub/webdns/">Chris Lindblad</A> and
+Matthew D. Stock.
+<DD><EM>(version 1.1.4 of 27-Sep-1999 and 2-alpha2 of 05-Jan-1999,
+checked 13-Apr-2004)</EM></DD>
+
+<DT><A HREF="/dist/zsu/">zsu</A></DT>
+<DD><A HREF="#tool-perl">Perl</A> script by Andr&aacute;s Salamon
+to increment zone serial numbers in a sensible way.  Can form a useful
+part of a larger zone maintenance system that includes version control
+and error checking, or run it standalone to batch update serial
+numbers for lots of zones.
+<EM>(version 1.20 of 08-Aug-2004, checked 08-Sep-2004)</EM></DD>
+
+</DL>
+
+
+<H3>Miscellaneous tools</H3>
+
+<P>
+Interesting bits and pieces.
+</P>
+
+<DL>
+
+<DT><A
+HREF="http://www.linux.it/~md/software/"
+NAME="tool-bindgraph">bindgraph</A></DT>
+<DD>Perl script using the
+<A HREF="http://people.ee.ethz.ch/~oetiker/webtools/rrdtool/">RRDtool</A>
+graphing database to generate graphs for monitoring BIND server stats.
+By Marco d'Itri.</DD>
+
+<DT><A
+HREF="http://www.shub-internet.org/brad/dns/"
+NAME="tool-bradstools">Brad's DNS Tools</A></DT>
+<DD>A collection of DNS tools maintained by Brad Knowles, including the
+most recent versions of
+<A HREF="#tool-doc">DOC</A>,
+<A HREF="#tool-lamers">lamers</A>, and
+<A HREF="ftp://ftp.shub-internet.org/pub/shub/brad/dns/dnsstats">dnsstats</A>.
+<EM>(checked 08-Sep-2004)</EM></DD>
+
+<DT><A
+HREF="ftp://ftp.univ-lyon1.fr/pub/systems/unix/network/tcpip/dns/dns-peers.tar.gz"
+NAME="tool-dnspeers">dns-peers</A></DT>
+<DD>Constructs BIND configuration file based on files of remote peers.
+For sites that exchange secondary service for many zones.  Probably
+requires major updating to be useful.
+<EM>(version 1.0 of 02-Jun-1994, checked 19-Nov-2004)</EM></DD>
+
+<DT><A
+HREF="ftp://ftp.cse.ogi.edu/pub/dnsparse-2.1.tar.gz"
+NAME="tool-dnsparse">dnsparse</A></DT>
+<DD>Not reviewed yet.
+</DD>
+
+<DT><A
+HREF="http://www.domtools.com/dns/"
+NAME="tool-paulstools">Paul's tools</A></DT>
+<DD>A good collection of useful utilities by Paul Balyoz: domtools,
+hiermap, dlint and cachebuild.
+<EM>(checked 08-Sep-2004)</EM></DD>
+
+<DT><A
+HREF="ftp://ftp.net.ohio-state.edu/users/maf/watch/"
+NAME="tool-watch">Watch</A></DT>
+<DD>A syslog watcher tool which maintains queues of DNS related events and
+summarises these.</DD>
+
+</DL>
+
+
+<H3>Online tools</H3>
+
+<P>
+These tools exist online as Internet resources.  Two main uses exist
+for these tools: when working on a system that has no DNS tools at all,
+or when local DNS is broken and an external perspective would be useful
+(for this second case, keep the IP addresses handy, or use the non-DNS
+links below).  I cannot vouch for the way your data is used by these
+sites, so be careful about entering sensitive information.
+</P>
+
+<DL>
+
+<DT><A HREF="http://us.mirror.menandmice.com/cgi-bin/DoDig">Dig
+It</A></DT>
+<DD>Online <A HREF="#tool-dig">dig</A> from
+<A HREF="http://www.menandmice.com/">Men & Mice</A>.
+Here is a <A HREF="http://192.220.90.71/cgi-bin/DoDig/">non-DNS link</A>.
+<EM>(checked 08-Sep-2004)</EM></DD>
+
+<DT><A HREF="http://www.spacereg.com/a.rpl?m=dig">Dig Gateway</A></DT>
+<DD>Online <A HREF="#tool-dig">dig</A> from
+<A HREF="http://www.spacereg.com/">SpaceReg</A>.
+Here is a <A HREF="http://209.132.98.204/a.rpl?m=dig">non-DNS link</A>.
+<EM>(checked 11-Apr-2004)</EM></DD>
+
+<DT><A HREF="http://www.demon.net/external/">Internet Query Tools</A></DT>
+<DD>General Internet directory lookup from <A
+HREF="http://www.demon.net/">Demon Internet</A>, including DNS
+and integrated access to WHOIS servers worldwide.
+Here is a <A HREF="http://194.159.245.141/external/">non-DNS link</A>.
+<EM>(checked 11-Apr-2004)</EM></DD>
+
+<DT><A HREF="telnet://nak.berkeley.edu:117/">Netinfo at
+Berkeley</A></DT>
+<DD>Menu-driven directory lookup tool, using
+<A HREF="#tool-dig">dig</A> for DNS.  Requires telnet.</DD>
+
+<DT><A
+HREF="http://atrey.karlin.mff.cuni.cz/~mj/sleuth/"
+NAME="online-sleuth">Sleuth</A></DT>
+<DD>Online tool, checks DNS zones for errors, by
+<A HREF="http://atrey.karlin.mff.cuni.cz/~mj/">Martin Mares</A>.
+A <A HREF="#tool-sleuth">downloadable version of Sleuth</A> is also available.
+<EM>(version 1.4-pre1 of 30-Mar-2003, checked 08-Sep-2004)</EM></DD>
+
+<DT><A HREF="http://www.zonecheck.fr/demo/">ZoneCheck</A></DT>
+<DD>Online zone checking tool from <A HREF="http://www.nic.fr/">NIC
+France</A>.  <A HREF="#tools-zonecheck">Source code</A> is available.
+<EM>(checked 08-Sep-2004)</EM></DD>
+
+</DL>
+
+
+<H3>System tools</H3>
+
+<P>
+Useful tools that are not specific to DNS.
+</P>
+
+<DL>
+
+<DT><A
+HREF="http://www.perl.com/"
+NAME="tool-perl">Perl</A></DT>
+<DD>A scripting language which is needed to run some of the tools
+listed here.  Although Perl runs on most operating systems, some of
+the scripts mentioned here may rely on Unix-specific features and
+so may not work on other systems.  If any of the Perl scripts listed
+above does not work on a non-Unix platform, please let us know.
+<EM>(checked 08-Sep-2004)</EM></DD>
+
+</DL>
+
+<HR>
+
+<A HREF="./"><IMG SRC="img/dnsrd.png" ALT="[Back to DNSRD]"></A>
+
+<HR>
+
+<ADDRESS>Copyright 1994-2004 by Andr&aacute;s Salamon
+<A HREF="/andras/">&lt;andras&#64;dns.net&gt;</A></ADDRESS>
+<BR>Last updated 19-Nov-2004
+</BODY>
+
+</HTML>

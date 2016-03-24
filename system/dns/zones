@@ -1,0 +1,5 @@
+zone "nkk.dp.ua" IN {
+	type master;
+	file "nkk.dp.ua.zone";
+	allow-update { none; };
+};

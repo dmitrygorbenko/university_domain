@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+	<title>IMENA ControlPanel</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+	<link href="/img/index.css" rel="stylesheet" type="text/css">
+	<script language="JavaScript" src="/js/functions.js"></script>
+    <script language="JavaScript">
+    //<!--
+    
+    function delDomain(id, domain) {
+        if (window.confirm('Удалить эту запись?')) {
+            location.href = '/domains.php?id='+id+'&act=del';
+        }
+    }
+    
+    function renewDomain(id, domain) {
+        if (window.confirm('продлить?')) {
+            location.href = '/domains.php?id='+id+'&act=renew';
+        }
+    }
+
+    // -->
+    </script>
+</head>
+
+<body bgcolor="#F9F8F8" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000" leftmargin="0" topmargin="0" marginwidth="0">
+<table width="100%" bgcolor="5778D9" border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td background="/img/logo_bg.jpg" style="background-repeat: repeat-y;"><a href="/"><img src="/img/logo.gif" alt="IMENA ControlPanel" width="161" height="41" border="0"></a></td>
+</tr>
+</table>
+<table width="100%" height="2" border="0" cellpadding="0" cellspacing="0" bgcolor="#7083E1">
+  <tr>
+    <td><img width=100 height=2 src="/img/tr.gif"></td>
+  </tr>
+</table>
+<table cellpadding="0" cellspacing="5" border="0" width="100%" bgcolor="#FFFFFF" style="border-bottom: 1px solid #CCCCCC">
+<tr>
+<td class="menus">&nbsp;&nbsp;<b><a href="/domains.php" class="menus">домены</a></b>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/profile.php" class="menus">профайл</a>&nbsp;&nbsp;
+&nbsp;&nbsp;<a href="/accounts.php" class="menus">пароли</a>&nbsp;&nbsp;
+&nbsp;&nbsp;<a href="/logout.php" class="menus">выход</a>&nbsp;&nbsp;
+</td>
+</tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F9F8F8">
+<tr valign="top">
+	<td width=100%>
+		<table width=100% border=0 cellpadding="5" cellspacing="0">
+			<tr valign=top>
+				<td style="padding-left:20px"><BR><BR>
+<b>Всего записей: 1</b>
+<table cellpadding=3 cellspacing=0 border=0 align=center width=100% style="border: 1px solid #CCCCCC">
+<tr class=head>
+	<th class=headlink><a class=headlink href="/domains.php?order_type=domain_name+desc"><img src="/img/arr_up.gif" border=0 width=8 height=9></a> Домен <a class=headlink href="/domains.php?order_type=domain_name"><img src="/img/arr_down.gif" border=0 width=8 height=9></a></th>
+<th class=headlink><a class=headlink href="/domains.php?order_type=scode+desc"><img src="/img/arr_up.gif" border=0 width=8 height=9></a> Сервис-код <a class=headlink href="/domains.php?order_type=scode"><img src="/img/arr_down.gif" border=0 width=8 height=9></a></th>
+<th class=headlink><a class=headlink href="/domains.php?order_type=status+desc"><img src="/img/arr_up.gif" border=0 width=8 height=9></a> Статус <a class=headlink href="/domains.php?order_type=status"><img src="/img/arr_down.gif" border=0 width=8 height=9></a></th>
+<th class=headlink><a class=headlink href="/domains.php?order_type=stop_date+desc"><img src="/img/arr_up.gif" border=0 width=8 height=9></a> Действителен до <img src="/img/arr_down_x.gif" border=0 width=8 height=9></th>
+<th class=headlink>  </th>
+
+</tr>
+
+<tr class="row1" onmouseover="rowPointer(this, 'over', 'row1', 'row_sel', 'row_mark')" onmouseout="rowPointer(this, 'out', 'row1', 'row_sel', 'row_mark')" onmousedown="rowPointer(this, 'down', 'row1', 'row_sel', 'row_mark')">
+	<td><b><a href="/domains.php?act=manage&id=26044">nkk.dp.ua</a></b></td>
+	<td align=center>139585</td>
+	<td align=center>зарегистрирован</td>
+	<td align=center>
+    29.01.2006
+    
+    <br><a href="javascript:renewDomain('26044', 'nkk.dp.ua')" style="font-size:80%">продлить</a>
+    
+    
+    </td>
+    <td align=center>
+    
+    &nbsp;
+    
+    </td>
+</tr>
+
+
+</table>
+
+<BR></td>
+			</tr>
+		</table>
+	</td>
+	<td width=250>
+	
+	<table width="250" border=0 cellpadding="5" cellspacing="0">
+	<tr>
+	<td>
+		<BR><BR>
+        
+        <!-- help start -->
+        <table cellpadding=4 cellspacing=1 border=0 align=center width=100%>
+            <tr>
+                <td><b>домены</b></td>
+            </tr>
+            <tr>
+                <td style="text-align:justify;">
+                Здесь можно просмотреть все доменные имена, которые Вы регистрировали, получить их сервис-коды и даты окончания регистрации. Также здесь можно изменить контакты для домена, прописать IP адрес и MX записи, настроить WEB и MAIL переадресацию, сменить Name Servers.
+                </td>
+            </tr>
+        
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            
+            <tr>
+                <td><b>профайл</b></td>
+            </tr>
+            <tr>
+                <td style="text-align:justify;">
+                Здесь хранится информация, определяющая учетную запись пользователя, регистрирующего все доменные имена, ассоциируемые с данным аккаунтом. Этот контакт может не относится ни к одному домену, он относится к учетной записи, с которой связаны логин и пароль, а также сумма на балансе.
+                </td>
+            </tr>
+            
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            
+            <tr>
+                <td><b>пароли</b></td>
+            </tr>
+            <tr>
+                <td style="text-align:justify;">
+                Здесь можно создать отдельный аккаунт, для управления всеми Вашими Доменами или некоторыми из них. Также можно отключить аккаунт ставший ненужным.
+                </td>
+            </tr>
+        </table>
+        
+        <!-- help stop -->
+	</td>
+	</tr>
+	</table>
+	
+	</td>
+</tr>
+</table>
+<BR><BR>
+</body>
+</html>

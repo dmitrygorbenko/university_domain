@@ -1,0 +1,395 @@
+Body { Font-Family: Tahoma;  background-Color:FFFFFF; margin:0 0 0 0; padding:0 0 0 0;}
+
+
+A:link {COLOR: 0063A4; text-decoration:underline;}
+A:visited {COLOR: 0063A4; text-decoration:underline;}
+A:active {COLOR: 0063A4; text-decoration:none;}
+A:hover {COLOR: 0000FF; text-decoration:underline;}
+
+
+
+A.path:link,A.path:visited,A.path:active,A.path:hover
+{COLOR: FFFFFF; text-decoration:underline; font-family:Tahoma; font-weight:none; font-size:11px;}
+
+A.menuThis:link,A.menuThis:visited,A.menuThis:active,A.menuThis:hover
+{COLOR: FFFFFF; text-decoration:none; font-family:Tahoma; font-weight:bold; font-size:13px;}
+
+A.menu:link,A.menu:visited,A.menu:active,A.menu:hover
+{COLOR: 0063A4; text-decoration:none; font-family:Tahoma; font-weight:bold; font-size:13px;}
+
+A.menuL:link,A.menuL:visited,A.menuL:active,A.menuL:hover
+{COLOR: 0063A4; text-decoration:none; font-family:Tahoma; font-weight:bold; font-size:11px;}
+
+A.menuL2:link,A.menuL2:visited,A.menuL2:active,A.menuL2:hover
+{COLOR: 0063A4; text-decoration:none; font-family:Tahoma; font-weight:bold; font-size:10px;}
+
+A.asmenu:link,A.asmenu:visited
+{COLOR: 0063A4; text-decoration:underline; font-family:Tahoma; font-weight:bold; font-size:13px;}
+A.asmenu:active,A.asmenu:hover
+{COLOR: 0063A4; text-decoration:none; font-family:Tahoma; font-weight:bold; font-size:13px;}
+
+A.greyLink:link,A.greyLink:visited
+{COLOR: 666666; text-decoration:underline; font-family:Tahoma;}
+A.greyLink:active,A.greyLink:hover
+{COLOR: 666666; text-decoration:none; font-family:Tahoma;}
+
+A.redLink:link,A.redLink:visited
+{COLOR: CC0000; text-decoration:underline; font-family:Tahoma;}
+A.redLink:active
+{COLOR: CC0000; text-decoration:none; font-family:Tahoma;}
+A.redLink:hover
+{COLOR: 0000FF; text-decoration:underline; font-family:Tahoma;}
+
+
+A.black:link,A.black:visited,A.black:active,A.black:hover
+{COLOR: 000000; text-decoration:none; font-family:Tahoma; }
+
+Form
+{
+ margin:0px;
+ padding:0px;
+}
+
+TD
+{
+  font-size:11px;
+  font-family:Tahoma;
+}
+
+TD.tdE
+{
+  padding-right:10;
+  padding-left:10;
+}
+}
+.headBG
+{
+  background-color:#0063A4;
+}
+.topPath
+{
+  padding:5 16 5 16;
+  color:#FFFFFF;
+  background-image:url('/_cut/img/bg1.gif');
+
+}
+
+.logoLine
+{
+  background-image:url('/_cut/img/bg1.gif');
+  padding:0 0 8 16;
+}
+
+.menuLine
+{
+  height:25;
+  background-image:url('/_cut/img/bg2.gif');
+  padding:0 0 0 16;
+}
+
+
+.logo
+{
+  width:288px;
+  height:60px;
+  background-image:url('/_cut/img/logo.gif');
+  background-repeat:no-repeat;
+}
+
+.menuE
+{
+  height:25;
+  padding:0 20 0 20;
+}
+
+.menuEthis
+{
+  height:25;
+  background-image:url('/_cut/img/bg3.gif');
+  padding:0 20 0 20;
+}
+
+.leftTd
+{
+  background-color:#F2F2F2;
+  padding:0 10 0 10;
+}
+
+.rightTd
+{
+  background-color:#B8CBD9;
+  padding:1;
+}
+
+.rightTitle
+{
+  height:20;
+  background-image:url('/_cut/img/bg7.gif');
+  padding:0;
+  text-align:center;
+  vertical=align:middle;
+  font-family:Tahoma; 
+  font-weight:bold; 
+  font-size:10px;
+}
+
+.leftTitle
+{
+  height:20;
+  background-image:url('/_cut/img/bg7.gif');
+  padding:0;
+  text-align:center;
+  vertical=align:middle;
+  font-family:Tahoma; 
+  font-weight:bold; 
+  font-size:13px;
+}
+ 
+.rightC
+{
+  padding:8;
+  background-Color:#FFFFFF;
+}
+
+.cats
+{
+  background-color:#FFFFFF;
+  padding:4; 
+}
+
+.cats2
+{
+  background-color:#FFFFFF;
+  padding:3 0 0 0;
+}
+
+.newSoft
+{
+  height:25;
+  background-image:url('/_cut/img/bg5.gif');
+  padding:0 20 0 20;
+  font-size:18px;
+  color:#FFFFFF;
+}
+
+
+.updates
+{
+  height:25;
+  background-image:url('/_cut/img/bg6.gif');
+  padding:0 20 0 20;
+  font-size:18px;
+  color:#FFFFFF;
+}
+
+.listE
+{
+  padding:10 10 10 10;
+}
+
+.info
+{
+  padding:6 0 6 0;
+  line-height:15px;
+  font-size:13px;
+}
+
+.info2
+{
+  font-size:13px;
+  padding:0 0 10 0;
+}
+
+.llo
+{
+  vertical-align:top;
+  padding:0 3 0 0;
+  font-weight:bold; 
+}
+
+.llm
+{
+  vertical-align:top;
+  padding:3 5 2 0;
+  font-weight:bold; 
+}
+
+.newPubC
+{
+  vertical-align:top;
+  padding:0 0 6 0;
+}
+
+.path1
+{
+  COLOR:#FFFFFF; 
+  text-decoration:none; 
+  font-family:Tahoma; 
+  font-weight:bold; 
+  font-size:11px;
+}
+
+.grey
+{
+  COLOR:#666666; 
+}
+
+.grey10
+{
+  font-size:10px;
+  COLOR:#666666; 
+}
+.commerce
+{
+ color:#FF6600
+}
+.free
+{
+ font-weight:bold;
+ color:#0D8000
+}
+
+.title
+{
+  font-family:Tahoma; 
+  font-weight:bold; 
+  font-size:10px;
+  color:#666666;
+}
+
+.blue
+{
+  color:#0063A4;
+}
+
+.pageTitle
+{
+  Font-Family: Tahoma;
+  FONT-SIZE:21px;
+  font-weight:none;
+  color:FFA800;
+}
+
+.d2
+{
+  margin:0 5 0 5;
+}
+
+.count
+{
+  width:88px;
+  height:31;
+  margin:0 3 0 3;
+}
+
+.bottom
+{
+  height:35;
+  background-image:url('/_cut/img/bg8.gif');
+  padding:8 0 0 0;
+  vertical-align:top;
+  text-align:center;
+}
+
+.text10
+{
+  font-size:10px;
+}
+
+.d1
+{
+  Font-Family: Tahoma;
+  FONT-SIZE:14px;
+  font-weight:bold;
+}
+
+.h14
+{
+  Font-Family: Tahoma;
+  FONT-SIZE:14px;
+  font-weight:bold;
+  color:003D66;
+}
+
+
+.tab1
+{
+  color:003D66;
+}
+
+
+.2title
+{
+  height:23;
+  padding:0 10 0 10;
+  font-size:18px;
+  background-image:url('/_cut/img/bg9.gif');
+  background-repeat:repeat-x;
+  color:#003D66;
+}
+
+.knop
+{
+  background-image:url('/_cut/img/bg2.gif');
+  Font-Family: Tahoma;
+  FONT-SIZE:12px;
+  font-weight:bold;
+  color:#0063A4;
+  border:5;
+}
+
+.rt
+{
+  Font-Family: Tahoma;
+  FONT-SIZE:13px;
+  font-weight:bold;
+  color:003D66;
+
+}
+
+
+
+{ добавка от 23.06.2004 }
+
+
+.topst
+{
+  Font-Family: Tahoma;
+  FONT-SIZE:16px;
+  font-weight:bold;
+}
+
+
+.bphead
+{
+  Font-Family: Tahoma;
+  FONT-SIZE:11px;
+  font-weight:bold;
+}
+
+.bpbull
+{
+  vertical-align:top;
+  Font-Family: Tahoma;
+  FONT-SIZE:10px;
+  color:003D66;  
+}
+
+.t13
+{
+  Font-Family: Tahoma;
+  FONT-SIZE:13px;
+  font-weight:bold;
+}
+
+.t13_
+{
+  Font-Family: Tahoma;
+  FONT-SIZE:13px;
+}
+
+.sped
+{
+  Font-Family: Tahoma;
+  FONT-SIZE:11px;
+}

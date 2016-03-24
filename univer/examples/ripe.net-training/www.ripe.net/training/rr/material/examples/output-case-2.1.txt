@@ -1,0 +1,55 @@
+!
+! Example of the setup for the As2001
+! multihomed customer of as3000 & as4000
+! 
+! case 2.2 with "-cisco_empty_lists" flag
+!
+! Max pref set to 100
+!
+!
+no route-map AS3000-IMPORT
+!
+route-map AS3000-IMPORT permit 1
+ set local-preference 70
+!
+router bgp 2001
+neighbor 10.3.15.2 route-map AS3000-IMPORT in
+!
+no route-map AS4000-IMPORT
+!
+route-map AS4000-IMPORT permit 1
+ set local-preference 60
+!
+no ip prefix-list pl100
+ip prefix-list pl100 permit 10.4.192.0/19
+ip prefix-list pl100 deny 0.0.0.0/0 le 32
+!
+route-map AS4000-IMPORT permit 2
+ match ip address prefix-list pl100
+ set local-preference 60
+!
+router bgp 2001
+neighbor 10.4.192.2 route-map AS4000-IMPORT in
+!
+!
+no ip prefix-list pl101
+ip prefix-list pl101 permit 10.20.0.0/24
+ip prefix-list pl101 permit 10.187.65.0/24
+ip prefix-list pl101 deny 0.0.0.0/0 le 32
+!
+no route-map AS3000-EXPORT
+!
+route-map AS3000-EXPORT permit 1
+ match ip address prefix-list pl101
+!
+router bgp 2001
+neighbor 10.3.15.2 route-map AS3000-EXPORT out
+!
+no route-map AS4000-EXPORT
+!
+route-map AS4000-EXPORT permit 1
+ match ip address prefix-list pl101
+ set as-path prepend 2001 2001 
+!
+router bgp 2001
+neighbor 10.4.192.2 route-map AS4000-EXPORT out

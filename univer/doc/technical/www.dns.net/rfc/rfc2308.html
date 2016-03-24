@@ -1,0 +1,1066 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.04 [en] (WinNT; I) [Netscape]">
+   <META NAME="Author" CONTENT="Mark Symons (bliksim9@yahoo.com)">
+   <TITLE>RFC2308: Negative Caching of DNS Queries (DNS NCACHE)</TITLE>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#FF0000">
+This RFC has been
+HTMLized by hand by <A HREF="mailto:bliksim9@yahoo.com">Mark Symons</A>,
+and word-for-word correspondance to the source has not been
+<BR>verified.&nbsp; The <A HREF="ftp://ftp.is.co.za/rfc/rfc2308.txt">original
+RFC</A> should be regarded as being authoritative.
+<BR>
+<HR WIDTH="100%">
+<BR>&nbsp;
+<BR>&nbsp;
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=3 WIDTH="100%" >
+<TR>
+<TD>Network Working Group</TD>
+
+<TD></TD>
+
+<TD>M. Andrews</TD>
+</TR>
+
+<TR>
+<TD>Request for Comments: 2308&nbsp;</TD>
+
+<TD></TD>
+
+<TD>CSIRO</TD>
+</TR>
+
+<TR>
+<TD>Updates: <A HREF="ftp://ftp.is.co.za/rfc/rfc1034.txt">1034</A>, <A HREF="rfc1035/">1035</A></TD>
+
+<TD></TD>
+
+<TD>March 1998</TD>
+</TR>
+
+<TR>
+<TD>Category: Standards Track&nbsp;</TD>
+
+<TD></TD>
+
+<TD></TD>
+</TR>
+</TABLE>
+&nbsp;
+<CENTER>
+<H1>
+Negative Caching of DNS Queries (DNS NCACHE)</H1></CENTER>
+
+<H2>
+Status of this Memo</H2>
+This document specifies an Internet standards track protocol for the Internet
+community, and requests discussion and suggestions for improvements.&nbsp;
+Please refer to the current edition of the "Internet Official Protocol
+Standards" (STD 1) for the standardization state and status of this protocol.&nbsp;
+Distribution of this memo is unlimited.
+<BR>&nbsp;
+<H2>
+Copyright Notice</H2>
+Copyright (C) The Internet Society (1998).&nbsp; All Rights Reserved.
+<BR>&nbsp;
+<H2>
+Abstract</H2>
+[<A HREF="ftp://ftp.is.co.za/rfc/rfc1034.txt">RFC1034</A>] provided a description
+of how to cache negative responses. It however had a fundamental flaw in
+that it did not allow a name server to hand out those cached responses
+to other resolvers, thereby greatly reducing the effect of the caching.&nbsp;
+This document addresses issues raise in the light of experience and replaces
+[<A HREF="ftp://ftp.is.co.za/rfc/rfc1034.txt">RFC1034</A> Section 4.3.4].
+
+<P>Negative caching was an optional part of the DNS specification and deals
+with the caching of the non-existence of an RRset [<A HREF="rfc2181.html">RFC2181</A>]
+or domain name.
+
+<P>Negative caching is useful as it reduces the response time for negative
+answers.&nbsp; It also reduces the number of messages that have to be sent
+between resolvers and name servers hence overall network traffic.&nbsp;
+A large proportion of DNS traffic on the Internet could be eliminated if
+all resolvers implemented negative caching.&nbsp; With this in mind negative
+caching should no longer be seen as an optional part of a DNS resolver.
+<BR>&nbsp;
+<H2>
+Contents</H2>
+<B><A HREF="#1 - Terminology">1 - Terminology</A></B>
+<BR><B><A HREF="#2 - Negative Responses">2 - Negative Responses</A></B>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#2.1 - Name error">2.1 - Name Error</A>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF="#2.1.1 Special Handling of Name Error">2.1.1 Special Handling
+of Name Error</A>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#2.2 - No Data">2.2 - No Data</A>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF="#2.2.1 - Special Handling of No Data">2.2.1 Special Handling of
+No Data</A>
+<BR><B><A HREF="#3 - Negative Answers from Authoritative Servers">3 - Negative
+Answers from Authoritative Servers</A></B>
+<BR><B><A HREF="#4 - SOA Minimum Field">4 - SOA Minimum Field</A></B>
+<BR><B><A HREF="#5 - Caching Negative Answers">5 - Caching Negative Answers</A></B>
+<BR><B><A HREF="#6 - Negative answers from the Cache">6 - Negative answers
+from the cache</A></B>
+<BR><B><A HREF="#7 - Other Negative Responses">7 - Other Negative Responses</A></B>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#7.1 Server Failure (Optional)">7.1
+Server Failure (OPTIONAL)</A>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#7.2 Dead / Unreachable Server (OPTIONAL)">7.2
+Dead / Unreachable Server (OPTIONAL)</A>
+<BR><B><A HREF="#8 - Changes from RFC 1034">8 - Changes from RFC 1034</A></B>
+<BR><B><A HREF="#9 - History of Negative Caching">9 - History of Negative
+Caching</A></B>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#Chives">9.1 CHIVES</A>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#9.2 BIND">9.2 BIND</A>
+<BR><B><A HREF="#10 Example">10&nbsp; Example</A></B>
+<BR><B><A HREF="#11 Security Considerations">11 Security Considerations</A></B>
+<BR><B><A HREF="#Acknowledgments">Acknowledgments</A></B>
+<BR><B><A HREF="#References">References</A></B>
+<BR><B><A HREF="#Author's Address">Author's Address</A></B>
+<BR><B><A HREF="#Full Copyright Statement">Full Copyright Statement</A></B>
+<BR>&nbsp;
+<H2>
+<A NAME="1 - Terminology"></A>1 - Terminology</H2>
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED",&nbsp; "MAY", and "OPTIONAL" in this document
+are to be interpreted as described in [<A HREF="rfc2219.html">RFC2119</A>].
+
+<P>"Negative caching" - the storage of knowledge that something does not
+exist.&nbsp; We can store the knowledge that a record has a particular
+value.&nbsp; We can also do the reverse, that is, to store the knowledge
+that a record does not exist.&nbsp; It is the storage of knowledge that
+something does not exist, cannot or does not give an answer that we call
+negative caching.
+
+<P>"QNAME" - the name in the query section of an answer, or where this
+resolves to a CNAME, or CNAME chain, the data field of the last CNAME.&nbsp;
+The last CNAME in this sense is that which contains a value which does
+not resolve to another CNAME.&nbsp; Implementations should note that including
+CNAME records in responses in order, so that the first has the label from
+the query section, and then each in sequence has the label from the data
+section of the previous (where more than one CNAME is needed) allows the
+sequence to be processed in one pass, and considerably eases the task of
+the receiver.&nbsp; Other relevant records (such as SIG RRs [<A HREF="rfc2065.html">RFC2065</A>])
+can be interspersed amongst the CNAMEs.
+
+<P>"NXDOMAIN" - an alternate expression for the "Name Error" RCODE as described
+in [<A HREF="rfc1035/rfc1035.html">RFC1035</A> Section 4.1.1] and the two
+terms are used interchangeably in this document.
+
+<P>"NODATA" - a pseudo RCODE which indicates that the name is valid, for
+the given class, but are no records of the given type.&nbsp; A NODATA response
+has to be inferred from the answer.
+
+<P>"FORWARDER" - a nameserver used to resolve queries instead of directly
+using the authoritative nameserver chain.&nbsp; The forwarder typically
+either has better access to the internet, or maintains a bigger cache which
+may be shared amongst many resolvers.&nbsp; How a server is identified
+as a FORWARDER, or knows it is a FORWARDER is outside the scope of this
+document.&nbsp; However if you are being used as a forwarder the query
+will have the recursion desired flag set.
+
+<P>An understanding of [<A HREF="ftp://ftp.is.co.za/rfc/rfc1034.txt">RFC1034</A>],
+[<A HREF="rfc1035/rfc1035.html">RFC1035</A>] and [<A HREF="rfc2065.html">RFC2065</A>]
+is expected when reading this document.
+<BR>&nbsp;
+<H2>
+<A NAME="2 - Negative Responses"></A>2 - Negative Responses</H2>
+The most common negative responses indicate that a particular RRset does
+not exist in the DNS.&nbsp; The first sections of this document deal with
+this case.&nbsp; Other negative responses can indicate failures of a nameserver,
+those are dealt with in <A HREF="#7 - Other Negative Responses">section
+7</A> (Other Negative Responses).
+
+<P>A negative response is indicated by one of the following conditions:
+<BR>&nbsp;
+<H3>
+<A NAME="2.1 - Name error"></A>2.1 - Name Error</H3>
+Name errors (NXDOMAIN) are indicated by the presence of "Name Error" in
+the RCODE field.&nbsp; In this case the domain referred to by the QNAME
+does not exist.&nbsp; Note: the answer section may have SIG and CNAME RRs
+and the authority section may have SOA, NXT [<A HREF="rfc2065.html">RFC2065</A>]
+and SIG RRsets.
+
+<P>It is possible to distinguish between a referral and a NXDOMAIN response
+by the presense of NXDOMAIN in the RCODE regardless of the presence of
+NS or SOA records in the authority section.
+
+<P>NXDOMAIN responses can be categorised into four types by the contents
+of the authority section.&nbsp; These are shown below along with a referral
+for comparison.&nbsp; Fields not mentioned are not important in terms of
+the examples.
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <B>NXDOMAIN RESPONSE:
+TYPE 1.</B></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Header:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RDCODE=NXDOMAIN</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Query:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+AN.EXAMPLE. A</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Answer:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+AN.EXAMPLE. CNAME TRIPPLE.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Authority:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+XX. SOA NS1.XX. HOSTMASTER.NS1.XX. ....</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+XX. NS NS1.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+XX. NS NS2.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Additional:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS1.XX. A 127.0.0.2</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS2.XX. A 127.0.0.3</TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <B>NXDOMAIN RESPONSE:
+TYPE 2.</B></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Header:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RDCODE=NXDOMAIN</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Query:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+AN.EXAMPLE. A</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Answer:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+AN.EXAMPLE. CNAME TRIPPLE.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Authority:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+XX. SOA NS1.XX. HOSTMASTER.NS1.XX. ....</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Additional:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;empty></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <B>NXDOMAIN RESPONSE:
+TYPE 3.</B></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Header:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RDCODE=NXDOMAIN</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Query:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+AN.EXAMPLE. A</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Answer:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+AN.EXAMPLE. CNAME TRIPPLE.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Authority:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;empty></TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Additional:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;empty></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <B>NXDOMAIN RESPONSE:
+TYPE 4</B></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Header:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RDCODE=NXDOMAIN</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Query:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+AN.EXAMPLE. A</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Answer:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+AN.EXAMPLE. CNAME TRIPPLE.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Authority:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+XX. NS NS1.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+XX. NS NS2.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Additional:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS1.XX. A 127.0.0.2</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS2.XX. A 127.0.0.3</TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <B>REFERRAL RESPONSE.</B></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Header:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RDCODE=NOERROR</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Query:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+AN.EXAMPLE. A</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Answer:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+AN.EXAMPLE. CNAME TRIPPLE.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Authority:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+XX. NS NS1.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+XX. NS NS2.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Additional:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS1.XX. A 127.0.0.2</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS2.XX. A 127.0.0.3</TT>
+
+<P>Note, in the four examples of NXDOMAIN responses, it is known that the
+name "AN.EXAMPLE." exists, and has as its value a CNAME record. The NXDOMAIN
+refers to "TRIPPLE.XX", which is then known not to exist.&nbsp; On the
+other hand, in the referral example, it is shown that "AN.EXAMPLE" exists,
+and has a CNAME RR as its value, but nothing is known one way or the other
+about the existence of "TRIPPLE.XX", other than that "NS1.XX" or "NS2.XX"
+can be consulted as the next step in
+<BR>obtaining information about it.
+
+<P>Where no CNAME records appear, the NXDOMAIN response refers to the name
+in the label of the RR in the question section.
+<BR>&nbsp;
+<H4>
+<A NAME="2.1.1 Special Handling of Name Error"></A>2.1.1 Special Handling
+of Name Error</H4>
+This section deals with errors encountered when implementing negative caching
+of NXDOMAIN responses.
+
+<P>There are a large number of resolvers currently in existence that fail
+to correctly detect and process all forms of NXDOMAIN response. Some resolvers
+treat a TYPE 1 NXDOMAIN response as a referral.&nbsp; To alleviate this
+problem it is recommended that servers that are authoritative for the NXDOMAIN
+response only send TYPE 2 NXDOMAIN responses, that is the authority section
+contains a SOA record and no NS records.&nbsp; If a non- authoritative
+server sends a type 1 NXDOMAIN response to one of these old resolvers,
+the result will be an unnecessary query to an authoritative server.&nbsp;
+This is undesirable, but not fatal except when the server is being used
+a FORWARDER.&nbsp; If however the resolver is using the server as a FORWARDER
+to such a resolver it will be necessary to disable the sending of TYPE
+1 NXDOMAIN response to it, use TYPE 2 NXDOMAIN instead.
+
+<P>Some resolvers incorrectly continue processing if the authoritative
+answer flag is not set, looping until the query retry threshold is exceeded
+and then returning SERVFAIL.&nbsp; This is a problem when your nameserver
+is listed as a FORWARDER for such resolvers.&nbsp; If the nameserver is
+used as a FORWARDER by such resolver, the authority flag will have to be
+forced on for NXDOMAIN responses to these resolvers.&nbsp; In practice
+this causes no problems even if turned on always, and has been the default
+behaviour in BIND from 4.9.3 onwards.
+<BR>&nbsp;
+<H3>
+<A NAME="2.2 - No Data"></A>2.2 - No Data</H3>
+NODATA is indicated by an answer with the RCODE set to NOERROR and no relevant
+answers in the answer section.&nbsp; The authority section will contain
+an SOA record, or there will be no NS records there.
+
+<P>NODATA responses have to be algorithmically determined from the response's
+contents as there is no RCODE value to indicate NODATA. In some cases to
+determine with certainty that NODATA is the correct response it can be
+necessary to send another query.
+
+<P>The authority section may contain NXT and SIG RRsets in addition to
+NS and SOA records.&nbsp; CNAME and SIG records may exist in the answer
+section.
+
+<P>It is possible to distinguish between a NODATA and a referral response
+by the presence of a SOA record in the authority section or the absence
+of NS records in the authority section.
+
+<P>NODATA responses can be categorised into three types by the contents
+of the authority section.&nbsp; These are shown below along with a referral
+for comparison.&nbsp; Fields not mentioned are not important in terms of
+the examples.
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <B>NODATA RESPONSE: TYPE
+1.</B></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Header:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RDCODE=NOERROR</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Query:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ANOTHER.EXAMPLE. A</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Answer:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;empty></TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Authority:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+EXAMPLE. SOA NS1.XX. HOSTMASTER.NS1.XX. ....</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+EXAMPLE. NS NS1.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+EXAMPLE. NS NS2.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Additional:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS1.XX. A 127.0.0.2</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS2.XX. A 127.0.0.3</TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <B>NO DATA RESPONSE:
+TYPE 2.</B></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Header:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RDCODE=NOERROR</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Query:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ANOTHER.EXAMPLE. A</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Answer:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;empty></TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Authority:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+EXAMPLE. SOA NS1.XX. HOSTMASTER.NS1.XX. ....</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Additional:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;empty></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <B>NO DATA RESPONSE:
+TYPE 3.</B></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Header:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RDCODE=NOERROR</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Query:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ANOTHER.EXAMPLE. A</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Answer:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;empty></TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Authority:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;empty></TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Additional:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;empty></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <B>REFERRAL RESPONSE.</B></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Header:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RDCODE=NOERROR</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Query:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ANOTHER.EXAMPLE. A</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Answer:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;empty></TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Authority:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+EXAMPLE. NS NS1.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+EXAMPLE. NS NS2.XX.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Additional:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS1.XX. A 127.0.0.2</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS2.XX. A 127.0.0.3</TT>
+<BR>&nbsp;
+
+<P>These examples, unlike the NXDOMAIN examples above, have no CNAME records,
+however they could, in just the same way that the NXDOMAIN examples did,
+in which case it would be the value of the last CNAME (the QNAME) for which
+NODATA would be concluded.
+<BR>&nbsp;
+<H4>
+<A NAME="2.2.1 - Special Handling of No Data"></A>2.2.1 - Special Handling
+of No Data</H4>
+There are a large number of resolvers currently in existence that fail
+to correctly detect and process all forms of NODATA response. Some resolvers
+treat a TYPE 1 NODATA response as a referral.&nbsp; To alleviate this problem
+it is recommended that servers that are authoritative for the NODATA response
+only send TYPE 2 NODATA responses, that is the authority section contains
+a SOA record and no NS records.&nbsp; Sending a TYPE 1 NODATA response
+from a non-authoritative server to one of these resolvers will only result
+in an unnecessary query.&nbsp; If a server is listed as a FORWARDER for
+another resolver it may also be necessary to disable the sending of TYPE
+1 NODATA response for non-authoritative NODATA responses.
+
+<P>Some name servers fail to set the RCODE to NXDOMAIN in the presence
+of CNAMEs in the answer section.&nbsp; If a definitive NXDOMAIN / NODATA
+answer is required in this case the resolver must query again using the
+QNAME as the query label.
+<BR>&nbsp;
+<H2>
+<A NAME="3 - Negative Answers from Authoritative Servers"></A>3 - Negative
+Answers from Authoritative Servers</H2>
+Name servers authoritative for a zone MUST include the SOA record of the
+zone in the authority section of the response when reporting an NXDOMAIN
+or indicating that no data of the requested type exists. This is required
+so that the response may be cached.&nbsp; The TTL of this record is set
+from the minimum of the MINIMUM field of the SOA record and the TTL of
+the SOA itself, and indicates how long a resolver may cache the negative
+answer.&nbsp; The TTL SIG record associated with the SOA record should
+also be trimmed in line with the SOA's TTL.
+
+<P>If the containing zone is signed [<A HREF="rfc2065.html">RFC2065</A>]
+the SOA and appropriate NXT and SIG records MUST be added.
+<BR>&nbsp;
+<H2>
+<A NAME="4 - SOA Minimum Field"></A>4 - SOA Minimum Field</H2>
+The SOA minimum field has been overloaded in the past to have three different
+meanings, the minimum TTL value of all RRs in a zone, the default TTL of
+RRs which did not contain a TTL value and the TTL of negative responses.
+
+<P>Despite being the original defined meaning, the first of these, the
+minimum TTL value of all RRs in a zone, has never in practice been used
+and is hereby deprecated.
+
+<P>The second, the default TTL of RRs which contain no explicit TTL in
+the master zone file, is relevant only at the primary server.&nbsp; After
+a zone transfer all RRs have explicit TTLs and it is impossible to determine
+whether the TTL for a record was explicitly set or derived from the default
+after a zone transfer.&nbsp; Where a server does not require RRs to include
+the TTL value explicitly, it should provide a mechanism, not being the
+value of the MINIMUM field of the SOA record, from which the missing TTL
+values are obtained.&nbsp; How this is done is implementation dependent.
+
+<P>The Master File format [<A HREF="rfc1035/rfc1035.html">RFC 1035</A>
+Section 5] is extended to include the following directive:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+$TTL &lt;TTL> [comment]
+
+<P>All resource records appearing after the directive, and which do not
+explicitly include a TTL value, have their TTL set to the TTL given in
+the $TTL directive.&nbsp; SIG records without a explicit TTL get their
+TTL from the "original TTL" of the SIG record [<A HREF="rfc2065.html">RFC
+2065</A> Section 4.5].
+
+<P>The remaining of the current meanings, of being the TTL to be used for
+negative responses, is the new defined meaning of the SOA minimum field.
+<BR>&nbsp;
+<H2>
+<A NAME="5 - Caching Negative Answers"></A>5 - Caching Negative Answers</H2>
+Like normal answers negative answers have a time to live (TTL).&nbsp; As
+there is no record in the answer section to which this TTL can be applied,
+the TTL must be carried by another method.&nbsp; This is done by including
+the SOA record from the zone in the authority section of the reply.&nbsp;
+When the authoritative server creates this record its TTL is taken from
+the minimum of the SOA.MINIMUM field and SOA's TTL. This TTL decrements
+in a similar manner to a normal cached answer and upon reaching zero (0)
+indicates the cached negative answer MUST NOT be used again.
+
+<P>A negative answer that resulted from a name error (NXDOMAIN) should
+be cached such that it can be retrieved and returned in response to another
+query for the same &lt;QNAME, QCLASS> that resulted in the cached negative
+response.
+
+<P>A negative answer that resulted from a no data error (NODATA) should
+be cached such that it can be retrieved and returned in response to another
+query for the same &lt;QNAME, QTYPE, QCLASS> that resulted in the cached
+negative response.
+
+<P>The NXT record, if it exists in the authority section of a negative
+answer received, MUST be stored such that it can be be located and returned
+with SOA record in the authority section, as should any SIG records in
+the authority section.&nbsp; For NXDOMAIN answers there is no "necessary"
+obvious relationship between the NXT records and the QNAME.&nbsp; The NXT
+record MUST have the same owner name as the query name for NODATA responses.
+
+<P>Negative responses without SOA records SHOULD NOT be cached as there
+is no way to prevent the negative responses looping forever between a pair
+of servers even with a short TTL.
+
+<P>Despite the DNS forming a tree of servers, with various mis-configurations
+it is possible to form a loop in the query graph, e.g. two servers listing
+each other as forwarders, various lame server configurations.&nbsp; Without
+a TTL count down a cache negative response when received by the next server
+would have its TTL reset.&nbsp; This negative indication could then live
+forever circulating between the servers involved.
+
+<P>As with caching positive responses it is sensible for a resolver to
+limit for how long it will cache a negative response as the protocol supports
+caching for up to 68 years.&nbsp; Such a limit should not be greater than
+that applied to positive answers and preferably be tunable.&nbsp; Values
+of one to three hours have been found to work well and would make sensible
+a default.&nbsp; Values exceeding one day have been found to be problematic.
+<BR>&nbsp;
+<H2>
+<A NAME="6 - Negative answers from the Cache"></A>6 - Negative answers
+from the cache</H2>
+When a server, in answering a query, encounters a cached negative response
+it MUST add the cached SOA record to the authority section of the response
+with the TTL decremented by the amount of time it was stored in the cache.&nbsp;
+This allows the NXDOMAIN / NODATA response to time out correctly.
+
+<P>If a NXT record was cached along with SOA record it MUST be added to
+the authority section.&nbsp; If a SIG record was cached along with a NXT
+record it SHOULD be added to the authority section.
+
+<P>As with all answers coming from the cache, negative answers SHOULD have
+an implicit referral built into the answer.&nbsp; This enables the resolver
+to locate an authoritative source.&nbsp; An implicit referral is characterised
+by NS records in the authority section referring the resolver towards a
+authoritative source.&nbsp; NXDOMAIN types 1 and 4 responses contain implicit
+referrals as does NODATA type 1 response.
+<BR>&nbsp;
+<H2>
+<A NAME="7 - Other Negative Responses"></A>7 - Other Negative Responses</H2>
+Caching of other negative responses is not covered by any existing RFC.&nbsp;
+There is no way to indicate a desired TTL in these responses. Care needs
+to be taken to ensure that there are not forwarding loops.
+<BR>&nbsp;
+<H3>
+<A NAME="7.1 Server Failure (Optional)"></A>7.1 Server Failure (OPTIONAL)</H3>
+Server failures fall into two major classes.&nbsp; The first is where a
+server can determine that it has been misconfigured for a zone.&nbsp; This
+may be where it has been listed as a server, but not configured to be a
+server for the zone, or where it has been configured to be a server for
+the zone, but cannot obtain the zone data for some reason.&nbsp; This can
+occur either because the zone file does not exist or contains errors, or
+because another server from which the zone should have been available either
+did not respond or was unable or unwilling to supply the zone.
+
+<P>The second class is where the server needs to obtain an answer from
+elsewhere, but is unable to do so, due to network failures, other servers
+that don't reply, or return server failure errors, or similar.
+
+<P>In either case a resolver MAY cache a server failure response.&nbsp;
+If it does so it MUST NOT cache it for longer than five (5) minutes, and
+it MUST be cached against the specific query tuple &lt;query name, type,
+class, server IP address>.
+<BR>&nbsp;
+<H3>
+<A NAME="7.2 Dead / Unreachable Server (OPTIONAL)"></A>7.2 Dead / Unreachable
+Server (OPTIONAL)</H3>
+Dead / Unreachable servers are servers that fail to respond in any way
+to a query or where the transport layer has provided an indication that
+the server does not exist or is unreachable.&nbsp; A server may be deemed
+to be dead or unreachable if it has not responded to an outstanding query
+within 120 seconds.
+
+<P>Examples of transport layer indications are:
+
+<P>&nbsp;&nbsp; ICMP error messages indicating host, net or port unreachable.
+<BR>&nbsp;&nbsp; TCP resets
+<BR>&nbsp;&nbsp; IP stack error messages providing similar indications
+to those above.
+
+<P>A server MAY cache a dead server indication.&nbsp; If it does so it
+MUST NOT be deemed dead for longer than five (5) minutes.&nbsp; The indication
+MUST be stored against query tuple &lt;query name, type, class, server
+IP address> unless there was a transport layer indication that the server
+does not exist, in which case it applies to all queries to that specific
+IP address.
+<BR>&nbsp;
+<H2>
+<A NAME="8 - Changes from RFC 1034"></A>8 - Changes from RFC 1034</H2>
+Negative caching in resolvers is no-longer optional, if a resolver caches
+anything it must also cache negative answers.
+
+<P>Non-authoritative negative answers MAY be cached.
+
+<P>The SOA record from the authority section MUST be cached.&nbsp; Name
+error indications must be cached against the tuple &lt;query name, QCLASS>.
+No data indications must be cached against &lt;query name, QTYPE, QCLASS>
+tuple.
+
+<P>A cached SOA record must be added to the response.&nbsp; This was explicitly
+not allowed because previously the distinction between a normal cached
+SOA record, and the SOA cached as a result of a negative response was not
+made, and simply extracting a normal cached SOA and adding that to a cached
+negative response causes problems.
+
+<P>The $TTL TTL directive was added to the master file format.
+<BR>&nbsp;
+<H2>
+<A NAME="9 - History of Negative Caching"></A>9 - History of Negative Caching</H2>
+This section presents a potted history of negative caching in the DNS and
+forms no part of the technical specification of negative caching.
+
+<P>It is interesting to note that the same concepts were re-invented in
+both the CHIVES and BIND servers.
+
+<P>The history of the early CHIVES work (<A HREF="#Chives">Section 9.1</A>)
+was supplied by Rob Austein &lt;<A HREF="mailto:sra@epilogue.com">sra@epilogue.com</A>>
+and is reproduced here in the form in which he supplied it [MPA].
+
+<P>Sometime around the spring of 1985, I mentioned to Paul Mockapetris
+that our experience with his JEEVES DNS resolver had pointed out the need
+for some kind of negative caching scheme.&nbsp; Paul suggested that we
+simply cache authoritative errors, using the SOA MINIMUM value for the
+zone that would have contained the target RRs.&nbsp; I'm pretty sure that
+this conversation took place before <A HREF="ftp://ftp.is.co.za/rfc/rfc973.txt">RFC-973</A>
+was written, but it was never clear to me whether this idea was something
+that Paul came up with on the spot in response to my question or something
+he'd already been planning to put into the document that became <A HREF="ftp://ftp.is.co.za/rfc/rfc973.txt">RFC-973</A>.
+In any case, neither of us was entirely sure that the SOA MINIMUM value
+was really the right metric to use, but it was available and was under
+the control of the administrator of the target zone, both of which seemed
+to us at the time to be important feature.
+
+<P><A NAME="Chives"></A>Late in 1987, I released the initial beta-test
+version of CHIVES, the DNS resolver I'd written to replace Paul's JEEVES
+resolver.&nbsp; CHIVES included a search path mechanism that was used pretty
+heavily at several sites (including my own), so CHIVES also included a
+negative caching mechanism based on SOA MINIMUM values.&nbsp; The basic
+strategy was to cache authoritative error codes keyed by the exact query
+parameters (QNAME, QCLASS, and QTYPE), with a cache TTL equal to the SOA
+MINIMUM value.&nbsp; CHIVES did not attempt to track down SOA RRs if they
+weren't supplied in the authoritative response, so it never managed to
+completely eliminate the gratuitous DNS error message traffic, but it did
+help considerably.&nbsp; Keep in mind that this was happening at about
+the same time as the near-collapse of the ARPANET due to congestion caused
+by exponential growth and the the "old" (pre-VJ) TCP retransmission algorithm,
+so negative caching resulted in drasticly better DNS response time for
+our users, mailer daemons, etcetera.
+
+<P>As far as I know, CHIVES was the first resolver to implement negative
+caching.&nbsp; CHIVES was developed during the twilight years of TOPS-20,
+so it never ran on very many machines, but the few machines that it did
+run on were the ones that were too critical to shut down quickly no matter
+how much it cost to keep them running.&nbsp; So what few users we did have
+tended to drive CHIVES pretty hard.&nbsp; Several interesting bits of DNS
+technology resulted from that, but the one that's relevant here is the
+MAXTTL configuration parameter.
+
+<P>Experience with JEEVES had already shown that RRs often showed up with
+ridiculously long TTLs (99999999 was particularly popular for many years,
+due to bugs in the code and documentation of several early versions of
+BIND), and that robust software that blindly believed such TTLs could create
+so many strange failures that it was often necessary to reboot the resolver
+frequently just to clear this garbage out of the cache.&nbsp; So CHIVES
+had a configuration parameter "MAXTTL", which specified the maximum "reasonable"
+TTL in a received RR.&nbsp; RRs with TTLs greater than MAXTTL would either
+have their TTLs reduced to MAXTTL or would be discarded entirely, depending
+on the setting of another configuration parameter.
+
+<P>When we started getting field experience with CHIVES's negative caching
+code, it became clear that the SOA MINIMUM value was often large enough
+to cause the same kinds of problems for negative caching as the huge TTLs
+in RRs had for normal caching (again, this was in part due to a bug in
+several early versions of BIND, where a secondary server would authoritatively
+deny all knowledge of its zones if it couldn't contact the primaries on
+reboot).&nbsp; So we started running the negative cache TTLs through the
+MAXTTL check too, and continued to experiment.
+
+<P>The configuration that seemed to work best on WSMR-SIMTEL20.ARMY.MIL
+(last of the major Internet TOPS-20 machines to be shut down, thus the
+last major user of CHIVES, thus the place where we had the longest experimental
+baseline) was to set MAXTTL to about three days. Most of the traffic initiated
+by SIMTEL20 in its last years was mail-related, and the mail queue timeout
+was set to one week, so this gave a "stuck" message several tries at complete
+DNS resolution, without bogging down the system with a lot of useless queries.&nbsp;
+Since (for reasons that now escape me) we only had the single MAXTTL parameter
+rather than separate ones for positive and negative caching, it's not clear
+how much effect this setting of MAXTTL had on the negative caching code.
+
+<P>CHIVES also included a second, somewhat controversial mechanism which
+took the place of negative caching in some cases.&nbsp; The CHIVES resolver
+daemon could be configured to load DNS master files, giving it the ability
+to act as what today would be called a "stealth secondary".&nbsp; That
+is, when configured in this way, the resolver had direct access to authoritative
+information for heavily-used zones. The search path mechanisms in CHIVES
+reflected this: there were actually two separate search paths, one of which
+only searched local authoritative zone data, and one which could generate
+normal iterative queries.&nbsp; This cut down on the need for negative
+caching in cases where usage was predictably heavy (e.g., the resolver
+on XX.LCS.MIT.EDU always loaded the zone files for both LCS.MIT.EDU and
+AI.MIT.EDU and put both of these suffixes into the "local" search path,
+since between them the hosts in these two zones accounted for the bulk
+of the DNS traffic).&nbsp; Not all sites running CHIVES chose to use this
+feature; C.CS.CMU.EDU, for example, chose to use the "remote" search path
+for everything because there were too many different sub-zones at CMU for
+zone shadowing to be practical for them, so they relied pretty heavily
+on negative caching even for local traffic.
+
+<P>Overall, I still think the basic design we used for negative caching
+was pretty reasonable: the zone administrator specified how long to cache
+negative answers, and the resolver configuration chose the actual cache
+time from the range between zero and the period specified by the zone administrator.&nbsp;
+There are a lot of details I'd do differently now (like using a new SOA
+field instead of overloading the MINIMUM field), but after more than a
+decade, I'd be more worried if we couldn't think of at least a few improvements.
+<BR>&nbsp;
+<H3>
+<A NAME="9.2 BIND"></A>9.2 BIND</H3>
+While not the first attempt to get negative caching into BIND, in July
+1993, BIND 4.9.2 ALPHA, Anant Kumar of ISI supplied code that implemented,
+validation and negative caching (NCACHE).&nbsp; This code had a 10 minute
+TTL for negative caching and only cached the indication that there was
+a negative response, NXDOMAIN or NOERROR_NODATA. This is the origin of
+the NODATA pseudo response code mentioned above.
+
+<P>Mark Andrews of CSIRO added code (RETURNSOA) that stored the SOA record
+such that it could be retrieved by a similar query.&nbsp; UUnet complained
+that they were getting old answers after loading a new zone, and the option
+was turned off, BIND 4.9.3-alpha5, April 1994. In reality this indicated
+that the named needed to purge the space the zone would occupy.&nbsp; Functionality
+to do this was added in BIND 4.9.3 BETA11 patch2, December 1994.
+
+<P>RETURNSOA was re-enabled by default, BIND 4.9.5-T1A, August 1996.
+<BR>&nbsp;
+<H2>
+<A NAME="10 Example"></A>10 Example</H2>
+The following example is based on a signed zone that is empty apart from
+the nameservers.&nbsp; We will query for WWW.XX.EXAMPLE showing initial
+response and again 10 minutes later.&nbsp; Note 1: during the intervening
+10 minutes the NS records for XX.EXAMPLE have expired. Note 2: the TTL
+of the SIG records are not explicitly set in the zone file and are hence
+the TTL of the RRset they are the signature for.
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp; <B>Zone File:</B></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp; $TTL 86400</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp; $ORIGIN XX.EXAMPLE.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp; @&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SOA&nbsp;&nbsp;&nbsp;&nbsp; NS1.XX.EXAMPLE.
+HOSTMATER.XX.EXAMPLE. (</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1997102000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; serial</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1800&nbsp;&nbsp;&nbsp; ; refresh (30 mins)</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+900&nbsp;&nbsp;&nbsp;&nbsp; ; retry (15 mins)</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+604800&nbsp; ; expire (7 days)</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1200 ) ; minimum (20 mins)</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SIG&nbsp;&nbsp;&nbsp;&nbsp; SOA ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1200&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NXT&nbsp;&nbsp;&nbsp;&nbsp; NS1.XX.EXAMPLE. A NXT SIG SOA NS KEY</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SIG&nbsp;&nbsp;&nbsp;&nbsp; NXT ... XX.EXAMPLE.
+...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 300&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS1.XX.EXAMPLE.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 300&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS2.XX.EXAMPLE.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SIG&nbsp;&nbsp;&nbsp;&nbsp; NS ... XX.EXAMPLE.
+...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; KEY&nbsp;&nbsp;&nbsp;&nbsp; 0x4100 1 1
+...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SIG&nbsp;&nbsp;&nbsp;&nbsp; KEY ... XX.EXAMPLE.
+...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SIG&nbsp;&nbsp;&nbsp;&nbsp; KEY ... EXAMPLE.
+...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp; NS1&nbsp;&nbsp;&nbsp;&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10.0.0.1</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SIG&nbsp;&nbsp;&nbsp;&nbsp; A ... XX.EXAMPLE.
+...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1200&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NXT&nbsp;&nbsp;&nbsp;&nbsp; NS2.XX.EXAMPLE. A NXT SIG</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SIG&nbsp;&nbsp;&nbsp;&nbsp; NXT ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp; NS2&nbsp;&nbsp;&nbsp;&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10.0.0.2</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SIG&nbsp;&nbsp;&nbsp;&nbsp; A ... XX.EXAMPLE.
+...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1200&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NXT&nbsp;&nbsp;&nbsp;&nbsp; XX.EXAMPLE. A NXT SIG</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SIG&nbsp;&nbsp;&nbsp;&nbsp; NXT ... XX.EXAMPLE.
+...</TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp; <B>Initial Response:</B></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp; Header:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RDCODE=NXDOMAIN,
+AA=1, QR=1, TC=0</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp; Query:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WWW.XX.EXAMPLE.
+IN A</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp; Answer:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;empty></TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp; Authority:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XX.EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1200 IN SOA NS1.XX.EXAMPLE. ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XX.EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1200 IN SIG SOA ... XX.EXAMPLE. ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS2.XX.EXAMPLE.&nbsp;
+1200 IN NXT XX.EXAMPLE. NXT A NXT SIG</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS2.XX.EXAMPLE.&nbsp;
+1200 IN SIG NXT ... XX.EXAMPLE. ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XX.EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;
+86400 IN NS&nbsp; NS1.XX.EXAMPLE.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XX.EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;
+86400 IN NS&nbsp; NS2.XX.EXAMPLE.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XX.EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;
+86400 IN SIG NS ... XX.EXAMPLE. ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp; Additional</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XX.EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;
+86400 IN KEY 0x4100 1 1 ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XX.EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;
+86400 IN SIG KEY ... EXAMPLE. ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS1.XX.EXAMPLE.
+86400 IN A&nbsp;&nbsp; 10.0.0.1</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS1.XX.EXAMPLE.
+86400 IN SIG A ... XX.EXAMPLE. ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS2.XX.EXAMPLE.
+86400 IN A&nbsp;&nbsp; 10.0.0.2</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS3.XX.EXAMPLE.
+86400 IN SIG A ... XX.EXAMPLE. ...</TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <B>After 10 Minutes:</B></TT>
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Header:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RDCODE=NXDOMAIN,
+AA=0, QR=1, TC=0</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Query:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WWW.XX.EXAMPLE.
+IN A</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Answer:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;empty></TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Authority:</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XX.EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+600 IN SOA NS1.XX.EXAMPLE. ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XX.EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+600 IN SIG SOA ... XX.EXAMPLE. ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS2.XX.EXAMPLE.&nbsp;&nbsp;
+600 IN NXT XX.EXAMPLE. NXT A NXT SIG</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS2.XX.EXAMPLE.&nbsp;&nbsp;
+600 IN SIG NXT ... XX.EXAMPLE. ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+65799 IN NS&nbsp; NS1.YY.EXAMPLE.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+65799 IN NS&nbsp; NS2.YY.EXAMPLE.</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+65799 IN SIG NS ... XX.EXAMPLE. ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Additional</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XX.EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;
+65800 IN KEY 0x4100 1 1 ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XX.EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;
+65800 IN SIG KEY ... EXAMPLE. ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS1.YY.EXAMPLE.
+65799 IN A&nbsp;&nbsp; 10.100.0.1</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS1.YY.EXAMPLE.
+65799 IN SIG A ... EXAMPLE. ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS2.YY.EXAMPLE.
+65799 IN A&nbsp;&nbsp; 10.100.0.2</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS3.YY.EXAMPLE.
+65799 IN SIG A ... EXAMPLE. ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+65799 IN KEY 0x4100 1 1 ...</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXAMPLE.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+65799 IN SIG KEY ... . ...</TT>
+<BR>&nbsp;
+<BR>&nbsp;
+<H2>
+<A NAME="11 Security Considerations"></A>11 Security Considerations</H2>
+It is believed that this document does not introduce any significant additional
+security threats other that those that already exist when using data from
+the DNS.
+
+<P>With negative caching it might be possible to propagate a denial of
+service attack by spreading a NXDOMAIN message with a very high TTL. Without
+negative caching that would be much harder.&nbsp; A similar effect could
+be achieved previously by spreading a bad A record, so that the server
+could not be reached - which is almost the same.&nbsp; It has the same
+effect as far as what the end user is able to do, but with a different
+psychological effect.&nbsp; With the bad A, I feel "damn the network is
+broken again" and try again tomorrow.&nbsp; With the "NXDOMAIN" I feel
+"Oh, they've turned off the server and it doesn't exist any more" and probably
+never bother trying this server again.
+
+<P>A practical example of this is a SMTP server where this behaviour is
+encoded. With a NXDOMAIN attack the mail message would bounce immediately,
+where as with a bad A attack the mail would be queued and could potentially
+get through after the attack was suspended.
+
+<P>For such an attack to be successful, the NXDOMAIN indiction must be
+injected into a parent server (or a busy caching resolver).&nbsp; One way
+this might be done by the use of a CNAME which results in the parent server
+querying an attackers server.&nbsp; Resolvers that wish to prevent such
+attacks can query again the final QNAME ignoring any NS data in the query
+responses it has received for this query.
+
+<P>Implementing TTL sanity checking will reduce the effectiveness of such
+an attack, because a successful attack would require re-injection of the
+bogus data at more frequent intervals.
+
+<P>DNS Security [<A HREF="rfc2065.html">RFC2065</A>] provides a mechanism
+to verify whether a negative response is valid or not, through the use
+of NXT and SIG records.&nbsp; This document supports the use of that mechanism
+by promoting the transmission of the relevant security records even in
+a non security aware server.
+<BR>&nbsp;
+<H2>
+<A NAME="Acknowledgments"></A>Acknowledgments</H2>
+I would like to thank Rob Austein for his history of the CHIVES nameserver.
+The DNSIND working group, in particular Robert Elz for his valuable technical
+and editorial contributions to this document.
+<BR>&nbsp;
+<H2>
+<A NAME="References"></A>References</H2>
+&nbsp;
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=2 WIDTH="100%" >
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD WIDTH="10%">[<A HREF="ftp://ftp.is.co.za/rfc/rfc1034.txt">RFC1034</A>]</TD>
+
+<TD>Mockapetris, P., "DOMAIN NAMES - CONCEPTS AND FACILITIES", STD 13,
+RFC 1034, November 1987.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="rfc1035/rfc1035.html">RFC1035</A>]&nbsp;</TD>
+
+<TD>Mockapetris, P., "DOMAIN NAMES - IMPLEMENTATION AND SPECIFICATION",
+STD 13, RFC 1035, November 1987.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="rfc2065.html">RFC2065</A>]</TD>
+
+<TD>Eastlake, D., and C. Kaufman, "Domain Name System Security Extensions,"
+RFC 2065, January 1997.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc2119.txt">RFC2119</A>]</TD>
+
+<TD>&nbsp;Bradner, S., "Key words for use in RFCs to Indicate Requirement
+Levels," BCP 14, RFC 2119, March 1997.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="rfc2181.html">RFC2181</A>]</TD>
+
+<TD>Elz, R., and R. Bush, "Clarifications to the
+<BR>DNS Specification," RFC 2181, July 1997.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<H2>
+<A NAME="Author's Address"></A>Author's Address</H2>
+Mark Andrews
+<BR>CSIRO - Mathematical and Information Sciences
+<BR>Locked Bag 17
+<BR>North Ryde NSW 2113
+<BR>AUSTRALIA
+
+<P>Phone: +61 2 9325 3148
+<BR>EMail: <A HREF="mailto:Mark.Andrews@cmis.csiro.au">Mark.Andrews@cmis.csiro.au</A>
+<BR>&nbsp;
+<H2>
+<A NAME="Full Copyright Statement"></A>Full Copyright Statement</H2>
+Copyright (C) The Internet Society (1998).&nbsp; All Rights Reserved.
+
+<P>This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it or
+assist in its implementation may be prepared, copied, published and distributed,
+in whole or in part, without restriction of any kind, provided that the
+above copyright notice and this paragraph are included on all such copies
+and derivative works.&nbsp; However, this document itself may not be modified
+in any way, such as by removing the copyright notice or references to the
+Internet Society or other Internet organizations, except as needed for
+the purpose of developing Internet standards in which case the procedures
+for copyrights defined in the Internet Standards process must be followed,
+or as required to translate it into languages other than English.
+
+<P>The limited permissions granted above are perpetual and will not be
+revoked by the Internet Society or its successors or assigns.
+
+<P>This document and the information contained herein is provided on an
+"AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING TASK
+FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE
+ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR
+A PARTICULAR PURPOSE.
+</BODY>
+</HTML>

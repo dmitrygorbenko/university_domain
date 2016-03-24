@@ -1,0 +1,41 @@
+! generating config. for 3007 and As20xy (2000, ..., 2032...)
+!
+! generating config for the peering between 3007 and 2000
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT"
+@RtConfig import AS3007 10.3.15.2 AS2000 10.20.0.3
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT"
+@RtConfig export AS3007 10.3.15.2 AS2000 10.20.0.3 
+!
+! generating config for the peering between 3007 and 2001
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT"
+@RtConfig import AS3007 10.3.15.2 AS2001 10.20.0.3
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT"
+@RtConfig export AS3007 10.3.15.2 AS2001 10.20.0.3 
+!
+! generating config for the peering between 3007 and 2030
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT"
+@RtConfig import AS3007 10.3.15.2 AS2030 10.20.0.3
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT"
+@RtConfig export AS3007 10.3.15.2 AS2030 10.20.0.3 
+!
+! generating config for the peering between 3007 and 2031
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT"
+@RtConfig import AS3007 10.3.15.2 AS2031 10.20.0.3
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT"
+@RtConfig export AS3007 10.3.15.2 AS2031 10.20.0.3 
+!
+! generating config for the peering between 3007 and 2032
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT"
+@RtConfig import AS3007 10.3.15.2 AS2032 10.20.0.3
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT"
+@RtConfig export AS3007 10.3.15.2 AS2032 10.20.0.3 

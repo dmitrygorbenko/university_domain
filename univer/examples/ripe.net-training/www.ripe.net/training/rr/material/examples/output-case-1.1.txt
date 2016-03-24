@@ -1,0 +1,9 @@
+! 
+! RtConfig template file for access lists creation
+! for AS2000; their peer is AS4000
+! 
+!
+no ip prefix-list pl100
+ip prefix-list pl100 permit 10.4.192.0/19
+ip prefix-list pl100 deny 0.0.0.0/0 le 32
+!

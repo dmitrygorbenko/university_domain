@@ -1,0 +1,142 @@
+NAME
+     nsupdate - Update name servers interactively
+
+SYNOPSIS
+     nsupdate [ - d ] [ -v ] [filename]
+
+     nsupdate
+
+DESCRIPTION
+     nsupdate updates the Internet domain name  servers.  It
+     has two modes: interactive and non-interactive.  Interactive
+     mode allows the user  to  update  servers  with  information
+     about  various  hosts  and  domains. Non-interactive mode allows
+     for batch updates of zones. Both modes assume that the nameserver
+     allows updates (see allow-update option in configuring in.named) 
+     from the host where nsupdate is being run. 
+
+OPTIONS 
+     -d is the debug mode.
+     -v makes use of TCP instead of UDP
+
+     filename  The name of the file containing the update requests and
+               entries. Data in the file must contain one line per entry
+               and should be of the form
+                        class section name ttl type rdata
+                Where:
+                class can be any of the following opcodes
+                update, zone, prereq
+
+                section can be one of the following opcodes
+                add, delete, nxdomain, yxdomain, nxrrset, yxrrset
+
+                name is the name of the entry being added
+
+                ttl  is the time to live (in seconds) for this entry, 
+                following which the nameserver will no longer serve the
+                entry
+
+                type is the RR type. (a, cname, ns, mx, txt ..etc)
+
+                rdate is the data appropriate for the RR type being 
+                updated. 
+
+USAGE
+   Interactive Mode
+        In the interactive mode, the user is expected to provide the
+        update data in the
+                class section name ttl type rdata
+        format against each promot, with each field separated by a space.
+        A return at with no data assumes the end of input and all update
+        entries are the nameserver is updated in one atomic operation.
+
+        A ^D ends the interactive mode and exits the program.
+
+   Non-Interactive Mode
+        In the non-interactive mode, the user is expected to provide the
+        update data in a file. Data in the file is  in the form of rows 
+        and columns. Each row must contain the following update data
+                class section name ttl type rdata
+
+EXAMPLE 
+   Interactive Mode
+
+Here is an exmple of an nsupdate session:
+
+Example 1: This example updates the nads.zn zone with a cname entry for 
+ivy18.nads.zn as www.nads.zn
+
+% nsupdate
+> update add www.nads.zn 60 in cname ivy18.nads.zn
+> 
+res_mkupdate: packet size = 49
+;; res_send()
+;; ->>HEADER<<- opcode: UPDATE, status: NOERROR, id: 53349
+;; flags:; ZONE: 1, PREREQUISITE: 0, UPDATE: 1, ADDITIONAL: 0
+;;      nads.zn, type = SOA, class = IN
+www.nads.zn.            1M IN CNAME     ivy18.nads.zn.
+;; Querying server (# 1) address = 192.168.1.1
+;; got answer:
+;; ->>HEADER<<- opcode: UPDATE, status: NOERROR, id: 53349
+;; flags: qr ra; ZONE: 0, PREREQUISITE: 0, UPDATE: 0, ADDITIONAL: 0
+
+
+2. The 2nd example deletes the entry created in example 1.
+% nsupdate
+> update delete www.nads.zn. cname
+> 
+;; res_mkquery(0, www.nads.zn, 1, 6)
+;; res_send()
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 53350
+;; flags: rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;;      www.nads.zn, type = SOA, class = IN
+;; Querying server (# 1) address = 192.168.1.1
+;; got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 53350
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 1, ADDITIONAL: 0
+;;      www.nads.zn, type = SOA, class = IN
+www.nads.zn.            1M IN CNAME     ivy18.nads.zn.
+nads.zn.                1D IN SOA       nserver.eng.nads.com.  admin.myhost.eng.n ads.com. (
+                                        1998012604      ; serial
+                                        3H              ; refresh
+                                        1H              ; retry
+                                        1W              ; expiry
+                                        1D )            ; minimum
+ 
+;; res_mkquery(0, nads.zn, 1, 6)
+;; res_send()
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 53351
+;; flags: rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;;      nads.zn, type = SOA, class = IN
+;; Querying server (# 1) address = 192.168.1.1
+;; got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 53351
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 1, ADDITIONAL: 1
+;;      nads.zn, type = SOA, class = IN
+nads.zn.                1D IN SOA       nserver.eng.nads.com.  admin.myhost.eng.n ads.com. (
+                                        1998012604      ; serial
+                                        3H              ; refresh
+                                        1H              ; retry
+                                        1W              ; expiry
+                                        1D )            ; minimum
+
+nads.zn.                1D IN NS        obelix.nads.zn.
+obelix.nads.zn.         1D IN A         192.168.1.1
+res_mkupdate: packet size = 41
+;; res_send()
+;; ->>HEADER<<- opcode: UPDATE, status: NOERROR, id: 53352
+;; flags:; ZONE: 1, PREREQUISITE: 0, UPDATE: 1, ADDITIONAL: 0
+;;      nads.zn, type = SOA, class = IN
+;; Querying server (# 1) address = 192.168.1.1
+;; got answer:
+;; ->>HEADER<<- opcode: UPDATE, status: NOERROR, id: 53352
+;; flags: qr ra; ZONE: 0, PREREQUISITE: 0, UPDATE: 0, ADDITIONAL: 0
+
+
+   Non-Interactive Mode
+        $nsupdate nsupd.txt
+        where nsupd.txt contains the following information
+                update delete www.nads.zn.
+                update add www.nads.zn. 60 CNAME ivy18.nads.zn
+
+Courtesy Ravindra R. Iyer, Sun Microsystems.

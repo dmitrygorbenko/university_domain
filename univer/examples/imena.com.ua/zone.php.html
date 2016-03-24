@@ -1,0 +1,376 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+	<title>IMENA ControlPanel</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+	<link href="/img/index.css" rel="stylesheet" type="text/css">
+	<script language="JavaScript" src="/js/functions.js"></script>
+    <script language="JavaScript">
+    //<!--
+    
+    function delDomain(id, domain) {
+        if (window.confirm('Удалить эту запись?')) {
+            location.href = '/domains.php?id='+id+'&act=del';
+        }
+    }
+    
+    function renewDomain(id, domain) {
+        if (window.confirm('продлить?')) {
+            location.href = '/domains.php?id='+id+'&act=renew';
+        }
+    }
+
+    // -->
+    </script>
+</head>
+
+<body bgcolor="#F9F8F8" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000" leftmargin="0" topmargin="0" marginwidth="0">
+<table width="100%" bgcolor="5778D9" border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td background="/img/logo_bg.jpg" style="background-repeat: repeat-y;"><a href="/"><img src="/img/logo.gif" alt="IMENA ControlPanel" width="161" height="41" border="0"></a></td>
+</tr>
+</table>
+<table width="100%" height="2" border="0" cellpadding="0" cellspacing="0" bgcolor="#7083E1">
+  <tr>
+    <td><img width=100 height=2 src="/img/tr.gif"></td>
+  </tr>
+</table>
+<table cellpadding="0" cellspacing="5" border="0" width="100%" bgcolor="#FFFFFF" style="border-bottom: 1px solid #CCCCCC">
+<tr>
+<td class="menus">&nbsp;&nbsp;<b><a href="/domains.php" class="menus">домены</a></b>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/profile.php" class="menus">профайл</a>&nbsp;&nbsp;
+&nbsp;&nbsp;<a href="/accounts.php" class="menus">пароли</a>&nbsp;&nbsp;
+&nbsp;&nbsp;<a href="/logout.php" class="menus">выход</a>&nbsp;&nbsp;
+</td>
+</tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F9F8F8">
+<tr valign="top">
+	<td width=100%>
+		<table width=100% border=0 cellpadding="5" cellspacing="0">
+			<tr valign=top>
+				<td style="padding-left:20px"><BR><BR>
+<style type="text/css">
+a.menu {
+    color: 000000;
+    font-size: 95%
+}
+a.menu:link {
+    color: 000000;
+    font-size: 95%
+}
+a.menu:visited {
+    color: 000000;
+    font-size: 95%
+}
+</style>
+
+<fieldset style="width:100%">
+<legend>
+Управление доменом: <a href=/domains.php?act=manage&id=26044>nkk.dp.ua</a> (139585)
+
+:: редактирование настроек домена
+
+
+
+
+</legend>
+
+
+<div style="float:left;padding:20px;width:70px;" align="center">
+<a href="/profile.php?id=26044" title="Контакты" class="menu"><img src="/img/contacts.gif" width="32" height="32" border="0"><br>Контакты</a>
+</div>
+
+
+
+<div style="float:left;padding:20px;width:70px;" align="center">
+<a href="/zone.php?id=26044" title="Настройка домена" class="menu"><img src="/img/zone.gif" width="32" height="32" border="0"><br>Настройка домена</a>
+</div>
+
+
+
+
+
+
+<div style="float:left;padding:20px;width:70px;" align="center">
+<a href="/nameservers.php?id=26044" title="NS сервера" class="menu"><img src="/img/nameservers.gif" width="32" height="32" border="0"><br>NS сервера</a>
+</div>
+
+
+<div style="float:left;padding:20px;width:70px;" align="center">
+<a href="/certificate.php?id=26044" title="Заказ сертификата" class="menu"><img src="/img/certificate.gif" width="32" height="32" border="0"><br>Заказ сертификата</a></div>
+
+
+</fieldset>
+<br><table cellpadding=2 cellspacing=1 align=center width=400 border=0 bgcolor=#CCCCCC>
+<tr bgcolor=#FFFFFF>
+	<td align=center><b>Запись была успешно отредактирована.</b></td>
+</tr>
+</table><br>
+<script language=javascript>
+
+function checkCNAME(frm) {
+    form = document.getElementById(frm);
+    domain = form.domain.value;
+    type = form.type.options[form.type.selectedIndex].value;
+  	
+    if (domain == "@" && type == "CNAME") {
+        alert("Вы не можете для @ установить тип CNAME.");
+        document.getElementById(frm).domain.value = "";
+    }
+    
+	setTimeout("checkCNAME('"+frm+"')", 1000);
+}
+
+</script>
+
+
+<table cellpadding=2 cellspacing=0 align=center width=100% border=0 bgcolor=#000000 style="border: 1px solid #CCCCCC">
+<tr bgcolor="#E9F4E9" height="22px">
+	<td align=center><b>Зона стоит в очереди на обновление.</b></td>
+</tr>
+</table>
+
+
+
+
+
+<br>
+<table cellpadding=1 cellspacing=1 align=center width=100% border=0>
+<form action="/zone.php" method=post>
+<input type=hidden name="id" value="26044">
+<input type=hidden name="act" value="do_zone_edit">
+<tr height="22px">
+	<td class=head colspan=7>&nbsp;<b>Редактирование зоны</b></td>
+</tr>
+<tr height="22px">
+	<td class=row1><b>Доменное имя:</b></td>
+	<td class=row2>nkk.dp.ua</td>
+	<td class=row1><b>TTL:</b></td>
+	<td class=row2>86400</td>
+	<td class=row1><b>Serial:</b></td>
+	<td class=row2>2005011701</td>
+    <td rowspan=2 class=row1 align=center><input type="submit" value="ОБНОВИТЬ"></td>
+</tr>
+<tr height="22px">
+	<td class=row1><b>Refresh:</b></td>
+	<td class=row2><input type=text name=form[refresh] value="86400" size=9></td>
+	<td class=row1><b>Retry:</b></td>
+	<td class=row2><input type=text name=form[retry] value="7200" size=9></td>
+	<td class=row1><b>Expire:</b></td>
+	<td class=row2><input type=text name=form[expire] value="604800" size=9></td>
+</tr>
+<tr height="22px">
+	<td class=row1 align="right" colspan=7>&nbsp;</td>
+</tr>
+</form>
+</table>
+
+<script language=javascript>
+
+function chkForm(frmName) {
+	frm = document.forms[frmName];
+	type = frm.type.options[frm.type.selectedIndex].value;
+	domain = frm.domain.value;
+	
+	if (type == 'MX') {
+		frm.pref.style.display = "";
+	} else {
+		frm.pref.style.display = "none";
+	}
+	
+}
+
+</script>
+<table cellpadding=0 cellspacing=0 border=0 width=100%>
+	<tr class=row1>
+		<td align=center width=19%><b>домен</b></td>
+		<td align=center width=14%><b>тип</b></td>
+		<td align=center width=9%><b>приоритет</b></td>
+		<td align=center width=28%><b>данные</b></td>
+		<td align=center width=35%>&nbsp;</td>
+	</tr>
+</table>
+<table cellpadding=0 cellspacing=0 border=0 width=100%>
+<form action="/zone.php" method=post name="record_111230" id="record_111230">
+<input type=hidden name="id" value="26044">
+<input type=hidden name="act" value="do_zone_edit_record">
+<input type=hidden name="form[id_record]" value="111230">
+	<tr height="22px" class=row2 onmouseover="rowPointer(this, 'over', 'row2', 'row_sel', 'row_mark')" onmouseout="rowPointer(this, 'out', 'row2', 'row_sel', 'row_mark')" onmousedown="rowPointer(this, 'down', 'row2', 'row_sel', 'row_mark')">
+		<td align=center width=19%><input type=text name="form[domain]" id=domain value="@" size=15></td>
+		<td align=center width=14%><select name="form[type]" id=type onchange="chkForm('record_111230')">
+<option value="A">A</option><option value="CNAME">CNAME</option><option value="MX" selected>MX</option></select>
+</td>
+		<td align=center width=9%><input type=text name="form[pref]" id=pref value="10" size=4></td>
+		<td align=center width=28%><input type=text name="form[data]" id=data value="mx.nkk.dp.ua." size=25></td>
+		<td align=center width=35%><input type=submit value="ОБНОВИТЬ">&nbsp;&nbsp;<input type=submit name="form[del]" value="УДАЛИТЬ" onclick="return confirm('Удалить эту запись?');"></td>
+	</tr>
+</form>
+</table>
+<script language=javascript>
+chkForm('record_111230');
+checkCNAME("record_111230");
+</script><table cellpadding=0 cellspacing=0 border=0 width=100%>
+<form action="/zone.php" method=post name="record_111231" id="record_111231">
+<input type=hidden name="id" value="26044">
+<input type=hidden name="act" value="do_zone_edit_record">
+<input type=hidden name="form[id_record]" value="111231">
+	<tr height="22px" class=row1 onmouseover="rowPointer(this, 'over', 'row1', 'row_sel', 'row_mark')" onmouseout="rowPointer(this, 'out', 'row1', 'row_sel', 'row_mark')" onmousedown="rowPointer(this, 'down', 'row1', 'row_sel', 'row_mark')">
+		<td align=center width=19%><input type=text name="form[domain]" id=domain value="@" size=15></td>
+		<td align=center width=14%><select name="form[type]" id=type onchange="chkForm('record_111231')">
+<option value="A" selected>A</option><option value="CNAME">CNAME</option><option value="MX">MX</option></select>
+</td>
+		<td align=center width=9%><input type=text name="form[pref]" id=pref value="0" size=4></td>
+		<td align=center width=28%><input type=text name="form[data]" id=data value="195.24.135.44" size=25></td>
+		<td align=center width=35%><input type=submit value="ОБНОВИТЬ">&nbsp;&nbsp;<input type=submit name="form[del]" value="УДАЛИТЬ" onclick="return confirm('Удалить эту запись?');"></td>
+	</tr>
+</form>
+</table>
+<script language=javascript>
+chkForm('record_111231');
+checkCNAME("record_111231");
+</script><table cellpadding=0 cellspacing=0 border=0 width=100%>
+<form action="/zone.php" method=post name="record_111233" id="record_111233">
+<input type=hidden name="id" value="26044">
+<input type=hidden name="act" value="do_zone_edit_record">
+<input type=hidden name="form[id_record]" value="111233">
+	<tr height="22px" class=row2 onmouseover="rowPointer(this, 'over', 'row2', 'row_sel', 'row_mark')" onmouseout="rowPointer(this, 'out', 'row2', 'row_sel', 'row_mark')" onmousedown="rowPointer(this, 'down', 'row2', 'row_sel', 'row_mark')">
+		<td align=center width=19%><input type=text name="form[domain]" id=domain value="ftp" size=15></td>
+		<td align=center width=14%><select name="form[type]" id=type onchange="chkForm('record_111233')">
+<option value="A" selected>A</option><option value="CNAME">CNAME</option><option value="MX">MX</option></select>
+</td>
+		<td align=center width=9%><input type=text name="form[pref]" id=pref value="0" size=4></td>
+		<td align=center width=28%><input type=text name="form[data]" id=data value="195.24.135.44" size=25></td>
+		<td align=center width=35%><input type=submit value="ОБНОВИТЬ">&nbsp;&nbsp;<input type=submit name="form[del]" value="УДАЛИТЬ" onclick="return confirm('Удалить эту запись?');"></td>
+	</tr>
+</form>
+</table>
+<script language=javascript>
+chkForm('record_111233');
+checkCNAME("record_111233");
+</script><table cellpadding=0 cellspacing=0 border=0 width=100%>
+<form action="/zone.php" method=post name="record_111234" id="record_111234">
+<input type=hidden name="id" value="26044">
+<input type=hidden name="act" value="do_zone_edit_record">
+<input type=hidden name="form[id_record]" value="111234">
+	<tr height="22px" class=row1 onmouseover="rowPointer(this, 'over', 'row1', 'row_sel', 'row_mark')" onmouseout="rowPointer(this, 'out', 'row1', 'row_sel', 'row_mark')" onmousedown="rowPointer(this, 'down', 'row1', 'row_sel', 'row_mark')">
+		<td align=center width=19%><input type=text name="form[domain]" id=domain value="mx" size=15></td>
+		<td align=center width=14%><select name="form[type]" id=type onchange="chkForm('record_111234')">
+<option value="A" selected>A</option><option value="CNAME">CNAME</option><option value="MX">MX</option></select>
+</td>
+		<td align=center width=9%><input type=text name="form[pref]" id=pref value="0" size=4></td>
+		<td align=center width=28%><input type=text name="form[data]" id=data value="195.24.135.44" size=25></td>
+		<td align=center width=35%><input type=submit value="ОБНОВИТЬ">&nbsp;&nbsp;<input type=submit name="form[del]" value="УДАЛИТЬ" onclick="return confirm('Удалить эту запись?');"></td>
+	</tr>
+</form>
+</table>
+<script language=javascript>
+chkForm('record_111234');
+checkCNAME("record_111234");
+</script><table cellpadding=0 cellspacing=0 border=0 width=100%>
+<form action="/zone.php" method=post name="record_111232" id="record_111232">
+<input type=hidden name="id" value="26044">
+<input type=hidden name="act" value="do_zone_edit_record">
+<input type=hidden name="form[id_record]" value="111232">
+	<tr height="22px" class=row2 onmouseover="rowPointer(this, 'over', 'row2', 'row_sel', 'row_mark')" onmouseout="rowPointer(this, 'out', 'row2', 'row_sel', 'row_mark')" onmousedown="rowPointer(this, 'down', 'row2', 'row_sel', 'row_mark')">
+		<td align=center width=19%><input type=text name="form[domain]" id=domain value="www" size=15></td>
+		<td align=center width=14%><select name="form[type]" id=type onchange="chkForm('record_111232')">
+<option value="A" selected>A</option><option value="CNAME">CNAME</option><option value="MX">MX</option></select>
+</td>
+		<td align=center width=9%><input type=text name="form[pref]" id=pref value="0" size=4></td>
+		<td align=center width=28%><input type=text name="form[data]" id=data value="195.24.135.44" size=25></td>
+		<td align=center width=35%><input type=submit value="ОБНОВИТЬ">&nbsp;&nbsp;<input type=submit name="form[del]" value="УДАЛИТЬ" onclick="return confirm('Удалить эту запись?');"></td>
+	</tr>
+</form>
+</table>
+<script language=javascript>
+chkForm('record_111232');
+checkCNAME("record_111232");
+</script><table cellpadding=0 cellspacing=0 border=0 width=100%>
+<form action="/zone.php" method=post name="add_record" id="add_record">
+<input type=hidden name="id" value="26044">
+<input type=hidden name="act" value="do_zone_add_record">
+<tr class=row1>
+	<td align=center width=19%><input type=text id=domain name="form[domain]" value="" size=15></td>
+	<td align=center width=14%><select name="form[type]" id=type onchange="chkForm('add_record')">
+<option value="A">A</option><option value="CNAME">CNAME</option><option value="MX">MX</option></select>
+</td>
+	<td align=center width=9%><input type=text id=pref name="form[pref]" value="" size=4></td>
+	<td align=center width=28%><input type=text id=data name="form[data]" value="" size=25></td>
+	<td align=center width=35%><input type=submit value=" ДОБАВИТЬ "></td>
+</tr>
+</form>
+</table>
+<br>
+<script language=javascript>
+chkForm('add_record');
+checkCNAME("add_record");
+</script><br>
+<table cellpadding=1 cellspacing=0 align=center width=100% border=0 style="border: 1px solid #CCCCCC">
+<form action="/zone.php" method="post">
+<input type=hidden name="id" value="26044">
+<input type=hidden name="act" value="set_default">
+<tr height="22px">
+	<td align=center><input type=submit value="Сбросить настройки зоны в начальные" onclick="return confirm('Сбросить настройки зоны в начальные?');" ></td>
+</tr>
+</form>
+</table><BR></td>
+			</tr>
+		</table>
+	</td>
+	<td width=250>
+	
+	<table width="250" border=0 cellpadding="5" cellspacing="0">
+	<tr>
+	<td>
+		<BR><BR>
+        
+        <!-- help start -->
+        <table cellpadding=4 cellspacing=1 border=0 align=center width=100%>
+            <tr>
+                <td><b>домены</b></td>
+            </tr>
+            <tr>
+                <td style="text-align:justify;">
+                Здесь можно просмотреть все доменные имена, которые Вы регистрировали, получить их сервис-коды и даты окончания регистрации. Также здесь можно изменить контакты для домена, прописать IP адрес и MX записи, настроить WEB и MAIL переадресацию, сменить Name Servers.
+                </td>
+            </tr>
+        
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            
+            <tr>
+                <td><b>профайл</b></td>
+            </tr>
+            <tr>
+                <td style="text-align:justify;">
+                Здесь хранится информация, определяющая учетную запись пользователя, регистрирующего все доменные имена, ассоциируемые с данным аккаунтом. Этот контакт может не относится ни к одному домену, он относится к учетной записи, с которой связаны логин и пароль, а также сумма на балансе.
+                </td>
+            </tr>
+            
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            
+            <tr>
+                <td><b>пароли</b></td>
+            </tr>
+            <tr>
+                <td style="text-align:justify;">
+                Здесь можно создать отдельный аккаунт, для управления всеми Вашими Доменами или некоторыми из них. Также можно отключить аккаунт ставший ненужным.
+                </td>
+            </tr>
+        </table>
+        
+        <!-- help stop -->
+	</td>
+	</tr>
+	</table>
+	
+	</td>
+</tr>
+</table>
+<BR><BR>
+</body>
+</html>

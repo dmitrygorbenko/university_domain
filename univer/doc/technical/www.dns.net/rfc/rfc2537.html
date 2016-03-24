@@ -1,0 +1,287 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (WinNT; I) [Netscape]">
+   <meta name="Author" content="Mark Symons (bliksim9@yahoo.com)">
+   <title>RFC2537:  RSA/MD5 KEYs and SIGs in the Domain Name System (DNS)</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+This RFC
+has been HTMLized by hand by <a href="mailto:bliksim9@yahoo.com">Mark Symons</a>,
+and word-for-word correspondence to the source has not been verified.&nbsp;
+The <a href="ftp://ftp.is.co.za/rfc/rfc2537.txt">original RFC</a> should
+be regarded as being authoritative.
+<br>
+<hr WIDTH="100%">
+<br>&nbsp;
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=3 WIDTH="100%" >
+<tr>
+<td>Network Working Group</td>
+
+<td></td>
+
+<td>D. Eastlake</td>
+</tr>
+
+<tr>
+<td>Request for Comments: 2537</td>
+
+<td></td>
+
+<td>IBM</td>
+</tr>
+
+<tr>
+<td>Category: Standards Track</td>
+
+<td></td>
+
+<td>March 1999</td>
+</tr>
+</table>
+
+<center>
+<h1>
+RSA/MD5 KEYs and SIGs in the Domain Name System (DNS)</h1></center>
+
+<h2>
+Status of this Memo</h2>
+This document specifies an Internet standards track protocol for the Internet
+community, and requests discussion and suggestions for improvements.&nbsp;
+Please refer to the current edition of the "Internet Official Protocol
+Standards" (STD 1) for the standardization state and status of this protocol.&nbsp;
+Distribution of this memo is unlimited.
+<br>&nbsp;
+<h2>
+Copyright Notice</h2>
+Copyright (C) The Internet Society (1999).&nbsp; All Rights Reserved.
+<br>&nbsp;
+<h2>
+<a NAME="Abstract"></a>Abstract</h2>
+A standard method for storing RSA keys and and RSA/MD5 based signatures
+in the Domain Name System is described which utilizes DNS KEY and SIG resource
+records.
+<br>&nbsp;
+<h2>
+Table of Contents</h2>
+<b><a href="#Abstract">Abstract</a></b>
+<br><b><a href="#1">1. Introduction</a></b>
+<br><b><a href="#2">2. RSA Public KEY Resource Records</a></b>
+<br><b><a href="#3">3. RSA/MD5 SIG Resource Records</a></b>
+<br><b><a href="#4">4. Performance Considerations</a></b>
+<br><b><a href="#5">5. Security Considerations</a></b>
+<br><b><a href="#References">References</a></b>
+<br><b><a href="#Author">Author's Address</a></b>
+<br><b><a href="#Copyright">Full Copyright Statement</a></b>
+<br>&nbsp;
+<h2>
+<a NAME="1"></a>1. Introduction</h2>
+The Domain Name System (DNS) is the global hierarchical replicated distributed
+database system for Internet addressing, mail proxy, and other information.
+The DNS has been extended to include digital signatures and cryptographic
+keys as described in [<a href="rfc2535.html">RFC 2535</a>].&nbsp; Thus
+the DNS can now be secured and used for secure key distribution.
+<p>This document describes how to store RSA keys and and RSA/MD5 based
+signatures in the DNS.&nbsp; Familiarity with the RSA algorithm is assumed
+[Schneier].&nbsp; Implementation of the RSA algorithm in DNS is recommended.
+<p>The key words "MUST", "REQUIRED", "SHOULD", "RECOMMENDED", and "MAY"
+in this document are to be interpreted as described in <a href="ftp://ftp.is.co.za/rfc/rfc2119.txt">RFC
+2119</a>.
+<br>&nbsp;
+<h2>
+<a NAME="2"></a>2. RSA Public KEY Resource Records</h2>
+RSA public keys are stored in the DNS as KEY RRs using algorithm number
+1 [<a href="rfc2535.html">RFC 2535</a>].&nbsp; The structure of the algorithm
+specific portion of the RDATA part of such RRs is as shown below.
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Field&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Size</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+----</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exponent length&nbsp;&nbsp;
+1 or 3 octets (see text)</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exponent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+as specified by length field</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; modulus&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+remaining space</tt>
+<p>For interoperability, the exponent and modulus are each currently limited
+to 4096 bits in length.&nbsp; The public key exponent is a variable length
+unsigned integer.&nbsp; Its length in octets is represented as one octet
+if it is in the range of 1 to 255 and by a zero octet followed by a two
+octet unsigned length if it is longer than 255 bytes.&nbsp; The public
+key modulus field is a multiprecision unsigned integer.&nbsp; The length
+of the modulus can be determined from the RDLENGTH and the preceding RDATA
+fields including the exponent. Leading zero octets are prohibited in the
+exponent and modulus.
+<br>&nbsp;
+<h2>
+<a NAME="3"></a>3. RSA/MD5 SIG Resource Records</h2>
+The signature portion of the SIG RR RDATA area, when using the RSA/MD5
+algorithm, is calculated as shown below.&nbsp; The data signed is determined
+as specified in [<a href="rfc2535.html">RFC 2535</a>].&nbsp; See [<a href="rfc2535.html">RFC
+2535</a>] for fields in the SIG RR RDATA which precede the signature itself.
+<br>&nbsp;
+<p>&nbsp; hash = MD5 ( data )
+<p>&nbsp; signature = ( 00 | 01 | FF* | 00 | prefix | hash ) ** e (mod
+n)
+<p>where MD5 is the message digest algorithm documented in [<a href="ftp://ftp.is.co.za/rfc/rfc1321.txt">RFC
+1321</a>], "|" is concatenation, "e" is the private key exponent of the
+signer, and "n" is the modulus of the signer's public key.&nbsp; 01, FF,
+and 00 are fixed octets of the corresponding hexadecimal value. "prefix"
+is the ASN.1 BER MD5 algorithm designator prefix specified in [<a href="ftp://ftp.is.co.za/rfc/rfc2437.txt">RFC
+2437</a>], that is,
+<p>&nbsp;&nbsp; hex 3020300c06082a864886f70d020505000410 [NETSEC].
+<p>This prefix is included to make it easier to use RSAREF (or similar
+packages such as EuroRef).&nbsp; The FF octet MUST be repeated the maximum
+number of times such that the value of the quantity being exponentiated
+is the same length in octets as the value of n.
+<p>(The above specifications are identical to the corresponding part of
+Public Key Cryptographic Standard #1 [<a href="ftp://ftp.is.co.za/rfc/rfc2437.txt">RFC
+2437</a>].)
+<p>The size of n, including most and least significant bits (which will
+be 1) MUST be not less than 512 bits and not more than 4096 bits.&nbsp;
+n and e SHOULD be chosen such that the public exponent is small.
+<p>Leading zero bytes are permitted in the RSA/MD5 algorithm signature.
+<p>A public exponent of 3 minimizes the effort needed to verify a signature.&nbsp;
+Use of 3 as the public exponent is weak for confidentiality uses since,
+if the same data can be collected encrypted under three different keys
+with an exponent of 3 then, using the Chinese Remainder Theorem [NETSEC],
+the original plain text can be easily recovered.&nbsp; This weakness is
+not significant for DNS security because we seek only authentication, not
+confidentiality.
+<br>&nbsp;
+<h2>
+<a NAME="4"></a>4. Performance Considerations</h2>
+General signature generation speeds are roughly the same for RSA and DSA
+[<a href="rfc2536.html">RFC 2536</a>].&nbsp; With sufficient pre-computation,
+signature generation with DSA is faster than RSA.&nbsp; Key generation
+is also faster for DSA.&nbsp; However, signature verification is an order
+of magnitude slower with DSA when the RSA public exponent is chosen to
+be small as is recommended for KEY RRs used in domain name system (DNS)
+data authentication.
+<p>Current DNS implementations are optimized for small transfers, typically
+less than 512 bytes including overhead.&nbsp; While larger transfers will
+perform correctly and work is underway to make larger transfers more efficient,
+it is still advisable at this time to make reasonable efforts to minimize
+the size of KEY RR sets stored within the DNS consistent with adequate
+security.&nbsp; Keep in mind that in a secure zone, at least one authenticating
+SIG RR will also be returned.
+<br>&nbsp;
+<h2>
+<a NAME="5"></a>5. Security Considerations</h2>
+Many of the general security consideration in [<a href="rfc2535.html">RFC
+2535</a>] apply.&nbsp; Keys retrieved from the DNS should not be trusted
+unless (1) they have been securely obtained from a secure resolver or independently
+verified by the user and (2) this secure resolver and secure obtainment
+or independent verification conform to security policies acceptable to
+the user.&nbsp; As with all cryptographic algorithms, evaluating the necessary
+strength of the key is essential and dependent on local policy.
+<p>For interoperability, the RSA key size is limited to 4096 bits.&nbsp;
+For particularly critical applications, implementors are encouraged to
+consider the range of available algorithms and key sizes.
+<br>&nbsp;
+<h2>
+<a NAME="References"></a>References</h2>
+
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=2 WIDTH="100%" >
+<tr ALIGN=LEFT VALIGN=TOP>
+<td WIDTH="10%">[NETSEC]&nbsp;</td>
+
+<td>Kaufman, C., Perlman, R. and M. Speciner, "Network Security: PRIVATE
+Communications in a PUBLIC World", Series in Computer Networking and Distributed
+Communications, 1995.
+<br>&nbsp;</td>
+</tr>
+
+<tr>
+<td>[<a href="ftp://ftp.is.co.za/rfc/rfc2437.txt">RFC 2437</a>]</td>
+
+<td>Kaliski, B. and J. Staddon, "PKCS #1: RSA Cryptography Specifications
+Version 2.0", RFC 2437, October 1998.
+<br>&nbsp;</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>[<a href="ftp://ftp.is.co.za/rfc/rfc1034.txt">RFC 1034</a>]</td>
+
+<td>Mockapetris, P., "Domain Names - Concepts and Facilities", STD 13,
+RFC 1034, November 1987.
+<br>&nbsp;</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>[<a href="rfc1035/rfc1035.html">RFC 1035</a>]</td>
+
+<td>Mockapetris, P., "Domain Names - Implementation and Specification",
+STD 13, RFC 1035, November 1987.
+<br>&nbsp;</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>[<a href="ftp://ftp.is.co.za/rfc/rfc1321.txt">RFC 1321</a>]</td>
+
+<td>Rivest, R., "The MD5 Message-Digest Algorithm", RFC 1321 April 1992.
+<br>&nbsp;</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>[<a href="rfc2535.html">RFC 2535</a>]</td>
+
+<td>Eastlake, D., "Domain Name System Security Extensions", RFC 2535, March
+1999.
+<br>&nbsp;</td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>[<a href="rfc2536.html">RFC 2536</a>]</td>
+
+<td>EastLake, D., "DSA KEYs and SIGs in the Domain Name System (DNS)",
+RFC 2536, March 1999.
+<br>&nbsp;</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP>[Schneier]</td>
+
+<td>Bruce Schneier, "Applied Cryptography Second Edition: protocols, algorithms,
+and source code in C", 1996, John Wiley and Sons, ISBN 0-471-11709-9.
+<br>&nbsp;</td>
+</tr>
+</table>
+
+<h2>
+<a NAME="Author"></a>Author's Address</h2>
+Donald E. Eastlake 3rd
+<br>IBM
+<br>65 Shindegan Hill Road, RR #1
+<br>Carmel, NY 10512
+<p>Phone:&nbsp;&nbsp; +1-914-276-2668(h)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +1-914-784-7913(w)
+<br>Fax:&nbsp;&nbsp;&nbsp;&nbsp; +1-914-784-3833(w)
+<br>EMail:&nbsp;&nbsp; <a href="mailto:dee3@us.ibm.com">dee3@us.ibm.com</a>
+<br>&nbsp;
+<br>&nbsp;
+<h2>
+<a NAME="Copyright"></a>Full Copyright Statement</h2>
+Copyright (C) The Internet Society (1999).&nbsp; All Rights Reserved.
+<p>This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it or
+assist in its implementation may be prepared, copied, published and distributed,
+in whole or in part, without restriction of any kind, provided that the
+above copyright notice and this paragraph are included on all such copies
+and derivative works.&nbsp; However, this document itself may not be modified
+in any way, such as by removing the copyright notice or references to the
+Internet Society or other Internet organizations, except as needed for
+the purpose of developing Internet standards in which case the procedures
+for copyrights defined in the Internet Standards process must be followed,
+or as required to translate it into languages other than English.
+<p>The limited permissions granted above are perpetual and will not be
+revoked by the Internet Society or its successors or assigns.
+<p>This document and the information contained herein is provided on an
+"AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+<br>TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN
+WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY
+OR FITNESS FOR A PARTICULAR PURPOSE.
+</body>
+</html>

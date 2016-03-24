@@ -1,0 +1,556 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.02 [en] (Win95; I) [Netscape]">
+   <META NAME="Author" CONTENT="Mark Symons (bliksim9@yahoo.com)">
+   <TITLE>RFC2317: Classless IN-ADDR.ARPA delegation</TITLE>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#FF0000">
+This RFC has been HTMLized by
+hand by <A HREF="mailto:bliksim9@yahoo.com">Mark Symons</A>, and
+word-for-word correspondance to the source has not been verified.&nbsp;
+The <A HREF="ftp://ftp.is.co.za/rfc/rfc2317.txt">original RFC</A> should
+be regarded as being authoritative.
+<BR>
+<HR WIDTH="100%">
+<BR>&nbsp;
+<BR>&nbsp;
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=3 WIDTH="100%" >
+<TR>
+<TD>Network Working Group</TD>
+
+<TD></TD>
+
+<TD>H. Eidnes</TD>
+</TR>
+
+<TR>
+<TD>Request for Comments: 2317&nbsp;</TD>
+
+<TD></TD>
+
+<TD>SINTEF RUNIT</TD>
+</TR>
+
+<TR>
+<TD>BCP: 20</TD>
+
+<TD></TD>
+
+<TD>G. de Groot</TD>
+</TR>
+
+<TR>
+<TD>Category: Best Current Practice</TD>
+
+<TD></TD>
+
+<TD>Berkeley Software Design, Inc.</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD></TD>
+
+<TD>P. Vixie</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD></TD>
+
+<TD>Internet Software Consortium</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD></TD>
+
+<TD>March 1998</TD>
+</TR>
+</TABLE>
+&nbsp;
+<CENTER>
+<H1>
+Classless IN-ADDR.ARPA delegation</H1></CENTER>
+
+<H2>
+Status of this Memo</H2>
+This document specifies an Internet Best Current Practices for the Internet
+Community, and requests discussion and suggestions for improvements.&nbsp;
+Distribution of this memo is unlimited.
+<BR>&nbsp;
+<H2>
+Copyright Notice</H2>
+Copyright (C) The Internet Society (1998).&nbsp; All Rights Reserved.
+<BR>&nbsp;
+<H2>
+Contents</H2>
+<A HREF="#2. Introduction">2.&nbsp;&nbsp;&nbsp; Introduction</A>
+<BR><A HREF="#3. Motivation">3.&nbsp;&nbsp;&nbsp; Motivation</A>
+<BR><A HREF="#4. Classless IN-ADDR.ARPA delegation">4.&nbsp;&nbsp;&nbsp;
+Classless IN-ADDR.ARPA delegation</A>
+<BR><A HREF="#5. Operational considerations">5.&nbsp;&nbsp;&nbsp; Operational
+considerations</A>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#5.1 Recommended secondary name service">5.1
+Recommended secondary name service</A>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#5.2 Alternative naming conventions">5.2
+Alternative naming conventions</A>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#5.3 Other operational issues">5.3
+Other operational issues</A>
+<BR><A HREF="#6. Security Considerations">6.&nbsp;&nbsp;&nbsp; Security
+Considerations</A>
+<BR><A HREF="#7. Conclusion">7.&nbsp;&nbsp;&nbsp; Conclusion</A>
+<BR><A HREF="#8. Acknowledgements">8.&nbsp;&nbsp;&nbsp; Acknowledgments</A>
+<BR><A HREF="#9. References">9.&nbsp;&nbsp;&nbsp; References</A>
+<BR><A HREF="#10. Authors' Addresses">10. Authors' Addresses</A>
+<BR><A HREF="#11.  Full Copyright Statement">11.&nbsp; Full Copyright Statement</A>
+<H2>
+<A NAME="2. Introduction"></A>2. Introduction</H2>
+This document describes a way to do IN-ADDR.ARPA delegation on non-octet
+boundaries for address spaces covering fewer than 256 addresses.&nbsp;
+The proposed method should thus remove one of the objections to subnet
+on non-octet boundaries but perhaps more significantly, make it possible
+to assign IP address space in smaller chunks than 24-bit prefixes, without
+losing the ability to delegate authority for the corresponding IN-ADDR.ARPA
+mappings.&nbsp; The proposed method is fully compatible with the original
+DNS lookup mechanisms specified in [1], i.e. there is no need to modify
+the lookup algorithm used, and there should be no need to modify any software
+which does DNS lookups.
+
+<P>The document also discusses some operational considerations to provide
+some guidance in implementing this method.
+<BR>&nbsp;
+<H2>
+<A NAME="3. Motivation"></A>3. Motivation</H2>
+With the proliferation of classless routing technology, it has become feasible
+to assign address space on non-octet boundaries.&nbsp; In case of a very
+small organization with only a few hosts, assigning a full 24-bit prefix
+(what was traditionally referred to as a "class C network number") often
+leads to inefficient address space
+<BR>utilization.
+
+<P>One of the problems encountered when assigning a longer prefix (less
+address space) is that it seems impossible for such an organization to
+maintain its own reverse ("IN-ADDR.ARPA") zone autonomously.&nbsp; By use
+of the reverse delegation method described below, the most important objection
+to assignment of longer prefixes to unrelated organizations can be removed.
+
+<P>Let us assume we have assigned the address spaces to three different
+parties as follows:
+
+<P><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 192.0.2.0/25&nbsp;&nbsp;
+to organization A</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 192.0.2.128/26 to organization
+B</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 192.0.2.192/26 to organization
+C</TT>
+
+<P>In the classical approach, this would lead to a single zone like this:
+
+<P><TT>$ORIGIN 2.0.192.in-addr.arpa.</TT>
+<BR><TT>;</TT>
+<BR><TT>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host1.A.domain.</TT>
+<BR><TT>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host2.A.domain.</TT>
+<BR><TT>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host3.A.domain.</TT>
+<BR><TT>;</TT>
+<BR><TT>129&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host1.B.domain.</TT>
+<BR><TT>130&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host2.B.domain.</TT>
+<BR><TT>131&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host3.B.domain.</TT>
+<BR><TT>;</TT>
+<BR><TT>193&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host1.C.domain.</TT>
+<BR><TT>194&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host2.C.domain.</TT>
+<BR><TT>195&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host3.C.domain.</TT>
+
+<P>The administration of this zone is problematic.&nbsp; Authority for
+this zone can only be delegated once, and this usually translates into
+"this zone can only be administered by one organization."&nbsp; The other
+organizations with address space that corresponds to entries in this zone
+would thus have to depend on another organization for their address to
+name translation.&nbsp; With the proposed method, this potential problem
+can be avoided.
+<BR>&nbsp;
+<H2>
+<A NAME="4. Classless IN-ADDR.ARPA delegation"></A>4. Classless IN-ADDR.ARPA
+delegation</H2>
+Since a single zone can only be delegated once, we need more points to
+do delegation on to solve the problem above.&nbsp; These extra points of
+delegation can be introduced by extending the IN-ADDR.ARPA tree downwards,
+e.g. by using the first address or the first address and the network mask
+length (as shown below) in the corresponding address space to form the
+the first component in the name for the zones.&nbsp; The following four
+zone files show how the problem in the motivation section could be solved
+using this method.
+
+<P><TT>$ORIGIN 2.0.192.in-addr.arpa.</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SOA&nbsp;&nbsp;&nbsp;&nbsp; my-ns.my.domain. hostmaster.my.domain. (...)</TT>
+<BR><TT>;...</TT>
+<BR><TT>;&nbsp; &lt;&lt;0-127>> /25</TT>
+<BR><TT>0/25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ns.A.domain.</TT>
+<BR><TT>0/25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; some.other.name.server.</TT>
+<BR><TT>;</TT>
+<BR><TT>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 1.0/25.2.0.192.in-addr.arpa.</TT>
+<BR><TT>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 2.0/25.2.0.192.in-addr.arpa.</TT>
+<BR><TT>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 3.0/25.2.0.192.in-addr.arpa.</TT>
+<BR><TT>;</TT>
+<BR><TT>;&nbsp; &lt;&lt;128-191>> /26</TT>
+<BR><TT>128/26&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ns.B.domain.</TT>
+<BR><TT>128/26&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+some.other.name.server.too.</TT>
+<BR><TT>;</TT>
+<BR><TT>129&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 129.128/26.2.0.192.in-addr.arpa.</TT>
+<BR><TT>130&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 130.128/26.2.0.192.in-addr.arpa.</TT>
+<BR><TT>131&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 131.128/26.2.0.192.in-addr.arpa.</TT>
+<BR><TT>;</TT>
+<BR><TT>;&nbsp; &lt;&lt;192-255>> /26</TT>
+<BR><TT>192/26&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ns.C.domain.</TT>
+<BR><TT>192/26&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+some.other.third.name.server.</TT>
+<BR><TT>;</TT>
+<BR><TT>193&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 193.192/26.2.0.192.in-addr.arpa.</TT>
+<BR><TT>194&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 194.192/26.2.0.192.in-addr.arpa.</TT>
+<BR><TT>195&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 195.192/26.2.0.192.in-addr.arpa.</TT>
+
+<P><TT>$ORIGIN 0/25.2.0.192.in-addr.arpa.</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SOA&nbsp;&nbsp;&nbsp;&nbsp; ns.A.domain. hostmaster.A.domain. (...)</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ns.A.domain.</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; some.other.name.server.</TT>
+<BR><TT>;</TT>
+<BR><TT>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host1.A.domain.</TT>
+<BR><TT>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host2.A.domain.</TT>
+<BR><TT>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host3.A.domain.</TT>
+
+<P><TT>$ORIGIN 128/26.2.0.192.in-addr.arpa.</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SOA&nbsp;&nbsp;&nbsp;&nbsp; ns.B.domain. hostmaster.B.domain. (...)</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ns.B.domain.</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; some.other.name.server.too.</TT>
+<BR><TT>;</TT>
+<BR><TT>129&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host1.B.domain.</TT>
+<BR><TT>130&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host2.B.domain.</TT>
+<BR><TT>131&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host3.B.domain.</TT>
+
+<P><TT>$ORIGIN 192/26.2.0.192.in-addr.arpa.</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SOA&nbsp;&nbsp;&nbsp;&nbsp; ns.C.domain. hostmaster.C.domain. (...)</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ns.C.domain.</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; some.other.third.name.server.</TT>
+<BR><TT>;</TT>
+<BR><TT>193&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host1.C.domain.</TT>
+<BR><TT>194&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host2.C.domain.</TT>
+<BR><TT>195&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host3.C.domain.</TT>
+
+<P>For each size-256 chunk split up using this method, there is a need
+to install close to 256 CNAME records in the parent zone.&nbsp; Some people
+might view this as ugly; we will not argue that particular point.&nbsp;
+It is however quite easy to automatically generate the CNAME resource records
+in the parent zone once and for all, if the way the address space is partitioned
+is known.
+
+<P>The advantage of this approach over the other proposed approaches for
+dealing with this problem is that there should be no need to modify any
+already-deployed software.&nbsp; In particular, the lookup mechanism in
+the DNS does not have to be modified to accommodate this splitting of the
+responsibility for the IPv4 address to name translation on "non-dot" boundaries.&nbsp;
+Furthermore, this technique has been in use for several years in many installations,
+apparently with no ill effects.
+
+<P>As usual, a resource record like
+
+<P><TT>$ORIGIN 2.0.192.in-addr.arpa.</TT>
+<BR><TT>129&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 129.128/26.2.0.192.in-addr.arpa.</TT>
+
+<P>can be convienently abbreviated to
+
+<P><TT>$ORIGIN 2.0.192.in-addr.arpa.</TT>
+<BR><TT>129&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 129.128/26</TT>
+
+<P>Some DNS implementations are not kind to special characters in domain
+names, e.g. the "/" used in the above examples.&nbsp; As [3] makes clear,
+these are legal, though some might feel unsightly.&nbsp; Because these
+are not host names the restriction of [2] does not apply.&nbsp; Modern
+clients and servers have an option to act in the liberal and correct fashion.
+
+<P>The examples here use "/" because it was felt to be more visible and
+pedantic reviewers felt that the 'these are not hostnames' argument needed
+to be repeated.&nbsp; We advise you not to be so pedantic, and to not precisely
+copy the above examples, e.g.&nbsp; substitute a more conservative character,
+such as hyphen, for "/".
+<BR>&nbsp;
+<H2>
+<A NAME="5. Operational considerations"></A>5. Operational considerations</H2>
+This technique is intended to be used for delegating address spaces covering
+fewer than 256 addresses.&nbsp; For delegations covering larger blocks
+of addresses the traditional methods (multiple delegations) can be used
+instead.
+<BR>&nbsp;
+<H3>
+<A NAME="5.1 Recommended secondary name service"></A>5.1 Recommended secondary
+name service</H3>
+Some older versions of name server software will make no effort to find
+and return the pointed-to name in CNAME records if the pointed-to name
+is not already known locally as cached or as authoritative data.&nbsp;
+This can cause some confusion in resolvers, as only the CNAME record will
+be returned in the response.&nbsp; To avoid this problem it is recommended
+that the authoritative name servers for the delegating zone (the zone containing
+all the CNAME records) all run as slave (secondary) name servers for the
+"child" zones delegated and pointed
+<BR>into via the CNAME records.
+<BR>&nbsp;
+<H3>
+<A NAME="5.2 Alternative naming conventions"></A>5.2 Alternative naming
+conventions</H3>
+As a result of this method, the location of the zone containing the actual
+PTR records is no longer predefined.&nbsp; This gives flexibility and some
+examples will be presented here.
+
+<P>An alternative to using the first address, or the first address and
+the network mask length in the corresponding address space, to name the
+new zones is to use some other (non-numeric) name.&nbsp; Thus it is also
+possible to point to an entirely different part of the DNS tree (i.e. outside
+of the IN-ADDR.ARPA tree).&nbsp; It would be necessary to use one of these
+alternate methods if two organizations somehow shared the same physical
+subnet (and corresponding IP address space) with no "neat" alignment of
+the addresses, but still wanted to administrate their own IN-ADDR.ARPA
+mappings.
+
+<P>The following short example shows how you can point out of the IN-ADDR.ARPA
+tree:
+
+<P><TT>$ORIGIN 2.0.192.in-addr.arpa.</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SOA&nbsp;&nbsp;&nbsp;&nbsp; my-ns.my.domain. hostmaster.my.domain. (...)</TT>
+<BR><TT>; ...</TT>
+<BR><TT>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 1.A.domain.</TT>
+<BR><TT>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 2.A.domain.</TT>
+<BR><TT>; ...</TT>
+<BR><TT>129&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 129.B.domain.</TT>
+<BR><TT>130&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 130.B.domain.</TT>
+<BR><TT>;</TT>
+<BR><TT>&nbsp;</TT>
+
+<P><TT>$ORIGIN A.domain.</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SOA&nbsp;&nbsp;&nbsp;&nbsp; my-ns.A.domain. hostmaster.A.domain. (...)</TT>
+<BR><TT>; ...</TT>
+<BR><TT>;</TT>
+<BR><TT>host1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 192.0.2.1</TT>
+<BR><TT>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host1</TT>
+<BR><TT>;</TT>
+<BR><TT>host2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 192.0.2.2</TT>
+<BR><TT>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+PTR&nbsp;&nbsp;&nbsp;&nbsp; host2</TT>
+<BR><TT>;</TT>
+
+<P>etc.
+
+<P>This way you can actually end up with the name->address and the (pointed-to)
+address->name mapping data in the same zone file - some may view this as
+an added bonus as no separate set of secondaries for the reverse zone is
+required.&nbsp; Do however note that the traversal via the IN-ADDR.ARPA
+tree will still be done, so the CNAME records inserted there need to point
+in the right direction for this to work.
+
+<P>Sketched below is an alternative approach using the same solution:&nbsp;
+
+<P><TT>$ORIGIN 2.0.192.in-addr.arpa.</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SOA&nbsp;&nbsp;&nbsp;&nbsp; my-ns.my.domain. hostmaster.my.domain. (...)</TT>
+<BR><TT>; ...</TT>
+<BR><TT>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 1.2.0.192.in-addr.A.domain.</TT>
+<BR><TT>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp; 2.2.0.192.in-addr.A.domain.</TT><TT></TT>
+
+<P><TT>$ORIGIN A.domain.</TT>
+<BR><TT>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SOA&nbsp;&nbsp;&nbsp;&nbsp; my-ns.A.domain. hostmaster.A.domain. (...)</TT>
+<BR><TT>; ...</TT>
+<BR><TT>;</TT>
+<BR><TT>host1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 192.0.2.1</TT>
+<BR><TT>1.2.0.192.in-addr&nbsp; PTR&nbsp;&nbsp;&nbsp;&nbsp; host1</TT>
+<BR><TT>host2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 192.0.2.2</TT>
+<BR><TT>2.2.0.192.in-addr&nbsp; PTR&nbsp;&nbsp;&nbsp;&nbsp; host2</TT>
+
+<P>It is clear that many possibilities exist which can be adapted to the
+specific requirements of the situation at hand.
+<BR>&nbsp;
+<H3>
+<A NAME="5.3 Other operational issues"></A>5.3 Other operational issues</H3>
+Note that one cannot provide CNAME referrals twice for the same address
+space, i.e. you cannot allocate a /25 prefix to one organisation, and run
+IN-ADDR.ARPA this way, and then have the organisation subnet the /25 into
+longer prefixes, and attempt to employ the same technique to give each
+subnet control of its own number space. This would result in a CNAME record
+pointing to a CNAME record, which may be less robust overall.
+
+<P>Unfortunately, some old beta releases of the popular DNS name server
+implementation BIND 4.9.3 had a bug which caused problems if a CNAME record
+was encountered when a reverse lookup was made.&nbsp; The beta releases
+involved have since been obsoleted, and this issue is resolved in the released
+code.&nbsp; Some software manufacturers have included the defective beta
+code in their product. In the few cases we know of, patches from the manufacturers
+are available or planned to replace the obsolete beta code involved.
+<BR>&nbsp;
+<H2>
+<A NAME="6. Security Considerations"></A>6. Security Considerations</H2>
+With this scheme, the "leaf sites" will need to rely on one more site running
+their DNS name service correctly than they would be if they had a /24 allocation
+of their own, and this may add an extra component which will need to work
+for reliable name resolution.
+
+<P>Other than that, the authors are not aware of any additional security
+issues introduced by this mechanism.
+<BR>&nbsp;
+<H2>
+<A NAME="7. Conclusion"></A>7. Conclusion</H2>
+The suggested scheme gives more flexibility in delegating authority in
+the IN-ADDR.ARPA domain, thus making it possible to assign address space
+more efficiently without losing the ability to delegate the DNS authority
+over the corresponding address to name mappings.
+<BR>&nbsp;
+<H2>
+<A NAME="8. Acknowledgements"></A>8. Acknowledgments</H2>
+Glen A. Herrmannsfeldt described this trick on comp.protocols.tcp-ip.domains
+some time ago.&nbsp; Alan Barrett and Sam Wilson provided valuable comments
+on the newsgroup.
+
+<P>We would like to thank Rob Austein, Randy Bush, Matt Crawford, Robert
+Elz, Glen A. Herrmannsfeldt, Daniel Karrenberg, David Kessens, Tony Li,
+Paul Mockapetris, Eric Wassenaar, Michael Patton, Hans Maurer,
+<BR>and Peter Koch for their review and constructive comments.
+<BR>&nbsp;
+<H2>
+<A NAME="9. References"></A>9. References</H2>
+
+
+<P><TT>[1]&nbsp; Mockapetris, P., "Domain Names - Concepts and Facilities",</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp; STD 13, <A HREF="ftp://ftp.is.co.za/rfc/rfc1034.txt">RFC
+1034</A>, November 1987.</TT><TT></TT>
+
+<P><TT>[2]&nbsp; Harrenstien, K., Stahl, M., and E. Feinler, "DoD Internet
+Host</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp; Table Specification", <A HREF="ftp://ftp.is.co.za/rfc/rfc952.txt">RFC
+952</A>, October 1985.</TT><TT></TT>
+
+<P><TT>[3]&nbsp; Elz, R., and R. Bush, "Clarifications to the DNS</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp; Specification", <A HREF="rfc2181.html">RFC
+2181</A>, July 1997.</TT>
+<BR>&nbsp;
+<BR>&nbsp;
+<H2>
+<A NAME="10. Authors' Addresses"></A>10. Authors' Addresses</H2>
+
+
+<P>Havard Eidnes
+<BR>SINTEF RUNIT
+<BR>N-7034 Trondheim
+<BR>Norway
+
+<P>Phone: +47 73 59 44 68
+<BR>Fax: +47 73 59 17 00
+<BR>EMail: <A HREF="mailto:Havard.Eidnes@runit.sintef.no">Havard.Eidnes@runit.sintef.no</A>
+<BR>&nbsp;
+
+<P>Geert Jan de Groot
+<BR>Berkeley Software Design, Inc. (BSDI)
+<BR>Hendrik Staetslaan 69
+<BR>5622 HM Eindhoven
+<BR>The Netherlands
+
+<P>Phone: +31 40 2960509
+<BR>Fax:&nbsp;&nbsp; +31 40 2960309
+<BR>EMail: <A HREF="mailto:GeertJan.deGroot@bsdi.com">GeertJan.deGroot@bsdi.com</A>
+<BR>&nbsp;
+
+<P>Paul Vixie
+<BR>Internet Software Consortium
+<BR>Star Route Box 159A
+<BR>Woodside, CA 94062
+<BR>USA
+
+<P>Phone: +1 415 747 0204
+<BR>EMail: <A HREF="mailto:paul@vix.com">paul@vix.com</A>
+<BR>&nbsp;
+<H2>
+<A NAME="11.  Full Copyright Statement"></A>11.&nbsp; Full Copyright Statement</H2>
+
+
+<P>Copyright (C) The Internet Society (1998).&nbsp; All Rights Reserved.
+
+<P>This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it or
+assist in its implementation may be prepared, copied, published and distributed,
+in whole or in part, without restriction of any kind, provided that the
+above copyright notice and this paragraph are included on all such copies
+and derivative works.&nbsp; However, this document itself may not be modified
+in any way, such as by removing the copyright notice or references to the
+Internet Society or other Internet organizations, except as needed for
+the purpose of developing Internet standards in which case the procedures
+for copyrights defined in the Internet Standards process must be followed,
+or as required to translate it into languages other than English.
+
+<P>The limited permissions granted above are perpetual and will not be
+revoked by the Internet Society or its successors or assigns.
+
+<P>This document and the information contained herein is provided on an
+"AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING TASK
+FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO ANY WARRANTY THAT THE USE OF THE INFORMATION
+<BR>HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY
+OR FITNESS FOR A PARTICULAR PURPOSE.
+</BODY>
+</HTML>

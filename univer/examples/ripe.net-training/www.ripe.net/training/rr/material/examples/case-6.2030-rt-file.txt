@@ -1,0 +1,23 @@
+! Configuration for AS2030, customer of 3007 & 4007
+! preferes all trafic through 3007 (even from 4007 & customers),
+! asking 3007 to announce him to peers;
+! using 4007 as backup only - by using the "localpref"
+!
+! Setting max pref to 100
+@RtConfig set cisco_max_preference = 100
+!
+! The Import Policy
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT"
+@RtConfig import AS2030 10.20.0.3 AS3007 10.3.15.2
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT"
+@RtConfig import AS2030 10.20.0.4 AS4007 10.4.192.2
+!
+! The Export Policy
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT"
+@RtConfig export AS2030 10.20.0.3 AS3007 10.3.15.2 
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT"
+@RtConfig export AS2030 10.20.0.4 AS4007 10.4.192.2 

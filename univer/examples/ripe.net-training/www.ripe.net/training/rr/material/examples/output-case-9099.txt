@@ -1,0 +1,76 @@
+!
+! Example - template for the Excercise in Case 6 (for April RR course)
+!
+! AS9099 is a multihomed customer of as3007 & as4007
+!
+! Setting max pref to 100
+!
+!
+no ip prefix-list pl100
+ip prefix-list pl100 permit 10.3.0.0/20
+ip prefix-list pl100 deny 0.0.0.0/0 le 32
+!
+no route-map AS3007-IMPORT
+!
+route-map AS3007-IMPORT permit 1
+ match ip address prefix-list pl100
+!
+no ip prefix-list pl101
+ip prefix-list pl101 deny 0.0.0.0/0 le 32
+!
+route-map AS3007-IMPORT permit 2
+ match ip address prefix-list pl101
+!
+no ip prefix-list pl102
+ip prefix-list pl102 permit 10.5.0.0/20
+ip prefix-list pl102 permit 10.7.0.0/20
+ip prefix-list pl102 deny 0.0.0.0/0 le 32
+!
+route-map AS3007-IMPORT permit 3
+ match ip address prefix-list pl102
+!
+router bgp 9099
+neighbor 10.3.15.2 route-map AS3007-IMPORT in
+!
+!
+no ip prefix-list pl103
+ip prefix-list pl103 permit 10.4.192.0/19
+ip prefix-list pl103 deny 0.0.0.0/0 le 32
+!
+no route-map AS4007-IMPORT
+!
+route-map AS4007-IMPORT permit 1
+ match ip address prefix-list pl103
+!
+route-map AS4007-IMPORT permit 2
+ match ip address prefix-list pl101
+!
+route-map AS4007-IMPORT permit 3
+ match ip address prefix-list pl101
+!
+router bgp 9099
+neighbor 10.4.192.2 route-map AS4007-IMPORT in
+!
+!
+no ip prefix-list pl104
+ip prefix-list pl104 permit 10.9.0.0/24
+ip prefix-list pl104 deny 0.0.0.0/0 le 32
+!
+no route-map AS3007-EXPORT
+!
+route-map AS3007-EXPORT permit 1
+ match ip address prefix-list pl104
+ set community  3007:20 3007:331
+!
+router bgp 9099
+neighbor 10.3.15.2 route-map AS3007-EXPORT out
+!
+!
+no route-map AS4007-EXPORT
+!
+route-map AS4007-EXPORT permit 1
+ match ip address prefix-list pl104
+ set community  4007:30 4007:221
+!
+router bgp 9099
+neighbor 10.4.192.2 route-map AS4007-EXPORT out

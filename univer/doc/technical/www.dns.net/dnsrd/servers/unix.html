@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<TITLE>Name Server Software: Unix
+</TITLE>
+<META NAME="copyright" CONTENT="1994-2004, Andras Salamon">
+<LINK REV="made" HREF="/andras/">
+<!-- OWNER_NAME="Andras Salamon" -->
+<!-- OWNER_INFO="andras,spam.not.welcome.dns.net" -->
+<META NAME="description" CONTENT="Domain Name System (DNS) server software for Unix">
+<META NAME="keywords"
+CONTENT="DNS, Domain Name System, DNSRD, Unix, DNS server, name server, nameserver, BIND, djbdns, PowerDNS, ANS, CNS, dents">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<H1>Name Server Software: Unix
+</H1>
+
+
+<H3>BIND</H3>
+
+<P>
+<A HREF="http://www.isc.org/bind.html">BIND</A> is the reference
+implementation of a DNS server and usually serves as the base for
+experimentation with DNS protocol extensions.  BIND is free and has
+been ported to many operating systems; see the respective entries
+in the <A HREF="./#index">index</A>.  Most BIND servers run on some
+variant of Unix, although <A HREF="windows.html">BIND on Windows</A>
+is also available.
+</P>
+
+<P>
+BIND is the proverbial kitchen sink of DNS.  This has led to
+familiar problems associated with legacy software: a large code
+base, increasing feature bloat, and severe security problems during
+2001 and 2002 (although no serious security issues were reported
+in 2003 or 2004).  Some of the main issues are covered in an
+<A HREF="http://www.circleid.com/article/774_0_1_0_C/">article by
+Paul Vixie</A>.
+</P>
+
+<P>
+Because of its long development history and its support for most of
+the <A HREF=../rfc/">DNS standards</A>, BIND is generally preferred
+for large production name servers on the Internet.  At the other end
+of the scale, BIND can also run well on an ancient PC with as little
+as 32MB RAM, and this can be a low-cost name server platform for a
+smaller site on a budget.
+</P>
+
+<P>
+At the time of writing, the most recent release of BIND is <A
+HREF="http://www.isc.org/sw/bind/bind9.php">BIND 9.2.4</A>, released
+in September 2004.  This contains bug fixes and also allows top level
+domain wildcard records to be ignored (for instance, Network Solutions'
+.COM redirection).  BIND 9.3.0 is also out, with some experimental
+DNSSEC features.
+</P>
+
+<P>
+BIND 9 is the reference implementation, but some large sites are
+still running <A HREF="http://www.isc.org/sw/bind/bind8.php">BIND 8</A>
+(the latest released version is 8.4.5),
+since it has less strict syntax checking, runs
+<A HREF="ftp://ftp.cup.hp.com/dist/networking/briefs/lp2kr_dns_server_results.txt">faster</A>
+for certain applications, and (ahem) supports some "legacy
+practices" that do not technically conform to the published
+<A HREF="../rfc/">standards</A>.  BIND 9 is a better bet.
+</P>
+
+
+<H3>djbdns</H3>
+
+<P>
+D. J. Bernstein's <A HREF="http://cr.yp.to/djbdns.html">djbdns</A>
+is a widely used collection of DNS tools from the author of the
+<A HREF="http://cr.yp.to/qmail.html">qmail mail server</A>.  The two
+main name server functions of caching and acting as an authoritative
+server are sensibly split into two separate programs
+(<A HREF="http://cr.yp.to/djbdns/dnscache.html">dnscache</A>
+and <A HREF="http://cr.yp.to/djbdns/tinydns.html">tinydns</A>).
+The djbdns package is free
+<A HREF="http://cr.yp.to/distributors.html">(with some
+minor restrictions on distribution of modified versions)</A>,
+and comes with a <A HREF="http://cr.yp.to/djbdns/guarantee.html">$500
+security guarantee</A>.  Worth a look.
+</P>
+
+
+<H3>ANS/CNS</H3>
+
+<P>
+<A HREF="http://www.nominum.com/products_technology.php?id=85">ANS/CNS</A>
+are commercial DNS servers from
+<A HREF="http://www.nominum.com">Nominum</A>, for enterprise
+applications that need maximum performance.  For those with serious
+budgets.
+
+
+<H3>PowerDNS</H3>
+
+<P>
+<A HREF="http://www.powerdns.com/">pdns</A> is in reasonably wide use,
+including at some large infrastructure providers.  The software is
+covered by the GPL, while support is offered on a contract basis.
+Worth a look.
+</P>
+
+
+<H3>NSD</H3>
+
+<P>
+<A HREF="http://www.nlnetlabs.nl/nsd/">NSD</A> is a recently developed
+open source server, used at several large registries.  Worth a look.
+</P>
+
+
+<H3>MaraDNS</H3>
+
+<P>
+<A HREF="http://www.maradns.org/">MaraDNS</A> is relatively new, free,
+and written to be secure against remote compromise.  Worth a look.
+</P>
+
+
+<H3>Dents</H3>
+
+<P>
+<A HREF="http://sourceforge.net/projects/dents/">Dents</A> is a name
+server implementation for Unix covered by the GPL.  The code has
+been stuck in testing for years, and is probably not appropriate for
+production use.
+</P>
+
+<HR>
+<P>
+Back to <A HREF="./">Name Server Software index</A> or
+<A HREF="../">DNSRD</A>.
+</P>
+
+
+<HR>
+
+<ADDRESS>Copyright 1994-2004 by Andr&aacute;s Salamon
+<A HREF="/andras/">&lt;andras&#64;dns.net&gt;</A></ADDRESS>
+<BR>Last updated 19-Nov-2004
+</BODY>
+</HTML>

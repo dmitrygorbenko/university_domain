@@ -1,0 +1,167 @@
+! generating config. for 3007 - all the things!!! (customers, peers, upstreams)
+! but only one example of each neighbour category
+!
+! setting up the Max_Preference to 100
+!
+!
+! Re-distributing static routes to himself
+!
+!
+no ip prefix-list pl100
+ip prefix-list pl100 permit 10.3.1.0/24
+ip prefix-list pl100 deny 0.0.0.0/0 le 32
+!
+no route-map MyMap_3007_1
+!
+route-map MyMap_3007_1 permit 1
+ match ip address prefix-list pl100
+ set local-preference 90
+!
+router bgp 3007
+ redistribute static route-map MyMap_3007_1
+!
+! generating config for the peering between 3007 and 5000 (*A* upstream)
+! (repeat these lines for each upstream)
+!
+!
+no ip prefix-list pl101
+ip prefix-list pl101 permit 0.0.0.0/0 le 32
+!
+no route-map AS5000-IMPORT
+!
+route-map AS5000-IMPORT permit 1
+ match ip address prefix-list pl101
+!
+router bgp 3007
+neighbor 10.5.0.3 route-map AS5000-IMPORT in
+!
+!
+no ip prefix-list pl102
+ip prefix-list pl102 deny 0.0.0.0/0 le 32
+!
+no route-map AS5000-EXPORT
+!
+route-map AS5000-EXPORT permit 1
+ match ip address prefix-list pl102
+!
+no ip prefix-list pl103
+ip prefix-list pl103 permit 10.6.27.0/24
+ip prefix-list pl103 permit 10.20.0.0/24
+ip prefix-list pl103 permit 10.187.65.0/24
+ip prefix-list pl103 permit 10.200.0.0/24
+ip prefix-list pl103 deny 0.0.0.0/0 le 32
+!
+ip bgp-community new-format
+!
+no ip community-list 1
+ip community-list 1 permit 3007:222 
+!
+route-map AS5000-EXPORT permit 2
+ match community 1
+ match ip address prefix-list pl103
+ set as-path prepend 3007 3007 
+!
+no ip community-list 2
+ip community-list 2 permit 3007:332 
+!
+route-map AS5000-EXPORT permit 3
+ match community 2
+ match ip address prefix-list pl103
+ set as-path prepend 3007 3007 
+!
+route-map AS5000-EXPORT permit 4
+ match ip address prefix-list pl103
+!
+router bgp 3007
+neighbor 10.5.0.3 route-map AS5000-EXPORT out
+!
+! generating config for the peering between 3007 and 4000 (*A* peer)
+! (repeat these lines for each peer)!
+!
+!
+no ip as-path access-list  1
+ip as-path access-list 1 permit ^_4000$
+!
+no route-map AS4000-IMPORT
+!
+route-map AS4000-IMPORT permit 1
+ match as-path 1
+ set local-preference 60
+!
+no ip as-path access-list  2
+ip as-path access-list 2 permit ^(_4000)+_(4200|4204|4208)$
+!
+route-map AS4000-IMPORT permit 2
+ match as-path 2
+ set local-preference 50
+!
+router bgp 3007
+neighbor 10.4.192.3 route-map AS4000-IMPORT in
+!
+!
+no ip prefix-list pl104
+ip prefix-list pl104 permit 10.3.0.0/20
+ip prefix-list pl104 deny 0.0.0.0/0 le 32
+!
+no route-map AS4000-EXPORT
+!
+route-map AS4000-EXPORT permit 1
+ match ip address prefix-list pl104
+!
+no ip community-list 3
+ip community-list 3 permit 3007:112 
+!
+route-map AS4000-EXPORT permit 2
+ match community 3
+ match ip address prefix-list pl103
+ set as-path prepend 3007 3007 
+!
+route-map AS4000-EXPORT permit 3
+ match ip address prefix-list pl103
+!
+router bgp 3007
+neighbor 10.4.192.3 route-map AS4000-EXPORT out
+!
+! generating config for the peering between 3007 and 2000 (*A* customer)
+! (repeat these lines for each customer)!
+!
+!
+no ip community-list 4
+ip community-list 4 permit 3007:20 
+!
+no route-map AS2000-IMPORT
+!
+route-map AS2000-IMPORT permit 1
+ match community 4
+ match ip address prefix-list pl103
+ set local-preference 80
+!
+no ip community-list 5
+ip community-list 5 permit 3007:30 
+!
+route-map AS2000-IMPORT permit 2
+ match community 5
+ match ip address prefix-list pl103
+ set local-preference 70
+!
+no ip community-list 6
+ip community-list 6 permit 3007:440 
+!
+route-map AS2000-IMPORT permit 3
+ match community 6
+ match ip address prefix-list pl103
+ set community  no-export
+!
+router bgp 3007
+neighbor 10.20.0.3 route-map AS2000-IMPORT in
+send community
+!
+!
+no route-map AS2000-EXPORT
+!
+route-map AS2000-EXPORT permit 1
+ match ip address prefix-list pl101
+!
+router bgp 3007
+neighbor 10.20.0.3 route-map AS2000-EXPORT out
+!

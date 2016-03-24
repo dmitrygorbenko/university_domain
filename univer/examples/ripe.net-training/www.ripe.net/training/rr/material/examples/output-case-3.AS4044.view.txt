@@ -1,0 +1,76 @@
+!
+! RtConfig template file for the case 5 (multiple peering points)
+! view of the as4044
+! Router7
+!
+! an "import/export" line needed for each physical link
+!
+! full mash - R7->R1 & R7 -> R2 	=> 4 lines in total
+! 
+! Setting max preference to 100
+!
+!
+no ip prefix-list pl100
+ip prefix-list pl100 permit 10.3.0.0/20
+ip prefix-list pl100 deny 0.0.0.0/0 le 32
+!
+no route-map AS3033-IMPORT-1
+!
+route-map AS3033-IMPORT-1 permit 1
+ match ip address prefix-list pl100
+ set local-preference 60
+!
+no ip prefix-list pl101
+ip prefix-list pl101 permit 10.6.27.0/24
+ip prefix-list pl101 permit 10.20.0.0/24
+ip prefix-list pl101 permit 10.187.65.0/24
+ip prefix-list pl101 permit 10.200.0.0/24
+ip prefix-list pl101 deny 0.0.0.0/0 le 32
+!
+route-map AS3033-IMPORT-1 permit 2
+ match ip address prefix-list pl101
+ set local-preference 50
+!
+router bgp 4044
+neighbor 10.3.0.1 route-map AS3033-IMPORT-1 in
+!
+!
+no route-map AS3033-IMPORT-2
+!
+route-map AS3033-IMPORT-2 permit 1
+ match ip address prefix-list pl100
+ set local-preference 60
+!
+route-map AS3033-IMPORT-2 permit 2
+ match ip address prefix-list pl101
+ set local-preference 50
+!
+router bgp 4044
+neighbor 10.3.0.2 route-map AS3033-IMPORT-2 in
+!
+!
+no ip prefix-list pl102
+ip prefix-list pl102 permit 10.4.192.0/19
+ip prefix-list pl102 permit 10.4.200.0/21 ge 22 le 22
+ip prefix-list pl102 permit 10.4.208.0/22
+ip prefix-list pl102 permit 10.20.0.0/24
+ip prefix-list pl102 permit 10.187.65.0/24
+ip prefix-list pl102 deny 0.0.0.0/0 le 32
+!
+no route-map AS3033-EXPORT-3
+!
+route-map AS3033-EXPORT-3 permit 1
+ match ip address prefix-list pl102
+!
+router bgp 4044
+neighbor 10.3.0.1 route-map AS3033-EXPORT-3 out
+!
+!
+no route-map AS3033-EXPORT-4
+!
+route-map AS3033-EXPORT-4 permit 1
+ match ip address prefix-list pl102
+!
+router bgp 4044
+neighbor 10.3.0.2 route-map AS3033-EXPORT-4 out
+!

@@ -1,0 +1,631 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.04 [en] (WinNT; I) [Netscape]">
+   <META NAME="Author" CONTENT="Mark Symons (bliksim9@yahoo.com)">
+   <TITLE>RFC2219: Use of DNS Aliases for Network Services</TITLE>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#FF0000">
+This RFC has been HTMLized
+by hand by <A HREF="mailto:bliksim9@yahoo.com">Mark Symons</A>,
+and word-for-word correspondance to the source has not been
+<BR>verified.&nbsp; A table of contents has been added. The <A HREF="ftp://ftp.is.co.za/rfc/rfc2219.txt">original
+RFC</A> should be regarded as being authoritative.
+<BR>
+<HR WIDTH="100%">
+<BR>&nbsp;
+<BR>&nbsp;
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=3 WIDTH="100%" >
+<TR>
+<TD>Network Working Group</TD>
+
+<TD></TD>
+
+<TD>M. Hamilton</TD>
+</TR>
+
+<TR>
+<TD>Request for Comments: 2219&nbsp;</TD>
+
+<TD></TD>
+
+<TD>Loughborough University</TD>
+</TR>
+
+<TR>
+<TD>BCP: 17</TD>
+
+<TD></TD>
+
+<TD>R. Wright</TD>
+</TR>
+
+<TR>
+<TD>Category: Best Current Practice</TD>
+
+<TD></TD>
+
+<TD>Lawrence Berkeley Laboratory</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD></TD>
+
+<TD>October 1997</TD>
+</TR>
+</TABLE>
+&nbsp;
+<CENTER>
+<H1>
+Use of DNS Aliases for Network Services</H1></CENTER>
+
+<H2>
+Status of this Memo</H2>
+This document specifies an Internet Best Current Practices for the Internet
+Community, and requests discussion and suggestions for improvements.&nbsp;
+Distribution of this memo is unlimited.
+<BR>&nbsp;
+<H2>
+Abstract</H2>
+It has become a common practice to use symbolic names (usually CNAMEs)
+in the Domain Name Service (DNS - <A HREF="rfc1034.txt">RFC 1034</A>, <A HREF="rfc1035/rfc1035.html">RFC
+1035</A>]) to refer to network services such as anonymous FTP [<A HREF="ftp://ftp.is.co.za/rfc/rfc959.txt">RFC
+959</A>] servers, Gopher [<A HREF="ftp://ftp.is.co.za/rfc/rfc1436.txt">RFC
+1436</A>] servers, and most notably World-Wide Web HTTP [<A HREF="ftp://ftp.is.co.za/rfc/rfc1945.txt">RFC
+1945</A>] servers.&nbsp; This is desirable for a number of reasons.&nbsp;
+It provides a way of moving services from one machine to another transparently,
+and a mechanism by which people or agents may programmatically discover
+that an organization runs, say, a World-Wide Web server.
+
+<P>Although this approach has been almost universally adopted, there is
+no standards document or similar specification for these commonly used
+names.&nbsp; This document seeks to rectify this situation by gathering
+together the extant 'folklore' on naming conventions, and proposes a mechanism
+for accommodating new protocols.
+
+<P>It is important to note that these naming conventions do not provide
+a complete long term solution to the problem of finding a particular network
+service for a site.&nbsp; There are efforts in other IETF working groups
+to address the long term solution to this problem, such as the Server Location
+Resource Records (DNS SRV) [<A HREF="rfc2052.txt">RFC 2052</A>] work.
+<BR>&nbsp;
+<H2>
+Contents</H2>
+<B><A HREF="#1.Rationale">1.&nbsp;&nbsp; Rationale</A></B>
+<BR><B><A HREF="#2. A generic framework">2.&nbsp;&nbsp; A Generic Framework</A></B>
+<BR><B><A HREF="#3. Special Cases">3.&nbsp;&nbsp; Special Cases</A></B>
+<BR><B><A HREF="#4. (Ab)Use">4.&nbsp;&nbsp; (Ab)Use of the DNS as a Directory
+Service</A></B>
+<BR><B><A HREF="#5. DNS Server Config">5.&nbsp;&nbsp; DNS Server Configuration</A></B>
+<BR><B><A HREF="#6. Limitations">6.&nbsp;&nbsp; Limitations of This Approach</A></B>
+<BR><B><A HREF="#7. CCSO Service Name">7.&nbsp;&nbsp; CCSO Service Name</A></B>
+<BR><B><A HREF="#8. Security">8.&nbsp;&nbsp; Security Considerations</A></B>
+<BR><B><A HREF="#9. Conclusions">9.&nbsp;&nbsp; Conclusions</A></B>
+<BR><B><A HREF="#10. Acknowledgements">10.&nbsp; Acknowledgements</A></B>
+<BR><B><A HREF="#11. References">11.&nbsp; References</A></B>
+<BR><B><A HREF="#12. Authors">12.&nbsp; Authors' Addresses</A></B>
+<H2>
+<A NAME="1.Rationale"></A>1. Rationale</H2>
+In order to locate the network services offered at a particular Internet
+domain one is faced with the choice of selecting from a growing number
+of centralized databases - typically Web or Usenet News "wanderers", or
+attempting to infer the existence of network services from whatever DNS
+information may be available.&nbsp; The former approach is not practical
+in some cases, notably when the entity seeking service information is a
+program.
+<BR>&nbsp;
+<BR>Perhaps the most visible example of the latter approach at work is
+in the case of World-Wide Web HTTP servers.&nbsp; It is common practice
+to try prefixing the domain name of an organization with "http://www."
+in order to reach its World-Wide Web site, e.g. taking "hivnet.fr" and
+arriving at "http://www.hivnet.fr."&nbsp; Some popular World-Wide Web browsers
+have gone so far as to provide automatic support for this domain name expansion.
+
+<P>Ideally, the DNS or some complementary directory service would provide
+a means for programs to determine automatically the network services which
+are offered at a particular Internet domain, the protocols which are used
+to deliver them, and other technical information.&nbsp; Unfortunately,
+although much work has been done to develop said directory service technologies
+and to define new types of DNS resource record to provide this type of
+information, there is no widely agreed upon or widely deployed solution
+to the problem - except in a small number of cases.
+
+<P>The first case is where the DNS already provides a lookup capability
+for the type of information being sought after.&nbsp; For example: Mail
+Exchanger (MX) records specify how mail to a particular domain should be
+routed [<A HREF="ftp://ftp.is.co.za/rfc/rfc974.txt">RFC 974</A>], the Start
+of Authority (SOA) records make it possible to determine who is responsible
+for a given domain, and Name Server (NS) records indicate which hosts provide
+DNS name service for a given domain.
+
+<P>The second case is where the DNS does not provide an appropriate lookup
+capability, but there is some widely accepted convention for finding this
+information.&nbsp; Some use has been made of Text (TXT) [<A
+HREF="rfc1035/rfc1035.html">RFC
+1035</A>] records in this scenario, but in the vast majority of cases a
+Canonical Name (CNAME) or Address (A) record pointer is used to indicate
+the host or hosts which provide the service.&nbsp; This document proposes
+a slight formalization of this well-known alias approach.
+
+<P>It should be noted that the DNS provides a Well Known Services (WKS)
+[<A HREF="rfc1035/rfc1035.html">RFC 1035</A>] lookup capability, which makes it
+possible to determine the network services offered at a given domain name.&nbsp;
+In practice this is not widely used, perhaps because of the absence of
+a suitable programming interface.&nbsp; Use of WKS for mail routing was
+deprecated in the Host Requirements specification [<A HREF="rfc1123.txt">RFC
+1123</A>] in favour of the MX record, and in the long term it is conceivable
+that SRV records will supersede both WKS and MX.
+<BR>&nbsp;
+<H2>
+<A NAME="2. A generic framework"></A>2. A Generic Framework</H2>
+Our approach to dealing with aliases for protocols is straightforward.
+We define a standard set of DNS aliases for the most popular network services
+that currently exist (see the "Special Cases" section below). For protocols
+that are not explicitly listed in this document, the protocol specification
+must propose a name.
+<BR>&nbsp;
+<H2>
+<A NAME="3. Special Cases"></A>3. Special Cases</H2>
+Special Cases:
+<BR>&nbsp;
+<TABLE BORDER COLS=2 WIDTH="70%" >
+<TR>
+<TD WIDTH="25%"><B>Alias</B></TD>
+
+<TD><B>Service</B></TD>
+</TR>
+
+<TR>
+<TD>archie</TD>
+
+<TD>archie [ARCHIE]</TD>
+</TR>
+
+<TR>
+<TD WIDTH="15%">finger</TD>
+
+<TD>Finger [<A HREF="ftp://ftp.is.co.za/rfc/rfc1288.txt">RFC 1288</A>]</TD>
+</TR>
+
+<TR>
+<TD>ftp</TD>
+
+<TD>File Transfer Protocol [<A HREF="ftp://ftp.is.co.za/rfc/rfc959.txt">RFC
+959</A>]&nbsp;</TD>
+</TR>
+
+<TR>
+<TD>gopher</TD>
+
+<TD>Internet Gopher Protocol [<A HREF="ftp://ftp.is.co.za/rfc/rfc1436.txt">RFC
+1436</A>]&nbsp;</TD>
+</TR>
+
+<TR>
+<TD>ldap</TD>
+
+<TD>Lightweight Directory Access Protocol [<A HREF="ftp://ftp.is.co.za/rfc/rfc1777.txt">RFC
+1777</A>]</TD>
+</TR>
+
+<TR>
+<TD>mail</TD>
+
+<TD>SMTP mail [<A HREF="ftp://ftp.is.co.za/rfc/rfc821.txt">RFC 821</A>]</TD>
+</TR>
+
+<TR>
+<TD>news</TD>
+
+<TD>Usenet News via NNTP [<A HREF="ftp://ftp.is.co.za/rfc/rfc977.txt">RFC
+977</A>]</TD>
+</TR>
+
+<TR>
+<TD>ntp</TD>
+
+<TD>Network Time Protocol [<A HREF="ftp://ftp.is.co.za/rfc/rfc1305.txt">RFC
+1305</A>]&nbsp;</TD>
+</TR>
+
+<TR>
+<TD>ph</TD>
+
+<TD>CCSO nameserver [PH]&nbsp;</TD>
+</TR>
+
+<TR>
+<TD>pop</TD>
+
+<TD>Post Office Protocol [<A HREF="ftp://ftp.is.co.za/rfc/rfc1939.txt">RFC
+1939</A>]&nbsp;</TD>
+</TR>
+
+<TR>
+<TD>rwhois</TD>
+
+<TD>Referral WHOIS [<A HREF="ftp://ftp.is.co.za/rfc/rfc1714.txt">RFC 1714</A>]</TD>
+</TR>
+
+<TR>
+<TD>wais</TD>
+
+<TD>Wide Area Information Server [<A HREF="ftp://ftp.is.co.za/rfc/rfc1625.txt">RFC
+1625</A>]&nbsp;</TD>
+</TR>
+
+<TR>
+<TD>whois</TD>
+
+<TD>NICNAME/WHOIS [<A HREF="ftp://ftp.is.co.za/rfc/rfc954.txt">RFC 954</A>]</TD>
+</TR>
+
+<TR>
+<TD>www</TD>
+
+<TD>World-Wide Web HTTP [<A HREF="ftp://ftp.is.co.za/rfc/rfc1945.txt">RFC
+1945</A>]&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<H2>
+<A NAME="4. (Ab)Use"></A>4. (Ab)Use of the DNS as a Directory Service</H2>
+The widespread use of these common aliases effectively means that it is
+sometimes possible to "guess" the domain names associated with an organization's
+network services, though this is becoming more difficult as the number
+of organizations registered in the DNS increases.
+
+<P>It should be understood by implementors that the existence of a DNS
+entry such as
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp; www.hivnet.fr
+
+<P>does not constitute a registration of a World-Wide Web service. There
+is no requirement that the domain name resolve to an IP address or addresses.&nbsp;
+There is no requirement that a host be listening for HTTP connections,
+or if it is, that the HTTP server be running on port 80.&nbsp; Finally,
+even if all of these things are true, there can be no guarantee that the
+World-Wide Web server will be prepared to honor requests from arbitrary
+clients.
+
+<P>Having said this, the aliases do provide useful "hints" about the services
+offered.&nbsp; We propose that they be taken in this spirit.
+
+<P>The conventions described in this document are, essentially, only useful
+when the organization's domain name can be determined - e.g. from some
+external database.&nbsp; A number of groups, including the IETF, have been
+working on ways of finding domain names given a set of information such
+as organization name, location, and business type. It is hoped that one
+or more of these will eventually make it possible to augment the basic
+lookup service which the DNS provides with a more generalized search and
+retrieval capability.
+<BR>&nbsp;
+<H2>
+<A NAME="5. DNS Server Config"></A>5. DNS Server Configuration</H2>
+In the short term, whilst directory service technology and further types
+of DNS resource record are being developed, domain name administrators
+are encouraged to use these common names for the network services they
+run.&nbsp; They will make it easier for outsiders to find information about
+your organization, and also make it easier for you to move services from
+one machine to another.
+
+<P>There are two conventional approaches to creating these DNS entries.
+One is to add a single CNAME record to your DNS server's configuration,
+e.g.
+
+<P>&nbsp;&nbsp;&nbsp; ph.hivnet.fr.&nbsp;&nbsp;&nbsp; IN&nbsp;&nbsp;&nbsp;
+CNAME&nbsp;&nbsp;&nbsp; baby.hivnet.fr.
+
+<P>Note that in this scenario no information about ph.hivnet.fr should
+exist in the DNS other than the CNAME record. For example, ph.hivnet.fr
+could not contain a MX record.
+
+<P>An alternative approach would be to create an A record for each of the
+IP addresses associated with ph.hivnet.fr, e.g.
+
+<P>&nbsp;&nbsp;&nbsp; ph.hivnet.fr.&nbsp;&nbsp;&nbsp; IN&nbsp;&nbsp;&nbsp;
+A&nbsp;&nbsp;&nbsp; 194.167.157.2
+
+<P>It isn't a simple matter of recommending CNAMEs over A records. Each
+site has it's own set of requirements that may make one approach better
+than the other. RFC 1912 [<A HREF="rfc1912.html">RFC 1912</A>]&nbsp; discusses
+some of the configuration issues involved in using CNAMEs.
+
+<P>Recent DNS server implementations provide a "round-robin" feature which
+causes the host's IP addresses to be returned in a different order each
+time the address is looked up.
+
+<P>Network clients are starting to appear which, when they encounter a
+host with multiple addresses, use heuristics to determine the address to
+contact - e.g. picking the one which has the shortest round-trip- time.&nbsp;
+Thus, if a server is mirrored (replicated) at a number of locations, it
+may be desirable to list the IP addresses of the mirror servers as A records
+of the primary server.&nbsp; This is only likely to be appropriate if the
+mirror servers are exact copies of the original server.
+<BR>&nbsp;
+<H2>
+<A NAME="6. Limitations"></A>6. Limitations of this Approach</H2>
+Some services require that a client have more information than the server's
+domain name.&nbsp; For example, an LDAP client needs to know a starting
+search base within the Directory Information Tree in order to have a meaningful
+dialogue with the server.&nbsp; This document does not attempt to address
+this problem.
+<BR>&nbsp;
+<H2>
+<A NAME="7. CCSO Service Name"></A>7. CCSO Service Name</H2>
+There are currently at least three different aliases in common use for
+the CCSO nameserver - e.g. "ph", "cso" and "ns".&nbsp; It would appear
+to be in everyone's interest to narrow the choice of alias down to a single
+name.&nbsp; "ns" would seem to be the best choice since it is the most
+commonly used name.&nbsp; However, "ns" is also being used by DNS to point
+to the DNS server.&nbsp; In fact, the most prevalent use of "ns" is to
+name DNS servers.&nbsp; For this reason, we suggest the use of "ph" as
+the best name to use for CCSO nameservers.
+
+<P>Sites with existing CCSO servers using some of these aliases may find
+it desirable to use all three.&nbsp; This increases the likelihood of the
+service being found.
+
+<P>As noted earlier, implementations should be resilient in the event that
+the name does not point to the expected service.
+<BR>&nbsp;
+<H2>
+<A NAME="8. Security"></A>8. Security Considerations</H2>
+The DNS is open to many kinds of "spoofing" attacks, and it cannot be guaranteed
+that the result returned by a DNS lookup is indeed the genuine information.&nbsp;
+Spoofing may take the form of denial of service, such as directing of the
+client to a non-existent address, or a passive attack such as an intruder's
+server which masquerades as the legitimate one.
+<BR>&nbsp;
+<BR>Work is ongoing to remedy this situation insofar as the DNS is concerned
+[<A HREF="rfc2065.html">RFC 2065</A>].&nbsp; In the meantime it should be
+noted that stronger authentication mechanisms such as public key cryptography
+with large key sizes are a pre-requisite if the DNS is being used in any
+sensitive situations.&nbsp; Examples of these would be on-line financial
+transactions, and any situation where privacy is a concern - such as the
+querying of medical records over the network.&nbsp; Strong encryption of
+the network traffic may also be advisable, to protect against TCP connection
+"hijacking" and packet sniffing.
+<BR>&nbsp;
+<H2>
+<A NAME="9. Conclusions"></A>9. Conclusions</H2>
+The service names listed in this document provide a sensible set of defaults
+which may be used as an aid in determining the hosts which offer particular
+services for a given domain name.
+
+<P>This document has noted some exceptions which are either inherently
+unsuitable for this treatment, or already have a substantial installed
+base using alternative aliases.
+<BR>&nbsp;
+<H2>
+<A NAME="10. Acknowledgements"></A>10. Acknowledgements</H2>
+Thanks to Jeff Allen, Tom Gillman, Renato Iannella, Thomas Lenggenhager,
+Bill Manning, Andy Powell, Sri Sataluri, Patrik Faltstrom, Paul Vixie and
+Greg Woods for their comments on draft versions of this document.
+
+<P>This work was supported by UK Electronic Libraries Programme (eLib)
+grant 12/39/01, the European Commission's Telematics for Research Programme
+grant RE 1004, and U. S. Department of Energy Contract Number DE-AC03-76SF00098.
+<BR>&nbsp;
+<H2>
+<A NAME="11. References"></A>11. References</H2>
+Request For Comments (RFC) documents are available from <A HREF="ftp://ftp.internic.net/rfc">&lt;URL:ftp://ftp.internic.net/rfc></A>
+and numerous mirror sites.
+<BR>&nbsp;
+<BR>&nbsp;
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=2 WIDTH="100%" >
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD WIDTH="10%">[ARCHIE]</TD>
+
+<TD>A. Emtage, P. Deutsch. "archie - An Electronic Directory Service for
+the Internet", Winter Usenix Conference Proceedings 1992.&nbsp; Pages 93-110.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[PH]</TD>
+
+<TD>R. Hedberg, S. Dorner, P. Pomes.&nbsp; "The CCSO Nameserver (Ph) Architecture",
+Work in Progress.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc768.txt">RFC 768</A>]</TD>
+
+<TD>Postel, J., "User Datagram Protocol", STD 6, RFC 768, August 1980.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc793.txt">RFC 793</A>]</TD>
+
+<TD>[Postel, J., "Transmission Control Protocol", STD 7, RFC 793, September
+1981.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc821.txt">RFC 821</A>]</TD>
+
+<TD>Postel, J., "Simple Mail Transfer Protocol", STD 10, RFC 821, August
+1982.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc954.txt">RFC 954</A>]</TD>
+
+<TD>Harrenstien, K., Stahl, M., and E. Feinler,&nbsp; "NICNAME/WHOIS",
+RFC 954, October 1985.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc959.txt">RFC 959</A>]</TD>
+
+<TD>Postel, J., and J.K. Reynolds, "File Transfer Protocol", STD 9, RFC
+959, October 1985.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD><A HREF="rfc974.txt">[RFC 974]</A></TD>
+
+<TD>Partridge, C., "Mail routing and the domain system", STD 14, RFC 974,
+January 1986.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc977.txt">RFC 977</A>]</TD>
+
+<TD>Kantor, B., and P. Lapsley, "Network News Transfer Protocol", RFC 977,
+February 1986.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="rfc1034.txt">RFC 1034]</A></TD>
+
+<TD>Mockapetris, P., "Domain Names - Concepts and Facilities", STD 13,
+RFC 1034, November 1987.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD><A HREF="rfc1035/rfc1035.html">[RFC 1035]</A></TD>
+
+<TD>Mockapetris, P., "Domain Names - Implementation and Specification",
+STD 13, RFC 1035, November 1987.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc1288.txt">RFC 1288</A>]</TD>
+
+<TD>Zimmerman, D., "The Finger User Information Protocol", RFC 1288, December
+1992.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc1305.txt">RFC 1305</A>]</TD>
+
+<TD>Mills, D., "Network Time Protocol (Version 3) Specification, Implementation",
+RFC 1305,&nbsp; March 1992.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc1436.txt">RFC 1436</A>]</TD>
+
+<TD>Anklesaria, F., McCahill, M., Lindner, P., Johnson, D., Torrey, D.,
+and B. Albert, "The Internet Gopher Protocol (a distributed document search
+and retrieval protocol)", RFC 1436, March 1993.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc1590.txt">RFC 1590</A>]</TD>
+
+<TD>Postel, J., "Media Type Registration Procedure", RFC 1590, March 1994.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc1625.txt">RFC 1625</A>]</TD>
+
+<TD>&nbsp;St. Pierre, M., Fullton, J., Gamiel, K., Goldman, J., Kahle,
+B., Kunze, J., Morris, H., and F. Schiettecatte, "WAIS over Z39.50-1988",
+RFC 1625, June 1994.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc1700.txt">RFC 1700</A>]</TD>
+
+<TD>&nbsp;Reynolds, J.K., and J. Postel,&nbsp; "ASSIGNED NUMBERS",&nbsp;
+STD 2, RFC 1700, October 1994.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc1714.txt">RFC 1714</A>]</TD>
+
+<TD>Williamson, S., and M. Kosters, "Referral Whois Protocol (RWhois)",
+RFC 1714, November 1994.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc1777.txt">RFC 1777</A>]</TD>
+
+<TD>Yeong, W., Howes, T., and S. Kille, "Lightweight Directory Access Protocol",
+RFC 1777, March 1995.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD><A HREF="rfc1912.html">[RFC 1912]</A></TD>
+
+<TD>Barr, D., "Common DNS Operational and Configuration Errors", RFC 1912,
+Feburary 1996.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc1939.txt">RFC 1939</A>]</TD>
+
+<TD>Myers, J., and M. Rose, "Post Office Protocol - Version 3", STD 53,
+RFC 1939, May 1996.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[<A HREF="ftp://ftp.is.co.za/rfc/rfc1945.txt">RFC 1945</A>]</TD>
+
+<TD>Berners-Lee, T., Fielding, R., and H. Nielsen, "Hypertext Transfer
+Protocol -- HTTP/1.0", RFC 1945, May 1996.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD><A HREF="rfc2052.txt">[RFC 2052]</A></TD>
+
+<TD>Gulbrandsen, A., and P. Vixie, "A DNS RR for specifying the location
+of services (DNS SRV)", RFC 2052, October 1996.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD><A HREF="rfc2065.html">[RFC 2065]</A></TD>
+
+<TD>Eastlake, D., and C. Kaufman, "Domain Name System Security Extensions",
+RFC 2065, January 1997.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<H2>
+<A NAME="12. Authors"></A>12. Authors' Addresses</H2>
+Martin Hamilton
+<BR>Department of Computer Studies
+<BR>Loughborough University of Technology
+<BR>Leics. LE11 3TU, UK
+
+<P>EMail: <A HREF="mailto:m.t.hamilton@lut.ac.uk">m.t.hamilton@lut.ac.uk</A>
+<BR>&nbsp;
+
+<P>Russ Wright
+<BR>Information &amp; Computing Sciences Division
+<BR>Lawrence Berkeley National Laboratory
+<BR>1 Cyclotron Road, Berkeley
+<BR>Mail-Stop: 50A-3111
+<BR>CA 94720, USA
+
+<P>EMail: <A HREF="mailto:wright@lbl.gov">wright@lbl.gov</A>
+</BODY>
+</HTML>

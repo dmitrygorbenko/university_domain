@@ -1,0 +1,70 @@
+/***************************************************************************
+ *   Copyright (C) 2003, 2004, 2005                                              *
+ *   by Dmitriy Gorbenko. "XAI" University, Kharkov, Ukraine               *
+ *   e-mail: nial@ukr.net                                                  *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ ***************************************************************************/
+
+#define FALSE 0
+#define TRUE 1
+#define BAD 2
+#define RES_FALSE 0
+#define RES_TRUE 1
+#define RES_BAD 2
+
+#define SQL_RESULT_UNDEFINED 0
+#define SQL_RESULT_EMPTY 1
+#define SQL_RESULT_TABLE_EMPTY 2
+#define SQL_RESULT_ERROR 3
+#define SQL_RESULT_ERROR_UNPRINTABLE 4
+#define SQL_RESULT_OK 5
+
+#define PGSQL_WAIT_TO_CONNECT 5
+
+#define PROGRAM_NAME "Engine"
+#define PROGRAM_VERSION "0.6"
+
+#define NAMED_FILE_NAME "/tmp/domain/named.conf"
+
+#define href_main_page			"engine"
+#define href_client_main_page		"http://hosting.ai:8000/domain/"
+#define href_whois_main_page		"http://whois.com.ua"
+
+#define href_search_select		"search_select"
+#define href_view_select		"view_select"
+
+#define href_view_query 		"view_query"
+#define href_view_registered 		"view_registered"
+#define href_view_refused 		"view_refused"
+#define href_view_domain_individ 	"view_domain_individ"
+#define href_view_to_prolong		"view_to_prolong"
+#define href_view_to_create		"view_to_create"
+#define href_view_to_delete		"view_to_delete"
+
+#define href_search_domain 		"search_domain"
+#define href_search_domain_run		"search_domain_run"
+#define href_search_client 		"search_client"
+#define href_search_client_run		"search_client_run"
+
+
+#define href_view_clients		"view_clients"
+#define href_view_client_individ	"view_client_individ"
+
+#define href_config_zone		"config_zone"
+#define href_config_zone_view		"config_zone_view"
+#define href_config_zone_update		"config_zone_update"
+
+#define href_config_ns_mx		"config_ns_mx"
+#define href_config_ns_mx_view		"config_zone_view"
+#define href_config_ns_mx_update	"config_ns_mx_update"
+
+#define href_add_notes			"add_notes"
+
+#define href_accept_query 		"accept_query"
+#define href_prolong_domain 		"prolong"
+#define href_reject_query 		"reject_query"
+#define href_reject_query_step_2 	"reject_query_step_2"

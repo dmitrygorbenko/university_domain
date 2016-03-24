@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<TITLE>Name Server Software: NetWare, OS/2, VMS, and others</TITLE>
+<META NAME="copyright" CONTENT="1994-2004, Andras Salamon">
+<LINK REV="made" HREF="/andras/">
+<!-- OWNER_NAME="Andras Salamon" -->
+<!-- OWNER_INFO="andras,spam.not.welcome.dns.net" -->
+<META NAME="description" CONTENT="Domain Name System (DNS) server software for NetWare, OS/2, VMS, and others.">
+<META NAME="keywords"
+ CONTENT="DNS, Domain Name System, NetWare, OS/2, VMS, name server, nameserver, BIND, DNS server, domain">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<H1>Name Server Software: NetWare, OS/2, VMS, and others</H1>
+
+
+<H3>Novell Netware</H3>
+
+<P>
+Novell's NetWare IP 2.12 had a DNS subsystem including a name server.
+It supported MX records and seemed to be fairly functional as a caching
+server, but did not do zone transfers at that stage.  Version 2.2
+apparently required the administrator to use a menu system for
+configuration.  More details of the DNS subsystem for NetWare would
+be welcome.
+</P>
+
+
+<H3>OS/2</H3>
+
+<P>
+Ports of old versions of BIND to OS/2 exist, although I'm not
+aware of any more recent than BIND 8.2.4.
+Several of these can be found at the
+<A HREF="http://hobbes.nmsu.edu/cgi-bin/h-browse?sh=1&dir=/pub/os2/util/network/tcpip">hobbes</A>
+archive.
+</P>
+
+<P>
+IBM apparently also provided a name server for OS/2.  Further details
+would be welcome.
+</P>
+
+<P>
+IBM had a name server implementation in their TCP/IP for VM and MVS.
+Craig Jackson mentioned that the name server in the mainframe TCP/IP
+product is not based on BIND but on software developed in the mid-80's
+at the University of Wisconsin, and uses a relational database backend.
+It is not known if these products are still available.
+</P>
+
+
+<H3>VMS</H3>
+
+<P>
+TGV Multinet included an enhanced VMS port of BIND.  Craig Jackson
+mentioned that the TGV port (as of 1996) ran under TGV's superserver
+and was heavily multithreaded.  This software is now under the banner of
+Process Software.  Jeff Schreiber from Process Software stated that their
+TCPware DNS server was a VMS port of BIND, with added features such as
+cluster load balancing.  According to Dave Barlow from Process Software,
+The code base for MultiNet V4.1 is BIND 4.9.7 while later versions are
+based on BIND 8.
+<PRE>
+   <A HREF="http://www.process.com/openvms.htp">http://www.process.com/openvms.htp</A>
+   <A HREF="http://www.process.com/multinet/">http://www.process.com/multinet/</A>
+</PRE>
+</P>
+
+<P>
+Paul Vixie mentioned that DEC's VMS TCP/IP implementation had a name
+server not based on BIND.
+</P>
+
+<P>
+Brad Knowles reported using Wollongong TCP-IP under VAX/VMS; apparently
+the work was originally done by TGV and was based on BIND.
+</P>
+
+
+<H3>MS-DOS and related systems</H3>
+
+<P>
+The KA9Q suite of DOS communications software contains a DNS server.
+<PRE>
+   <A HREF="ftp://ftp.demon.co.uk/pub/demon/ibmpc/dos/files/">ftp://ftp.demon.co.uk/pub/demon/ibmpc/dos/files/</A>
+</PRE>
+</P>
+
+<P>
+Steve D. Miller pointed out that the NetManage ChameleonNFS 4.0 manual
+stated that the product included a DNS server.  It seems it only did
+hostname to IP translation.  Later versions of NFS/X were released, but no
+details about the functionality of the included name server are available.
+</P>
+
+<P>
+A package called "bind" was available from FTP Software under MS-DOS.
+This was discontinued several years ago.
+</P>
+
+
+<H3>Banyan VINES</H3>
+
+<P>
+Banyan shipped a DNS server.  According to Merton Campbell Crockett,
+FTP Software provided the original TCP/IP support for Banyan VINES.
+</P>
+
+
+<H3>Miscellaneous</H3>
+
+<P>
+Roland Schemers implemented <A
+HREF="http://www.stanford.edu/~schemers/docs/lbnamed/lbnamed.html">lbnamed</A>,
+a load-balancing DNS forwarder, at Stanford and presented a <A
+HREF="http://www.usenix.org/publications/library/proceedings/lisa95/schemers.html">paper</A>
+on it at the LISA IX conference in September 1995.
+<CODE>lbnamed</CODE> is implemented as a Perl script, and strictly
+speaking is not a server but a server adjunct.
+</P>
+
+<P>
+This idea is now widely used by vendors of commercial load balancing
+appliances and other network hardware, though in contrast to
+<CODE>lbnamed</CODE>, some black-box trickery is involved and source
+code is generally not available.
+</P>
+
+<P>
+The Perl module <A
+HREF="http://www.stanford.edu/~riepel/lbnamed/Stanford-DNSserver/">Stanford::DNSserver</A>
+is a recent further development of <CODE>lbnamed</CODE>, by Rob Riepel
+and several contributors.
+</P>
+
+
+<P>
+Simon Leinen came up with a real exotic:
+<BLOCKQUOTE>
+    The DNS server in Genera, the operating system of the Symbolics
+    Lisp Machines.  It is written in Lisp (of course).  The source is
+    about 750 lines long.
+</BLOCKQUOTE>
+</P>
+   
+
+<P>
+Richard Shuford sent information on the md-dns name server which ran
+on VOS for Stratus fault-tolerant computers, but appears to have been
+discontinued.
+</P>
+
+<HR>
+<P>
+Back to <A HREF="./">Name Server Software index</A> or
+<A HREF="../">DNSRD</A>.
+</P>
+
+
+<HR>
+
+<ADDRESS>Copyright 1994-2004 by Andr&aacute;s Salamon
+<A HREF="/andras/">&lt;andras&#64;dns.net&gt;</A></ADDRESS>
+<BR>Last updated 19-Nov-2004
+</BODY>
+</HTML>

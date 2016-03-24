@@ -1,0 +1,440 @@
+<html><head><title>MySQL.RU .:. Одобрено лучшими российскими программистами</title>
+
+<link href="MySQL-PostgreSQL_features_files/style.css" rel="stylesheet" type="text/css"></head>
+<body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0">
+<table wrap="" border="0" cellpadding="0" cellspacing="0" height="92" width="100%">
+  <tbody><tr> 
+    <td align="right" background="MySQL-PostgreSQL_features_files/verh.jpg" height="92" width="686">&nbsp;</td>
+    <td align="right" background="MySQL-PostgreSQL_features_files/verh_b.jpg" width="333"><iframe src="MySQL-PostgreSQL_features_files/erle.html" vspace="0" hspace="0" marginwidth="0" marginheight="0" frameborder="0" height="60" scrolling="no" width="468">&lt;a&gt;&lt;img&gt;&lt;/a&gt;</iframe><br>
+    </td>
+  </tr>
+</tbody></table>
+<table wrap="" border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tbody><tr> 
+    <td background="MySQL-PostgreSQL_features_files/lev_back.jpg" valign="top" width="157">
+      <img src="MySQL-PostgreSQL_features_files/lev_menu.jpg" height="28" width="155"><br>
+      <a href="http://www.mysql.ru/news" target="_top"><img src="MySQL-PostgreSQL_features_files/a_news.jpg" border="0" height="15" width="155"></a><br>
+      <a href="http://www.mysql.ru/docs" target="_top"><img src="MySQL-PostgreSQL_features_files/a_documents.jpg" border="0" height="19" width="155"></a><br>
+      <a href="http://www.mysql.ru/download" target="_top"><img src="MySQL-PostgreSQL_features_files/a_download.jpg" border="0" height="19" width="155"></a><br>
+      <a href="http://www.mysql.ru/webboard" target="_top"><img src="MySQL-PostgreSQL_features_files/a_webboard.jpg" border="0" height="19" width="155"></a><br>
+      <a href="http://www.mysql.ru/search.html" target="_top"><img src="MySQL-PostgreSQL_features_files/a_searh.jpg" border="0" height="19" width="155"></a><br>
+      <a href="http://www.mysql.ru/faq" target="_top"><img src="MySQL-PostgreSQL_features_files/a_faq.gif" border="0" height="19" width="155"></a><br>
+      <a href="mailto:admin@mysql.ru"><img src="MySQL-PostgreSQL_features_files/a_mail.jpg" border="0" height="19" width="155"></a><br>
+      <br>
+      <br>
+      <br>
+    </td>
+    <td valign="top"> 
+      <table wrap="" align="center" border="0" cellpadding="0" cellspacing="0" width="96%">
+        <tbody><tr> 
+          <td align="left" height="500" valign="top">
+	    <br>
+	<!-- Start: center -->
+
+<center><h2>Справочное руководство по MySQL</h2><h5>1.11.2.2  Сравнение возможностей MySQL и PostgreSQL</h5></center>
+
+<div><ul><li><a href="http://www.mysql.ru/docs/man/Introduction.html">1 Общая информация
+</a><ul><li><a href="http://www.mysql.ru/docs/man/Comparisons.html">1.11 Сравнение MySQL с другими СУБД
+</a><ul><li><a href="http://www.mysql.ru/docs/man/Compare_PostgreSQL.html">1.11.2 Сравнение MySQL c PostgreSQL
+</a><ul><li><a href="http://www.mysql.ru/docs/man/MySQL-PostgreSQL_goals.html">1.11.2.1 Стратегии развития MySQL и PostgreSQL
+</a></li><li>1.11.2.2 Сравнение возможностей MySQL и PostgreSQL
+</li><li><a href="http://www.mysql.ru/docs/man/MySQL-PostgreSQL_benchmarks.html">1.11.2.3 Тестирование скорости работы MySQL и PostgreSQL
+</a></li></ul></li></ul></li></ul></li></ul></div><ul>
+
+<div>
+<div><a rel="prev" href="http://www.mysql.ru/docs/man/MySQL-PostgreSQL_goals.html" title="1.11.2.1  Стратегии развития MySQL и PostgreSQL">Previous</a> / <a rel="next" href="http://www.mysql.ru/docs/man/MySQL-PostgreSQL_benchmarks.html" title="1.11.2.3  Тестирование скорости работы MySQL и PostgreSQL">Next</a> / <a rel="up" href="http://www.mysql.ru/docs/man/Compare_PostgreSQL.html" title="1.11.2  Сравнение MySQL c PostgreSQL">Up</a> / <a rel="contents" href="http://www.mysql.ru/docs/man/index.html">Table of Contents</a></div><h4>1.11.2.2  Сравнение возможностей MySQL и PostgreSQL</h4>
+
+<p>
+<a name="IDX162"></a>
+
+</p>
+<p>
+На странице <code>crash-me</code> (<a href="http://www.mysql.com/information/crash-me.php">http://www.mysql.com/information/crash-me.php</a>)
+приведен список ограничений и особенностей СУБД, которые могут быть
+обнаружены автоматически с помощью специальных программ. Однако не стоит
+забывать о том, что многие ограничения могут быть изменены настройкой
+соответствующих баз данных. Впрочем, эта web-страница оказывается очень
+кстати, если необходимо, чтобы создаваемое приложение нормально работало с
+несколькими СУБД или для перевода приложения с одной СУБД в другую.
+
+</p>
+<p>
+MySQL обладает следующими преимуществами перед PostgreSQL:
+
+</p>
+
+<ul>
+<li>
+
+<code>MySQL</code> обычно намного превосходит PostgreSQL по скорости работы. Кроме
+того, в MySQL 4.0 реализован кэш запросов. Он позволяет во много раз
+увеличить скорость обработки запросов для сайтов, на которых
+преобладают неоднократно повторяющиеся запросы на чтение.
+
+</li><li>
+
+По количеству пользователей MySQL также намного превосходит
+PostgreSQL. Поэтому код тестируется значительно более придирчиво и
+опытным путем доказана большая его надежность, нежели у PostgreSQL.
+MySQL чаще, чем PostgreSQL, используется на производстве, в
+основном потому, что компания MySQL AB (ранее - TCX DataKonsult AB)
+предоставляет высококачественную коммерческую техническую поддержку
+MySQL с момента появления этой системы на рынке, а у PostgreSQL
+до самого последнего времени никакой поддержки не было.
+
+</li><li>
+
+MySQL работает в среде Windows лучше, чем PostgreSQL. MySQL
+Server запускается как настоящее (родное) Windows-приложение (в
+NT/2000/XP - сервис), в то время как PostgreSQL запускается в среде
+эмуляции, <code>Cygwin</code>. Нам доводилось слышать о недостаточной стабильности
+работы PostgreSQL в среде Windows, но самостоятельно эти сведения до
+сих пор мы проверить не могли.
+
+</li><li>
+
+MySQL оснащен большим количеством API для других языков и
+поддерживается большим количеством существующих программ, нежели
+PostgreSQL. See section <a href="http://www.mysql.ru/docs/man/Contrib.html">B  Привнесенные программы</a>.
+
+</li><li>
+
+MySQL работает на высоконадежных промышленных системах 24/7
+(включенных 24 часа в сутки 7 дней в неделю). В большинстве случаев
+никаких ``чисток'' в MySQL производить не требуется. PostgreSQL же
+пока что не может работать в таких системах, так как иногда приходится
+запускать <code>VACUUM</code> для освобождения занятого последствиями работы команд
+<code>UPDATE</code> и <code>DELETE</code> пространства и проводить статистический анализ,
+необходимый для достижения максимальной производительности PostgreSQL.
+Запускать <code>VACUUM</code> необходимо и после каждого добавления к таблице
+нескольких столбцов. На напряженно работающих системах <code>VACUUM</code> нужно
+запускать более часто, в худших случаях - по несколько раз в день. А
+ведь во время работы <code>VACUUM</code> (а ее работа может продолжаться часы, если
+база данных достаточно велика) база практически ``мертва''. Впрочем, в
+PostgreSQL версии 7.2 выполнение основных функций этой программы
+больше не приводит к блокировке базы, и пользователи могут продолжать
+нормально работать с ней. Новая команда <code>VACUUM FULL</code> берется за дело
+более серьезно: она, как и в старых версиях, блокирует таблицу и
+сжимает копию таблицы на диске.
+
+</li><li>
+
+Репликация MySQL отлично протестирована и используется в таких сайтах,
+как:
+
+<ul>
+<li>
+
+Yahoo Finance (<a href="http://finance.yahoo.com/">http://finance.yahoo.com/</a>)
+</li><li>
+
+Mobile.de (<a href="http://www.mobile.de/">http://www.mobile.de/</a>)
+</li><li>
+
+Slashdot (<a href="http://www.slashdot.org/">http://www.slashdot.org/</a>)
+</li></ul>
+
+</li><li>
+
+В комплект поставки MySQL входят два тестовых пакета, <code>mysql-test-run</code> и
+<code>crash-me</code> (<a href="http://www.mysql.com/information/crash-me.php">http://www.mysql.com/information/crash-me.php</a>), а также
+пакет для замеров производительности. Тестовая система постоянно
+обновляется, в нее добавляется код для тестирования всех новых
+возможностей и почти всех воспроизводимых ошибок, которые попали в
+поле нашего зрения. Перед выпуском каждой новой версии мы используем
+эти пакеты для тестирования MySQL на нескольких платформах.
+Наши тесты значительно превосходят по своим возможностям все
+существующие в PostgreSQL аналоги, и обеспечивают высокое качество
+кода MySQL.
+
+</li><li>
+
+Книг о MySQL вышло значительно больше, нежели о PostgreSQL.
+Книги о MySQL выпустили издательства O'Reilly, SAMS, Que и New Riders.
+Все возможности MySQL детально описаны в документации, так как это
+является обязательным условием включения новых возможностей в код.
+
+</li><li>
+
+MySQL поддерживает больше стандартных функций ODBC, чем
+<code>PostgreSQL</code>.
+
+</li><li>
+
+MySQL обладает значительно более мощной реализацией <code>ALTER
+TABLE</code>.
+
+</li><li>
+
+В MySQL предусмотрена возможность создания таблиц без
+транзакций, что необходимо приложениям, требующим максимально
+возможной скорости работы. Эти таблицы могут храниться в памяти,
+относиться к типу <code>HEAP</code>-таблиц или дисковых <code>MyISAM</code>. See section <a href="http://www.mysql.ru/docs/man/Table_types.html">7  Типы  таблиц MySQL</a>.
+
+</li><li>
+
+MySQL может работать с двумя поддерживающими транзакции
+обработчиками таблиц, а именно - <code>InnoDB</code> и <code>BerkeleyDB</code>. Так как все
+системы поддержки транзакций в разных условиях работают по-разному,
+это дает разработчику возможность найти наилучшее решение для условий,
+в которых будет работать его система. See section <a href="http://www.mysql.ru/docs/man/Table_types.html">7  Типы  таблиц MySQL</a>.
+
+</li><li>
+
+Команда слияния таблиц MERGE предоставляет в ваше распоряжение
+уникальную возможность создать представление нескольких идентичных
+таблиц и работать с ними как с одной. Это особенно удобно для работы с
+журналами, разбитыми, например, по месяцам. See section <a href="http://www.mysql.ru/docs/man/MERGE.html">7.2  Таблицы MERGE</a>.
+
+</li><li>
+
+Возможность сжатия доступных только для чтения таблиц, не отменяющая
+прямого доступа к их записям, повышает производительность системы,
+снижая количество операций считывания с диска. Это особенно полезно
+при архивировании. See section <a href="http://www.mysql.ru/docs/man/myisampack.html">4.7.4  <code>myisampack</code>, MySQL-генератор сжатых таблиц (только для чтения)</a>.
+
+</li><li>
+
+В MySQL реализован полнотекстовый поиск. See section <a href="http://www.mysql.ru/docs/man/Fulltext_Search.html">6.8  Полнотекстовый поиск в MySQL</a>.
+
+</li><li>
+
+Имеется возможность работы с несколькими базами через одно соединение
+(разумеется, в зависимости от привилегий пользователя).
+
+</li><li>
+
+Система MySQL с самого начала разрабатывалась в расчете на
+многопоточность, а PostgreSQL использует процессы. Переключение
+контекстов и доступ к общим данным несколькими потоками осуществляется
+значительно быстрее, нежели отдельными процессами. Таким образом MySQL
+Server в многопользовательских приложениях получает неплохое
+преимущество в производительности, а кроме того, таким образом MySQL
+Server удается значительно эффективней пользоваться преимуществами,
+предоставляемыми симметричными мультипроцессорными системами (SMP).
+
+</li><li>
+
+В MySQL реализована значительно более мощная система
+привилегий, нежели в PostgreSQL. В то время как PostgreSQL
+обеспечивает лишь привилегии <code>INSERT</code>, <code>SELECT</code> и <code>UPDATE</code>/<code>DELETE</code> над базой
+или таблицей, MySQL предоставляет возможность определения
+полного набора разнообразных привилегий на уровне базы, таблицы и
+столбца. Кроме того, MySQL позволяет задавать привилегии для
+комбинаций хост/пользователь. See section <a href="http://www.mysql.ru/docs/man/GRANT.html">4.3.1  Синтаксис команд <code>GRANT</code> и <code>REVOKE</code></a>.
+
+</li><li>
+
+В MySQL используется протокол связи между клиентом и сервером
+со сжатием данных, что увеличивает производительность системы в
+условиях низкоскоростных каналов связи.
+
+</li><li>
+
+Насколько нам известно, только в реляционной системе баз данных MySQL
+Server используется концепция ``обработчика таблиц''. Благодаря этому
+создается возможность работы с различными низкоуровневыми типами
+таблиц из ядра MySQL, причем каждая таблица может быть оптимизирована
+для различных характеристик производительности.
+
+</li><li>
+
+Все типы таблиц в MySQL (кроме <code>InnoDB</code>) реализованы в виде файлов (по
+одной таблице в файле), что значительно облегчает создание резервных
+копий, перенос, удаление и даже создание символьных ссылок между
+базами данных и таблицами, даже если сервер находится в нерабочем
+состоянии.
+
+</li><li>
+
+Наличие утилиты для восстановления и оптимизации таблиц <code>MyISAM</code>
+(наиболее распространенного типа таблиц в MySQL). Ее использование
+требуется только в случае физического повреждения файла данных
+(например, в результате аппаратного сбоя). Позволяет восстановить
+большую часть данных.
+
+</li><li>
+
+Обновление (апгрейд) MySQL проходит совершенно ``безболезненно''. При
+модернизации MySQL нет нужды в копировании/восстановлении
+данных, что приходится делать при установке большинства обновлений
+PostgreSQL.
+</li></ul>
+
+<p>
+Недостатки MySQL по сравнению с PostgreSQL:
+
+</p>
+
+<ul>
+<li>
+
+Поддержка транзакций в MySQL пока что не настолько хорошо
+проверена, как в системе PostgreSQL.
+
+</li><li>
+
+Так как MySQL основан на использовании потоков (threads), пока
+что еще не безошибочно работающих в некоторых ОС, для обеспечения
+стабильной работы приходится либо использовать один из
+откомпилированных пакетов, доступных по адресу
+<a href="http://www.mysql.ru/downloads/index.html">http://www.mysql.com/downloads/</a>, либо точно выполнять содержащиеся в
+section <a href="http://www.mysql.ru/docs/man/Installing_source.html">2.3  Установка исходного дистрибутива MySQL</a> инструкции.
+
+</li><li>
+
+Блокировка таблиц, применяющаяся в нетранзакционных таблицах <code>MyISAM</code>,
+во многих случаях работает быстрее, нежели блокировки на уровне
+страниц, строк или контроль версий. Недостаток этого подхода в том,
+что если не учитывать механизм работы блокирования таблиц, один
+длительный запрос может надолго заблокировать таблицу. Обычно этого
+эффекта можно избежать, приняв соответствующие меры при разработке
+приложения. Если это не удастся, всегда можно изменить тип таблицы и
+сделать ее транзакционной. See section <a href="http://www.mysql.ru/docs/man/Table_locking.html">5.3.2  Вопросы блокирования таблиц</a>.
+
+</li><li>
+
+При помощи <code>UDF</code> (<code>user-defined functions</code>, определяемые пользователем
+функции) возможности MySQL можно расширить и дополнить обычными
+SQL-функциями или их объединениями. Но это сделать не так просто, да и
+система не настолько гибка в этом отношении, как PostgreSQL. See section <a href="http://www.mysql.ru/docs/man/Adding_functions.html">9.2  Добавление новых функций в MySQL</a>.
+
+</li><li>
+
+В MySQL сложнее организовывались обновления, затрагивающие
+несколько таблиц сразу. Впрочем, это было исправлено в MySQL 4.0.2
+реализацией многотабличного <code>UPDATE</code> и в MySQL 4.1 - с помощью
+подзапросов. В MySQL 4.0 можно одновременно удалять данные из
+нескольких таблиц. See section <a href="http://www.mysql.ru/docs/man/DELETE.html">6.4.6  Синтаксис оператора <code>DELETE</code></a>.
+</li></ul>
+
+<p>
+Ниже перечислены преимущества PostgreSQL по сравнению с MySQL на
+сегодняшний день.
+
+</p>
+<p>
+Так как нам известен план разработки новых версий MySQL, мы включили в
+приведенную ниже таблицу версии MySQL, в которых будет реализована
+поддержка соответствующих возможностей. К сожалению, в сопоставлении мы
+сделать этого не могли, так как план разработки PostgreSQL нам неизвестен.
+
+</p>
+<table border="1" width="100%">
+<tbody><tr><td><strong>Возможность</strong> </td><td> <strong>Версия MySQL</strong>
+</td></tr>
+<tr><td>Подзапросы </td><td> 4.1
+</td></tr>
+<tr><td>Внешние ключи </td><td> 5.0 (3.23 с InnoDB)
+</td></tr>
+<tr><td>Представления </td><td> 5.0
+</td></tr>
+<tr><td>Хранимые процедуры </td><td> 5.0
+</td></tr>
+<tr><td>Триггеры </td><td> 5.0
+</td></tr>
+<tr><td>Объединения </td><td> 4.0
+</td></tr>
+<tr><td>Полные связи </td><td> 4.1
+</td></tr>
+<tr><td>Ограничения </td><td> 4.1 или 5.0
+</td></tr>
+<tr><td>Курсоры </td><td> 4.1 или 5.0
+</td></tr>
+<tr><td>R-деревья </td><td> 4.1 (для таблиц MyISAM)
+</td></tr>
+<tr><td>Наследование таблиц </td><td> Не планируется
+</td></tr>
+<tr><td>Расширяемая система типов </td><td> Не планируется
+</td></tr>
+</tbody></table>
+
+<p>
+Другие причины, по которым можно предпочесть PostgreSQL:
+
+</p>
+
+<ul>
+<li>
+
+В некоторых случаях PostgreSQL оказывается ближе к ANSI SQL.
+
+</li><li>
+
+Работу PostgreSQL можно ускорить, выполняя код в виде хранимых
+процедур.
+
+</li><li>
+
+При хранении географических данных R-деревья дают PostgreSQL
+преимущество перед MySQL (примечание: в MySQL версии 4.1 для
+таблиц <code>MyISAM</code> реализована поддержка R-деревьев).
+
+</li><li>
+
+Оптимизатор PostgreSQL в некоторых случаях способен дать лучший в
+сравнении с существующим на сегодняшний день оптимизатором MySQL
+результат. Особенно это заметно при слиянии таблиц без соответствующих
+ключей или при слиянии с использованием разных ключей в сочетании с
+логическим оператором <code>OR</code>. Набор результатов тестов скорости MySQL,
+расположенный по адресу
+<a href="http://www.mysql.ru/information/benchmarks.html">http://www.mysql.com/information/benchmarks.html</a> покажет, каких
+конструкций следует избегать при работе с различными базами данных.
+
+</li><li>
+
+Команда разработчиков PostgreSQL, пишущих код для сервера, больше.
+</li></ul>
+
+<p>
+Недостатки PostgreSQL по сравнению с MySQL:
+
+</p>
+
+<ul>
+<li>
+
+<code>VACUUM</code> затрудняет использование PostgreSQL в постоянно работающих
+системах.
+
+</li><li>
+
+Наличие только транзакционных таблиц.
+
+</li><li>
+
+Значительно более медленная работа команд <code>INSERT</code>, <code>DELETE</code> и <code>UPDATE</code>.
+</li></ul>
+
+<p>
+Полный список недостатков приведен в первой таблице настоящего раздела.
+
+</p>
+
+
+
+<br><div><a href="http://www.mysql.ru/docs/man/MySQL-PostgreSQL_features.html#">Top</a> / <a rel="prev" href="http://www.mysql.ru/docs/man/MySQL-PostgreSQL_goals.html" title="1.11.2.1  Стратегии развития MySQL и PostgreSQL">Previous</a> / <a rel="next" href="http://www.mysql.ru/docs/man/MySQL-PostgreSQL_benchmarks.html" title="1.11.2.3  Тестирование скорости работы MySQL и PostgreSQL">Next</a> / <a rel="up" href="http://www.mysql.ru/docs/man/Compare_PostgreSQL.html" title="1.11.2  Сравнение MySQL c PostgreSQL">Up</a> / <a rel="contents" href="http://www.mysql.ru/docs/man/index.html">Table of Contents</a></div></div>
+</ul>
+<center><form action="http://www.mysql.ru/docs/search.html" method="get">
+Поиск по документации:
+<input name="text" value="" size="20" type="text">
+<input value="Поехали!" type="submit">
+</form></center>
+
+	<!-- Stop: center -->
+            <br>
+          </td>
+        </tr>
+      </tbody></table>
+    </td>
+  </tr>
+</tbody></table>
+<table wrap="" background="MySQL-PostgreSQL_features_files/niz_c.jpg" border="0" cellpadding="0" cellspacing="0" height="47" width="100%">
+  <tbody><tr> 
+    <td> <img src="MySQL-PostgreSQL_features_files/niz_a.jpg" height="47" width="247"><a href="http://www.inside.ru/"><img src="MySQL-PostgreSQL_features_files/niz_logo.jpg" border="0" height="47" width="113"></a><img src="MySQL-PostgreSQL_features_files/niz_b.jpg" height="47" width="211"> 
+  </td></tr>
+  <tr>
+    <td>
+  </td></tr>
+</tbody></table>
+</body></html>

@@ -1,0 +1,742 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html><head><!-- Meta http equivalent was here                               -->
+   
+   <meta name="GENERATOR" content="Mozilla/4.77 [ru] (X11; U; Linux 2.4.2-0.1.49 i686) [Netscape]">
+   <title>Правила заполнения заявок</title></head>
+
+<body bgcolor="#f5f5f5">
+<b>НПП "ТРАЙФЛ Ко, Лтд."</b> обеспечивает поддержку
+географического публичного домена <b>.DP.UA</b>.
+<br>Одной из задач является ведения Базы данных публичного домена <b>.DP.UA</b>,
+включающей информацию о доменах, регистраторах и другую публично доступную
+информацию, относящуюся к функционированию домена <b>.DP.UA</b>.
+<p>Право доступа к Базе данных имеет любое лицо. Для регистрации данных
+в зоне <b>.DP.UA</b> достаточно отправить правильно заполненную форму по
+адресу: <a href="mailto:auto-dbm@dp.ua">auto-dbm@dp.ua</a>. Дополнительно
+возможен доступ через сервер <b>whois.dp.ua</b>, порт 43.
+</p><p>Объект <b>domain</b> - основной объект в Базе данных. Этот объект описывает
+какие записи будут добавляться в DNS зоны <b>.DP.UA</b>.
+<br>Право создания новых объектов <b>domain</b> и изменения записей о существующих
+доменах имеют <b>Регистраторы</b> и лица, которым <b>Регистраторы</b> доверяют
+выполнение этих действий от своего имени.
+<br><b>Регистратором</b> может стать любой <b>субъект предпринимательской
+деятельности</b>, зарегистрировавший в Базе данных необходимые объекты
+и заключивший <i><a href="http://nic.dp.ua/dogovor.html">"Договор между
+регистратором и администратором публичного домена .DP.UA"</a></i>.
+<br>Необходимыми объектами для <b>Регистратора</b> являются объекты <b>person</b>,
+содержащие информацию о персонале <b>Регистратора</b>,<b> </b>и объект <b>mntner</b>,
+который служит для защиты других объектов от несанкционированного доступа
+и определяет метод аутентификации и авторизации, используемый <b>Регистратором</b>
+или его доверенным лицом, для внесения изменений в Базу данных.
+<br>Поскольку объект <b>mntner</b> ссылается на объекты <b>person</b>,
+соответствующие объекты <b>person</b> должны быть зарегистрированы до регистрации
+объекта <b>mntner</b> или в том же сообщении-заявке на регистрацию объекта <b>mntner</b>.
+<br>
+<br>Один <b>Регистратор</b> может создать любое количество объектов <b>mntner</b>.
+<br>
+<br>Объект <b>mail-obj</b> служит для описания общей политики маршрутизации
+почты для многих доменов. Позволяет быстро изменить набор записей 'MX'
+для нескольких объектов <b>domain</b>.
+</p><ol>
+<li>
+Полное описание всех объектов:</li>
+
+<ul>
+<li>
+<a href="#domain">domain</a></li>
+
+<li>
+<a href="#person">person</a></li>
+
+<li>
+<a href="#mntner">mntner</a></li>
+
+<li>
+<a href="#mailobj">mail-obj</a></li>
+
+<li>
+<a href="#cname">CNAME</a></li>
+</ul>
+
+<li>
+Примеры заполнения заявок</li>
+
+<ul>
+<li>
+<a href="#ex0">пример объекта person</a></li>
+
+<li>
+<a href="#ex1">пример объекта mntner</a></li>
+
+<li>
+<a href="#ex2">примеры объекта domain</a></li>
+
+<li>
+<a href="#ex3">пример объекта mail-obj</a></li>
+</ul>
+</ol>
+
+<center>
+<h2>
+<a name="domain"></a>Объект domain.</h2></center>
+
+<p><br><b>domain</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Полное имя домена (без последней точки)
+<br>&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+domain: ukd.dp.ua
+<br>&nbsp;&nbsp;&nbsp; Поле <b>обязательно</b> должно присутствовать в
+заявке.
+</p><p><b>descr</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Описание домена.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Обычно описывают регистранта - организацию или лицо, за которыми
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+закреплен домен.Указывать почтовый адрес не обязательно -
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+его можно узнать через контактных лиц регистратора.
+<br>&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+descr: Dniepropetrovsk National University
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+descr: Dniepropetrovsk
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+descr: Ukraine
+<br>&nbsp;&nbsp;&nbsp; Поле указывается по желанию.
+</p><p><b>admin-c</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Администратор домена.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Содержит ссылку на контактную информацию - лицо, с которым следует
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+связываться в случае возникновения каких-либо административных
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+конфликтов. Как правило, им является представитель регистранта.
+<br>&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+admin-c: SB187
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+admin-c: AVS5
+<br>&nbsp;&nbsp;&nbsp; Поле обязательно только если это заявка на делегирование
+зоны.
+<br>&nbsp;&nbsp;&nbsp; Может быть несколько записей admin-c.
+</p><p><b>tech-c</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Технический администратор домена.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Содержит ссылку на контактную информацию - лицо, с которым следует
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+связываться в случае возникновения каких-либо технических проблем.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Может быть представителем как регистранта, так и регистратора.
+<br>&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+tech-c: SB187
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+tech-c: AVS5
+<br>&nbsp;&nbsp;&nbsp; Поле обязательно только если это заявка на делегирование
+зоны.
+<br>&nbsp;&nbsp;&nbsp; Может быть несколько записей tech-c.
+</p><p><b>zone-c</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Администратор зоны.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Содержит ссылку на контактную информацию - человека,&nbsp; чей адрес
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+указан в SOA.
+<br>&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+zone-c: SB187
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+zone-c: AVS5
+<br>&nbsp;&nbsp;&nbsp; Поле обязательно только если это заявка на делегирование
+зоны.
+<br>&nbsp;&nbsp;&nbsp; Может быть несколько записей zone-c.
+</p><p><b>nserver</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Список серверов доменных имен для зоны, указанной в поле domain.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Каждый primary или secondary сервер описывается одной строкой -
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+имя домена и IP адрес.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+nserver: ns.apex.dp.ua&nbsp; 195.24.128.65
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+nserver: ns.lucky.net&nbsp; 193.193.193.100
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле используется только при делегировании
+зоны.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; При регистрации записей других типов в заявке
+должно присутствовать
+<br>&nbsp;&nbsp;&nbsp;&nbsp; хотя бы одно из полей <b>a-record</b>, <b>sub-dom</b>,
+<b>mail-r</b>
+или <b>mail-to</b>.
+</p><p><b>notify</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Электронный адрес, по которому будет высылаться все изменения этого
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+объекта. Используется для защиты от несанкционированого доступа.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+notify: sergey@apex.dp.ua
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное.
+</p><p><b>mnt-by</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Ссылка на объект mntner, который используется для защиты от
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+несанкционированного доступа.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+mnt-by: APEX-MNT
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>a-record</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Добавить 'A' запись в DNS.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+a-record: 195.24.128.65
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное.
+</p><p><b>sub-dom</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Домен четвертого уровня.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Поле содержит дополнительный домен и ip адрес.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+sub-dom: www&nbsp;&nbsp; 195.24.128.65
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное.
+</p><p><b>mail-r</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Добавить 'MX' запись в DNS
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+mail-r: 10 smtp.apex.dp.ua
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+mail-r: 20 smtp.lucky.net
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное.
+</p><p><b>mail-to</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Ссылка на объект mail-obj, в котором описываются общие правила
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+по маршрутизации почты.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+mail-to: APEX-MAIL
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное.
+</p><p><b>delete</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Запрос на удаление записи из DNS
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+delete: свободный текст, обычно причина удаления.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле используется в особых случаях и добавляется
+к полному
+<br>&nbsp;&nbsp;&nbsp;&nbsp; описанию удаляемого из Базы данных домена.
+</p><p><b>changed</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Поле содержит электронный адрес человека, создавшего или
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+изменившего объект и дату проведения изменения.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+changed: sergey@apex.dp.ua 20010524
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>source</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Источник данных.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+В Базе данных публичного домена .DP.UA всегда APEX.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+source: APEX
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><center>
+<h2>
+<a name="#person"></a>Объект person.</h2></center>
+<b>person</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Фамилия имя человека.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+person: Sergey Boganov
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+<p><b>address</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Почтовый адрес по которому можно вести переписку.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+address: Gagarina av 17/315
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+address: Dnepropetrovsk
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+address: Ukraine
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>phone</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Телефон.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+phone: +380 562 410054
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>fax-no</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Номер факса.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+fax-no: +380 562 476995
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное.
+</p><p><b>e-mail</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Электронный адрес.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; e-mail: sergey@apex.dp.ua
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное.
+</p><p><b>nic-hdl</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Краткое сокращение, позволяющее однозначно найти человека в Базе
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+данных. Используется в полях admin-c, tech-c, zone-c.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Представляет собой комбинацию 2-4 латинских букв (обычно инициалы)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+и цифр, модифицирующих nic-hdl в плане уникальности.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+nic-hdl: SB187
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>notify</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Электронный адрес, по которому будет отправляться информация о
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+всех изменениях этого объекта. Используется для защиты от
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+несанкционированного доступа.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+notify: sergey@apex.dp.ua
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное.
+</p><p><b>mnt-by</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Ссылка на объект mntner, который используется для
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+защиты от несанкционированного доступа.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+mnt-by: APEX-MNT
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное. При регистрации объекта
+person, предшествующей
+<br>&nbsp;&nbsp;&nbsp;&nbsp; регистрации объекта mntner это поле лучше
+не использовать с тем, чтобы
+<br>&nbsp;&nbsp;&nbsp;&nbsp; после регистрации объекта можно было бы изменить
+объект person, добавив
+<br>&nbsp;&nbsp;&nbsp;&nbsp; поле mnt-by, ссылающееся на свой mntner.
+</p><p><b>changed</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Поле содержит электронный адрес человека, создавшего или
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+изменившего объект и дату проведения изменения.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+changed: sergey@apex.dp.ua 20010524
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>source</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+В Базе данных публичного домена .DP.UA всегда APEX.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+source: APEX
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><center>
+<h2>
+<a name="mailobj"></a>Объект mail-obj.</h2></center>
+<b>mail-obj</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Название объекта. Обязательно должно заканчиваться символами "-MAIL".
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+mail-obj: APEX-MAIL
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+<p><b>descr</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Краткое описание объекта. Для чего он предназначен.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+descr: Apex NCC mail routing policy
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>admin-c</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Содержит ссылку на контактную информацию - лицо, с которым следует
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+связываться в случае возникновения каких-либо административных
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+конфликтов.
+<br>&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+admin-c: SB187
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+admin-c: AVS5
+<br>&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>. Может быть несколько записей
+admin-c.
+</p><p><b>tech-c</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Содержит ссылку на контактную информацию - лицо, с которым следует
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+связываться в случае возникновения каких-либо технических проблем.
+<br>&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+tech-c: SB187
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+tech-c: AVS5
+<br>&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>. Может быть несколько записей
+tech-c.
+</p><p><b>notify</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Электронный адрес, по которому будет отправляться информация о
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+всех изменениях этого объекта. Используется для защиты от
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+несанкционированного доступа.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+notify: sergey@apex.dp.ua
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное.
+</p><p><b>mnt-by</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Ссылка на объект mntner, который используется для
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+защиты от несанкционированного доступа.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+mnt-by: APEX-MNT
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное.
+</p><p><b>mail-r</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Добавить 'MX' запись в DNS
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+mail-r: 10 smtp.apex.dp.ua
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+mail-r: 20 smtp.lucky.net
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>changed</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Поле содержит электронный адрес человека, создавшего или
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+изменившего объект и дату проведения изменения.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+changed: sergey@apex.dp.ua 20010524
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>source</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Источник данных.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+В Базе данных публичного домена .DP.UA всегда APEX.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+source: APEX
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><center>
+<h2>
+<a name="mntner"></a>Объект mntner.</h2></center>
+<b>mntner</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Краткое название объекта
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+mntner: APEX-MNT
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+<p><b>descr</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Краткое описание объекта. Для чего или для кого он предназначен.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+descr: Apex NCC protect object
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>reg-id</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Идентификатор Регистратора.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Рекомендуется использовать форму
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;идентификатор региона&gt;.&lt;краткое название Регистратора&gt;.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Это поле долно быть одинаковым у всех объектов mntner,
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+принадлежащих одному и тому же Регистратору.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+reg-id: dp.apex
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>admin-c</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Содержит ссылку на контактную информацию - лицо, с которым следует
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+связываться в случае возникновения каких-либо административных
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+конфликтов. Все объекты mntner
+<br>&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+admin-c: SB187
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+admin-c: AVS5
+<br>&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>. Может быть несколько записей
+admin-c.
+</p><p><b>tech-c</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Содержит ссылку на контактную информацию - лицо, с которым следует
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+связываться в случае возникновения каких-либо технических проблем.
+<br>&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+tech-c: SB187
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+tech-c: AVS5
+<br>&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>. Может быть несколько записей
+tech-c.
+</p><p><b>notify</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Электронный адрес, по которому будет отправляться информация о
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+всех изменениях этого объекта. Используется для защиты от
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+несанкционированного доступа.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+notify: sergey@apex.dp.ua
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное.
+</p><p><b>mnt-by</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Ссылка на объект mntner, который используется для
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+защиты от несанкционированного доступа.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+mnt-by: APEX-MNT
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное.
+</p><p><b>upd-to</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Электронный адрес, по которому будут приходить все сообщения
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+о попытках несанкционированного изменения объекта.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+upd-to: sergey@apex.dp.ua
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+upd-to: postmaster@apex.dp.ua
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>mnt-nfy</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Электронный адрес, по которому будут отправляться все изменения
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+состояния объектов.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+mnt-nfy: sergey@apex.dp.ua
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+mnt-nfy: postmaster@apex.dp.ua
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле необязательное.
+</p><p><b>auth</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Метод авторизации.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Формат:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;схема&gt; &lt;данные&gt;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Доступные схемы:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+NONE&nbsp;&nbsp;&nbsp;&nbsp; - авторизация не проводится, любой может изменять
+данные.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CRYPT-PW &lt;данные&gt; - это пароль, зашифрованный методом des или md5.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+При этом в любом запросе необхдимо указывать поле password.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+MAIL-FROM - адреса, запросы с которых будут обрабатываться.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+auth: NONE
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+auth: CRYPT-PW QasWadASWQEX
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+auth: MAIL-FROM .*@apex.dp.ua
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>changed</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Поле содержит электронный адрес человека, создавшего или
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+изменившего объект и дату проведения изменения.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+changed: sergey@apex.dp.ua 20010524
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p><b>source</b>:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Источник данных.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+В Базе данных публичного домена .DP.UA всегда APEX.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Пример:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+source: APEX
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Поле <b>обязательное</b>.
+</p><p>
+</p><hr>
+<h4>
+<a name="cname"></a>CNAME. <font color="#ff0000">Заявки на регистрацию CNAME
+не обрабатываются. Если использование CNAME необходимо, следует
+зарегистрировать зону и применить эту конструкцию в описании зоны на обслуживающих
+ее нэйм-серверах.</font>
+<hr></h4>
+
+<center><a name="ex0"></a></center>
+
+<center>
+<h2>
+Пример заполнения объекта person</h2></center>
+Здесь показана типичная заявка на регистрацию персоны с использованием защиты
+уже существующим объектом mntner. Если объект mntner еще создан, смотрите
+<a href="#ex1">пример заполнения объекта mntner</a>
+<pre>person:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sergey A Boganov
+address:&nbsp;&nbsp;&nbsp;&nbsp; Apex NCC
+address:&nbsp;&nbsp;&nbsp;&nbsp; Gagarina av 17/315
+address:&nbsp;&nbsp;&nbsp;&nbsp; Ukraine
+phone:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +380 562 410054
+phone:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +380 562 476995
+e-mail:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua
+nic-hdl:&nbsp;&nbsp;&nbsp;&nbsp; SB187
+mnt-by:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APEX-MNT
+changed:&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua 20010524
+source:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APEX</pre>
+
+<center><a name="ex1"></a></center>
+
+<center>
+<h2>
+Пример заполнения объекта mntner</h2></center>
+Объект APEX-MNT показывает, что если в другом объекте будет строка mnt-by:
+APEX-MNT, то изменения для этого объекта будут приниматься только если
+письмо было послано с адреса вида *@apex.dp.ua, все попытки несанкционированного
+доступа будут пересылаться по адресам sergey@apex.dp.ua и alexs@apex.dp.ua.
+<br>В этом же примере показаны заявки на регистрацию объектов person, используемых
+в объекте mntner. Разумеется, включать их в сообщение-заявку на объект mntner
+следует только в том случае, если объекты person, на которые ссылается mntner
+не были созданы ранее.
+<br>При указании нескольких объектов в одном сообщении-заявке их необходимо
+разделять пустой строкой.
+<pre>mntner:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APEX-MNT
+descr:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Apex NCC protect object
+reg-id:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dp.apex
+admin-c:&nbsp;&nbsp;&nbsp;&nbsp; SB187
+tech-c:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AVS5
+tech-c:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SB187
+upd-to:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua
+upd-to:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; alexs@apex.dp.ua
+auth:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MAIL-FROM .*@apex.dp.ua
+notify:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua
+mnt-by:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APEX-MNT
+changed:&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua 20010524
+source:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APEX
+
+person:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sergey A Boganov
+address:&nbsp;&nbsp;&nbsp;&nbsp; Apex NCC
+address:&nbsp;&nbsp;&nbsp;&nbsp; Gagarina av 17/315
+address:&nbsp;&nbsp;&nbsp;&nbsp; Ukraine
+phone:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +380 562 410054
+phone:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +380 562 476995
+e-mail:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua
+nic-hdl:&nbsp;&nbsp;&nbsp;&nbsp; SB187
+changed:&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua 20010524
+source:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APEX
+
+person:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Alexandr V Savchenko
+address:&nbsp;&nbsp;&nbsp;&nbsp; Apex NCC
+address:&nbsp;&nbsp;&nbsp;&nbsp; Gagarina av 17/315
+address:&nbsp;&nbsp;&nbsp;&nbsp; Ukraine
+phone:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +380 562 410054
+fax-no:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +380 562 476995
+e-mail:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; alexs@apex.dp.ua
+nic-hdl:&nbsp;&nbsp;&nbsp;&nbsp; AVS5
+changed:&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua 20010524
+source:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APEX</pre>
+
+<center><a name="ex2"></a></center>
+
+<center>
+<h2>
+Примеры заполнения объекта domain</h2></center>
+Рассмотрим типичные случаи. Необходимо зарегистрировать 'A' запись . Заявка
+тогда будет выглядеть как:
+<pre>domain:&nbsp;&nbsp; apex.dp.ua
+a-record: 195.24.128.65
+....</pre>
+Необходимо зарегистрировать нового абонента со своим набором MX-ов:
+<pre>domain: gtk.dp.ua
+...
+mail-r: 10 smtp.gtk.dp.ua
+mail-r: 20 apex.dp.ua
+mail-r: 50 mixt.apex.dp.ua
+...</pre>
+Необходимо зарегистрировать стандартного абонента:
+<pre>domain:&nbsp; nnn.dp.ua
+mail-to: APEX-MAIL
+...</pre>
+где в объекте APEX-MAIL заранее описан набор MX записей.
+<p>Необходимо зарегистрировать www.xxx.dp.ua:
+</p><pre>domain:&nbsp; xxx.dp.ua
+sub-dom: www 195.24.128.65
+...</pre>
+Типичная заявка на регистрацию одиночного доменного имени с поддоменом www,
+привязкой к ip-адресу и указанием маршрутизации почты на поддомен mail
+выглядит так:
+<pre>domain:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; example.dp.ua
+descr:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Some domain example
+admin-c:&nbsp;&nbsp;&nbsp;&nbsp; SB187
+tech-c:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AVS5
+tech-c:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SB187
+a-record:&nbsp;&nbsp;&nbsp; 195.24.128.65
+sub-dom:&nbsp;&nbsp;&nbsp;&nbsp; www 195.24.128.65
+sub-dom:&nbsp;&nbsp;&nbsp;&nbsp; mail 195.24.128.66
+mail-r:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10&nbsp; mail.example.dp.ua
+mail-r:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 25&nbsp; mixt.apex.dp.ua
+notify:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua
+mnt-by:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APEX-MNT
+changed:&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua 20010524
+source:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APEX</pre>
+Типичная заявка на регистрацию зоны:
+<pre>domain:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; example.dp.ua
+descr:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Some zone example
+zone-c:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AS2329
+admin-c:&nbsp;&nbsp;&nbsp;&nbsp; SB187
+tech-c:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AVS5
+tech-c:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SB187
+nserver:&nbsp;&nbsp;&nbsp;&nbsp; ns1.example.dp.ua 195.24.128.65
+nserver:&nbsp;&nbsp;&nbsp;&nbsp; ns2.example.dp.ua 195.24.128.164
+notify:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua
+mnt-by:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APEX-MNT
+changed:&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua 20010524
+source:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APEX</pre>
+
+<center><a name="ex3"></a></center>
+
+<center>
+<h2>
+Пример заполнения объекта mail-obj</h2></center>
+Данный объект показывает, что если в объекте <b>domain</b> будет строка
+вида <b>mail-to</b>: APEX-MAIL то для данного объекта будет сгенерирован
+стандартный набор записей MX.
+<pre>mail-obj:&nbsp;&nbsp;&nbsp; APEX-MAIL
+descr:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Apex NCC mail policy
+admin-c:&nbsp;&nbsp;&nbsp;&nbsp; SB187
+tech-c:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AVS5
+tech-c:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SB187
+mail-r:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10&nbsp; apex.dp.ua
+mail-r:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 25&nbsp; mixt.apex.dp.ua
+mail-r:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 50&nbsp; relay2.carrier.kiev.ua
+notify:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua
+mnt-by:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APEX-MNT
+changed:&nbsp;&nbsp;&nbsp;&nbsp; sergey@apex.dp.ua 20010524
+source:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APEX</pre>
+
+</body></html>

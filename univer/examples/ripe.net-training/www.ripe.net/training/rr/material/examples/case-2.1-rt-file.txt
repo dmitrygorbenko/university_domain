@@ -1,0 +1,16 @@
+!
+! Example of the setup for the As2001
+! multihomed customer of as3000 & as4000
+! 
+! case 2.2 with "-cisco_empty_lists" flag
+!
+! Max pref set to 100
+@RtConfig set cisco_max_preference = 100
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT"
+@RtConfig import AS2001 10.20.0.3 AS3000 10.3.15.2
+@RtConfig import AS2001 10.20.0.4 AS4000 10.4.192.2
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT"
+@RtConfig export AS2001 10.20.0.3 AS3000 10.3.15.2 
+@RtConfig export AS2001 10.20.0.4 AS4000 10.4.192.2 

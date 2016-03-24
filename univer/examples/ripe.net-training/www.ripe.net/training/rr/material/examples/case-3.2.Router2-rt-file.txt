@@ -1,0 +1,19 @@
+!
+! RtConfig template file for the case 5 (multiple peering points)
+! view of the as3033
+!
+! Only EXPORT policy is of interest to us!!
+!
+! multiple export lines are needed, one for every physical link
+!
+! Router2
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT-%d"
+@RtConfig export AS3033 10.3.0.2 AS4044 10.4.0.8
+!
+! Example 2 - if there is a full mash
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT-%d"
+@RtConfig export AS3033 10.3.0.2 AS4044 10.4.0.7
+!
+

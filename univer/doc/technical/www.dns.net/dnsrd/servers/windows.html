@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<TITLE>Name Server Software: Windows
+</TITLE>
+<META NAME="copyright" CONTENT="1994-2004, Andras Salamon">
+<LINK REV="made" HREF="/andras/">
+<!-- OWNER_NAME="Andras Salamon" -->
+<!-- OWNER_INFO="andras,spam.not.welcome.dns.net" -->
+<META NAME="description" CONTENT="Domain Name System (DNS) server software for Windows 2003, XP, WinNT, Win95, Win98, W2K">
+<META NAME="keywords"
+CONTENT="DNS, Domain Name System, DNSRD, Windows, DNS server, name server, nameserver, BIND">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<H1>Name Server Software: Windows
+</H1>
+
+
+<H3>Overview</H3>
+
+<P>
+Windows is a moderately popular platform for name servers.  The best
+bet at time of writing is probably to use one of the ports of BIND,
+Microsoft's DNS server from Windows 2003, or a commercial alternative.
+Microsoft's name server implementations are closely tied to their
+server licensing.  Non-Microsoft servers usually function on either
+workstation or server variants of Windows, and several are free.
+</P>
+
+
+<H3>BIND</H3>
+
+<P>
+<A HREF="http://www.isc.org/index.pl?/sw/bind/">BIND</A> now includes
+official support for Windows, for both BIND 8 and BIND 9.  This is
+a stable and reliable server in a number of production environments,
+although server administration is command-line based.  Recommended;
+free software, source code freely available.
+</P>
+
+<P>
+<A HREF="http://BIND8NT.MEIway.com/">Len Conrad's web site</A>
+documents the BIND 8 port and provides help in configuring it.  Getting
+a bit out of date.
+</P>
+
+<P>
+<A HREF="http://www.metainfo.com/">MetaInfo</A>
+has a commercial port of BIND to Windows called
+<A HREF="http://www.metainfo.com/index.cfm/page/metadns">Meta DNS Pro</A>,
+which is fully functional and well regarded.  Its management
+frontend runs only on Windows, but the server is actually available for
+Windows, Linux or Solaris, as one would expect of a BIND-based product.
+</P>
+
+
+<H3>Microsoft's DNS server</H3>
+
+<P>
+The DNS server in Windows 2003 has seen increasing adoption since its
+first release for Windows 2000 in 1999.  It is regarded as stable and
+is well-integrated with Microsoft's server administration tools.  This
+is in contrast to Microsoft's Windows 2000 client networking subsystem,
+which generates dynamic DNS updates using a dubious heuristic, and
+has been shown to be the cause of a large proportion of root name server
+queries (all completely useless).
+There is extensive discussion about the Microsoft name server, especially
+as regards migration and use in heterogeneous server environments, in
+the archives of the <A HREF="../lists.html#bind-users">bind-users</A>
+mailing list.
+</P>
+
+<P>
+Microsoft's DNS server component of NT Server 4.0 was not provided with
+the Workstation version of NT.  This server appears to be reasonable,
+although there are mixed feelings about its suitability for robust,
+large-scale service.  The DNS server in NT Server 4.0 features integration
+with WINS, has a GUI database frontend and a control panel.  However,
+it has been found to be vulnerable to a variety of denial-of-service
+attacks.  If using this server, it is important to keep up to date
+with software updates from Microsoft; the Service Packs for NT 4.0 and
+subsequent DNS-related hotfixes are mandatory to resolve the most serious
+security issues.
+</P>
+
+<P>
+If the Microsoft NT 4.0 DNS server is integrated with WINS, it will
+generate nonstandard resource records containing the dynamic WINS
+information.  Outward zone transfers from such a server may fail if
+the initiating server is standards-based.  Older versions of BIND
+(pre-4.9.5) will also terminate when encountering these records during
+a zone transfer.  The properties for each zone include an option to
+switch off the generation of these records by the Microsoft DNS server,
+and Microsoft recommends doing so when these zones need to be transferred
+to a non-Microsoft server.
+</P>
+
+<P>
+The Windows NT 3.51 Resource Kit from Microsoft included a DNS server.
+This had several major shortcomings and was beta code--it is not
+appropriate for use as an Internet name server under any circumstances.
+</P>
+
+
+<H3>Simple DNS Plus</H3>
+
+<P>
+<A HREF="http://www.jhsoft.com/">Simple DNS Plus</A> is commercial
+software for Windows (any version from Windows 95 to 2003).  It seems
+fully functional and targeted to small sites and home users with
+permanent Internet connections.  It has some innovative features,
+but I have no first hand experience with it.
+</P>
+
+<HR>
+<P>
+Back to <A HREF="./">Name Server Software index</A> or
+<A HREF="../">DNSRD</A>.
+</P>
+
+
+<HR>
+
+<ADDRESS>Copyright 1994-2004 by Andr&aacute;s Salamon
+<A HREF="/andras/">&lt;andras&#64;dns.net&gt;</A></ADDRESS>
+<BR>Last updated 01-Oct-2004
+</BODY>
+</HTML>

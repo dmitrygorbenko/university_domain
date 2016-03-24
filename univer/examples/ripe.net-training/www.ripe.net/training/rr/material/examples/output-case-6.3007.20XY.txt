@@ -1,0 +1,182 @@
+! generating config. for 3007 and As20xy (2000, ..., 2032...)
+!
+! generating config for the peering between 3007 and 2000
+!
+!
+no ip prefix-list pl100
+ip prefix-list pl100 permit 10.6.27.0/24
+ip prefix-list pl100 permit 10.20.0.0/24
+ip prefix-list pl100 permit 10.187.65.0/24
+ip prefix-list pl100 permit 10.200.0.0/24
+ip prefix-list pl100 deny 0.0.0.0/0 le 32
+!
+ip bgp-community new-format
+!
+no ip community-list 1
+ip community-list 1 permit 3007:20 
+!
+no route-map AS2000-IMPORT
+!
+route-map AS2000-IMPORT permit 1
+ match community 1
+ match ip address prefix-list pl100
+ set local-preference 980
+!
+no ip community-list 2
+ip community-list 2 permit 3007:30 
+!
+route-map AS2000-IMPORT permit 2
+ match community 2
+ match ip address prefix-list pl100
+ set local-preference 970
+!
+no ip community-list 3
+ip community-list 3 permit 3007:440 
+!
+route-map AS2000-IMPORT permit 3
+ match community 3
+ match ip address prefix-list pl100
+ set community  no-export
+!
+router bgp 3007
+neighbor 10.20.0.3 route-map AS2000-IMPORT in
+!
+!
+no ip prefix-list pl101
+ip prefix-list pl101 permit 0.0.0.0/0 le 32
+!
+no route-map AS2000-EXPORT
+!
+route-map AS2000-EXPORT permit 1
+ match ip address prefix-list pl101
+!
+router bgp 3007
+neighbor 10.20.0.3 route-map AS2000-EXPORT out
+!
+! generating config for the peering between 3007 and 2001
+!
+!
+no route-map AS2001-IMPORT
+!
+route-map AS2001-IMPORT permit 1
+ match community 1
+ match ip address prefix-list pl100
+ set local-preference 980
+!
+route-map AS2001-IMPORT permit 2
+ match community 2
+ match ip address prefix-list pl100
+ set local-preference 970
+!
+route-map AS2001-IMPORT permit 3
+ match community 3
+ match ip address prefix-list pl100
+ set community  no-export
+!
+router bgp 3007
+neighbor 10.20.0.3 route-map AS2001-IMPORT in
+!
+!
+no route-map AS2001-EXPORT
+!
+route-map AS2001-EXPORT permit 1
+ match ip address prefix-list pl101
+!
+router bgp 3007
+neighbor 10.20.0.3 route-map AS2001-EXPORT out
+!
+! generating config for the peering between 3007 and 2030
+!
+!
+no route-map AS2030-IMPORT
+!
+route-map AS2030-IMPORT permit 1
+ match community 1
+ match ip address prefix-list pl100
+ set local-preference 980
+!
+route-map AS2030-IMPORT permit 2
+ match community 2
+ match ip address prefix-list pl100
+ set local-preference 970
+!
+route-map AS2030-IMPORT permit 3
+ match community 3
+ match ip address prefix-list pl100
+ set community  no-export
+!
+router bgp 3007
+neighbor 10.20.0.3 route-map AS2030-IMPORT in
+!
+!
+no route-map AS2030-EXPORT
+!
+route-map AS2030-EXPORT permit 1
+ match ip address prefix-list pl101
+!
+router bgp 3007
+neighbor 10.20.0.3 route-map AS2030-EXPORT out
+!
+! generating config for the peering between 3007 and 2031
+!
+!
+no route-map AS2031-IMPORT
+!
+route-map AS2031-IMPORT permit 1
+ match community 1
+ match ip address prefix-list pl100
+ set local-preference 980
+!
+route-map AS2031-IMPORT permit 2
+ match community 2
+ match ip address prefix-list pl100
+ set local-preference 970
+!
+route-map AS2031-IMPORT permit 3
+ match community 3
+ match ip address prefix-list pl100
+ set community  no-export
+!
+router bgp 3007
+neighbor 10.20.0.3 route-map AS2031-IMPORT in
+!
+!
+no route-map AS2031-EXPORT
+!
+route-map AS2031-EXPORT permit 1
+ match ip address prefix-list pl101
+!
+router bgp 3007
+neighbor 10.20.0.3 route-map AS2031-EXPORT out
+!
+! generating config for the peering between 3007 and 2032
+!
+!
+no route-map AS2032-IMPORT
+!
+route-map AS2032-IMPORT permit 1
+ match community 1
+ match ip address prefix-list pl100
+ set local-preference 980
+!
+route-map AS2032-IMPORT permit 2
+ match community 2
+ match ip address prefix-list pl100
+ set local-preference 970
+!
+route-map AS2032-IMPORT permit 3
+ match community 3
+ match ip address prefix-list pl100
+ set community  no-export
+!
+router bgp 3007
+neighbor 10.20.0.3 route-map AS2032-IMPORT in
+!
+!
+no route-map AS2032-EXPORT
+!
+route-map AS2032-EXPORT permit 1
+ match ip address prefix-list pl101
+!
+router bgp 3007
+neighbor 10.20.0.3 route-map AS2032-EXPORT out

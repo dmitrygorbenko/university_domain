@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<TITLE>Resources for DNS Programmers</TITLE>
+<META NAME="copyright" CONTENT="1994-2004, Andras Salamon">
+<LINK REV="made" HREF="http://www.dns.net/andras/">
+<!-- OWNER_NAME="Andras Salamon" -->
+<!-- OWNER_INFO="andras,spam.not.welcome.dns.net" -->
+<META NAME="description" CONTENT="DNS programming resources">
+<META NAME="keywords"
+ CONTENT="DNS, Domain Name System, DNSRD, gethostbyaddr, programming, software">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<H1>Resources for DNS Programmers</H1>
+
+<HR>
+
+<P>
+There are several alternatives for client-side DNS programming.
+</P>
+
+<P>
+The most common application is to simply call the standard library
+routines
+<CODE>gethostbyname()</CODE> or <CODE>getnameinfo()</CODE>
+in a C or C++ program, or their equivalents provided by other programming
+language libraries.
+</P>
+
+<P>
+When the functionality provided by
+<CODE>gethostbyname()</CODE> or <CODE>getnameinfo()</CODE>
+is not sufficient, a common approach is to reuse code from one of the
+freely distributable pieces of software (such as BIND), as long as the
+copyright terms are suitable.  Several DNS servers are open source,
+and their code is often used as a basis by programmers.  For these
+(including BIND and djbdns) please see the <A HREF="servers/">listing
+of DNS server software</A>.
+</P>
+
+<P>
+In a Windows environment, reportedly the <CODE>DnsQuery()</CODE> API is
+quite functional, including support for SRV records from Windows 2000
+onwards.  Please consult the vendor documentation for more information.
+</P>
+
+<DL>
+
+<DT><A
+HREF="http://www.chiark.greenend.org.uk/~ian/adns/">GNU adns</A>
+<DD>C/C++ library providing a stub resolver that can be used asynchronously
+(without blocking).  Comes bundled with some example utilities that use
+the library.  Free.
+<EM>(Version 1.1 released 20-Sep-2003, checked 17-Nov-2004)</EM></DD>
+
+<DT><A
+HREF="http://www.net-dns.org/">Net::DNS</A>
+<DD>Perl module for performing DNS queries.  More generally it provides
+a Perl interface to the DNS resolver.  Free.
+<EM>(Version 0.48 released 12-Aug-2004, checked 17-Nov-2004)</EM></DD>
+
+<DT><A
+HREF="http://www.nongnu.org/ruli/">RULI</A>
+<DD>Asynchronous stub resolver library, with support for SRV records and
+bindings for PHP, Perl, Guile/Scheme, Java and Lua.  Free.
+<EM>(Version 0.32 released 26-Oct-2004, checked 17-Nov-2004)</EM></DD>
+
+</DL>
+
+<HR>
+
+<A HREF="./"><IMG SRC="img/dnsrd.png" ALT="[Back to DNSRD]"></A>
+
+<HR>
+
+<ADDRESS>Copyright 1994-2004 by Andr&aacute;s Salamon
+<A HREF="/andras/">&lt;andras&#64;dns.net&gt;</A></ADDRESS>
+<BR>Last updated 17-Nov-2004
+</BODY>
+
+</HTML>

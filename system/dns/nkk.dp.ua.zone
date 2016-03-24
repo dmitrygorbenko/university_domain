@@ -1,0 +1,17 @@
+$ORIGIN .
+$TTL 86400	; 1 day
+nkk.dp.ua.			IN SOA  nkk.dp.ua. hostmaster.hosting.ai. (
+				2006092724 ; serial
+				10800      ; refresh (3 hours)
+				900        ; retry (15 minutes)
+				604800     ; expire (1 week)
+				3600       ; negative caching (1 hour)
+				)
+		IN	NS	ns.hosting.ai.
+		IN	NS	ns2.hosting.ai.
+		IN	MX	10	mx.hosting.ai.
+		IN	A	172.16.212.200
+		IN	MX	20	mx2.nkk.dp.ua
+$ORIGIN nkk.dp.ua.
+aaa		IN	A	192.168.5.19
+aaa2		IN	A	192.168.5.99

@@ -1,0 +1,335 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (WinNT; I) [Netscape]">
+   <meta name="Author" content="Mark Symons (bliksim9@yahoo.com)">
+   <title>RFC2517: Building Directories from DNS: Experiences from WWWSeeker</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+This
+RFC has been HTMLized by hand by <a href="mailto:bliksim9@yahoo.com">Mark
+Symons</a>, and word-for-word correspondence to the source has not been
+verified. A table of contents has been added. The <a href="ftp://ftp.is.co.za/rfc/rfc2517.txt">original
+RFC</a> should be regarded as being authoritative.
+<br>
+<hr WIDTH="100%">
+<br>&nbsp;
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=3 WIDTH="100%" >
+<tr>
+<td>Network Working Group</td>
+
+<td></td>
+
+<td>R. Moats</td>
+</tr>
+
+<tr>
+<td>Request for Comments: 2517</td>
+
+<td></td>
+
+<td>R. Huber</td>
+</tr>
+
+<tr>
+<td>Category: Informational</td>
+
+<td></td>
+
+<td>AT&amp;T</td>
+</tr>
+
+<tr>
+<td></td>
+
+<td></td>
+
+<td>February 1999</td>
+</tr>
+</table>
+
+<center>
+<h1>
+Building Directories from DNS: Experiences from WWWSeeker</h1></center>
+
+<h2>
+Status of this Memo</h2>
+This memo provides information for the Internet community.&nbsp; It does
+not specify an Internet standard of any kind.&nbsp; Distribution of this
+memo is unlimited.
+<br>&nbsp;
+<h2>
+Copyright Notice</h2>
+Copyright (C) The Internet Society (1999).&nbsp; All Rights Reserved.
+<br>&nbsp;
+<h2>
+<a NAME="Abstract"></a>Abstract</h2>
+There has been much discussion and several documents written about the
+need for an Internet Directory.&nbsp; Recently, this discussion has focused
+on ways to discover an organization's domain name without relying on use
+of DNS as a directory service.&nbsp; This memo discusses lessons that were
+learned during InterNIC Directory and Database Services' development and
+operation of WWWSeeker, an application that finds a web site given information
+about the name and location of an organization.&nbsp; The back end database
+that drives this application was built from information obtained from domain
+registries via WHOIS and other protocols.&nbsp; We present this information
+to help future implementors avoid some of the blind alleys that we have
+already explored.&nbsp; This work builds on the Netfind system that was
+created by Mike Schwartz and his team at the University of Colorado at
+Boulder [<a href="#ref1">1</a>].
+<br>&nbsp;
+<h2>
+Table of Contents</h2>
+<b><a href="#Abstract">Abstract</a></b>
+<br><b><a href="#1">1. Introduction</a></b>
+<br><b><a href="#2">2. Directory Population</a></b>
+<br>&nbsp;&nbsp; <a href="#2.1">2.1 What to do?</a>
+<br>&nbsp;&nbsp; <a href="#2.2">2.2 Building the skeleton</a>
+<br>&nbsp;&nbsp; <a href="#2.3">2.3 Adding the meat</a>
+<br><b><a href="#3">3. Directory Updating: Full Rebuilds vs Incremental
+Updates</a></b>
+<br><b><a href="#4">4. Directory Presentation: Distributed vs Monolithic</a></b>
+<br><b><a href="#5">5. Security Considerations</a></b>
+<br><b><a href="#6">6. Acknowledgments</a></b>
+<br><b><a href="#7">7. References</a></b>
+<br><b><a href="#8">8. Authors' Addresses</a></b>
+<br><b><a href="#9">9.&nbsp; Full Copyright Statement</a></b>
+<h2>
+<a NAME="1"></a>1. Introduction</h2>
+Over time, there have been several RFCs [<a href="#ref2">2, 3, 4</a>] about
+approaches for providing Internet Directories.&nbsp; Many of the earlier
+documents discussed white pages directories that supply mappings from a
+person's name to their telephone number, email address, etc.
+<p>More recently, there has been discussion of directories that map from
+a company name to a domain name or web site.&nbsp; Many people are using
+DNS as a directory today to find this type of information about a given
+company.&nbsp; Typically when DNS is used, users guess the domain name
+of the company they are looking for and then prepend "www.". This makes
+it highly desirable for a company to have an easily guessable name.
+<p>There are two major problems here.&nbsp; As the number of assigned names
+increases, it becomes more difficult to get an easily guessable name. Also,
+the TLD must be guessed as well as the name.&nbsp; While many users just
+guess ".COM" as the "default" TLD today, there are many two-letter country
+code top-level domains in current use as well as other gTLDs (.NET, .ORG,
+and possibly .EDU) with the prospect of additional gTLDs in the future.&nbsp;
+As the number of TLDs in general use increases, guessing gets more difficult.
+<p>Between July 1996 and our shutdown in March 1998, the InterNIC Directory
+and Database Services project maintained the Netfind search engine [<a href="#ref1">1</a>]
+and the associated database that maps organization information to domain
+names. This database thus acted as the type of Internet directory that
+associates company names with domain names. We also built WWWSeeker, a
+system that used the Netfind database to find web sites associated with
+a given organization.&nbsp; The experienced gained from maintaining and
+growing this database provides valuable insight into the issues of providing
+a directory service.&nbsp; We present it here to allow future implementors
+to avoid some of the blind alleys that we have already explored.
+<br>&nbsp;
+<h2>
+<a NAME="2"></a>2. Directory Population</h2>
+
+<h3>
+<a NAME="2.1"></a>2.1 What to do?</h3>
+There are two issues in populating a directory: finding all the domain
+names (building the skeleton) and associating those domains with entities
+(adding the meat).&nbsp; These two issues are discussed below.
+<br>&nbsp;
+<h3>
+<a NAME="2.2"></a>2.2 Building the skeleton</h3>
+In "building the skeleton", it is popular to suggest using a variant of
+a "tree walk" to determine the domains that need to be added to the directory.&nbsp;
+Our experience is that this is neither a reasonable nor an efficient proposal
+for maintaining such a directory.&nbsp; Except for some infrequent and
+long-standing DNS surveys [<a href="#ref5">5</a>], DNS "tree walks" tend
+to be discouraged by the Internet community, especially given that the
+frequency of DNS changes would require a new tree walk monthly (if not
+more often).&nbsp; Instead, our experience has shown that data on allocated
+DNS domains can usually be retrieved in bulk fashion with FTP, HTTP, or
+Gopher (we have used each of these for particular TLDs).&nbsp; This has
+the added advantage of both "building the skeleton" and "adding the meat"
+at the same time.&nbsp; Our favorite method for finding a server that has
+allocated DNS domain information is to start with the list maintained at
+<a href="http://www.alldomains.com/countryindex.html">http://www.alldomains.com/countryindex.html</a>
+and go from there.
+<br>Before this was available, it was necessary to hunt for a registry
+using trial and error.
+<p>When maintaining the database, existing domains may be verified via
+direct DNS lookups rather than a "tree walk." "Tree walks" should therefore
+be the choice of last resort for directory population, and bulk retrieval
+should be used whenever possible.
+<br>&nbsp;
+<h3>
+<a NAME="2.3"></a>2.3 Adding the meat</h3>
+A possibility for populating a directory ("adding the meat") is to use
+an automated system that makes repeated queries using the WHOIS protocol
+to gather information about the organization that owns a domain.&nbsp;
+The queries would be made against a WHOIS server located with the above
+method. At the conclusion of the InterNIC Directory and Database Services
+project, our backend database contained about 2.9 million records built
+from data that could be retrieved via WHOIS.&nbsp; The entire database
+contained 3.25 million records, with the additional records coming from
+sources other than WHOIS.
+<p>In our experience this information contains many factual and typographical
+errors and requires further examination and processing to improve its quality.&nbsp;
+Further, TLD registrars that support WHOIS typically only support WHOIS
+information for second level domains (i.e. ne.us) as opposed to lower level
+domains (i.e. windrose.omaha.ne.us).&nbsp; Also, there are TLDs without
+registrars, TLDs without WHOIS support, and still other TLDs that use other
+methods (HTTP, FTP, gopher) for providing organizational information.&nbsp;
+Based on our experience, an implementor of an internet directory needs
+to support multiple protocols for directory population.&nbsp; An automated
+WHOIS search tool is necessary, but isn't enough.
+<br>&nbsp;
+<h2>
+<a NAME="3"></a>3. Directory Updating: Full Rebuilds vs Incremental Updates</h2>
+Given the size of our database in April 1998 when it was last generated,
+a complete rebuild of the database that is available from WHOIS lookups
+would require between 134.2 to 167.8 days just for WHOIS lookups from a
+Sun SPARCstation 20. This estimate does not include other considerations
+(for example, inverting the token tree required about 24 hours processing
+time on a Sun SPARCstation 20) that would increase the amount of time to
+rebuild the entire database.
+<p>Whether this is feasible depends on the frequency of database updates
+provided.&nbsp; Because of the rate of growth of allocated domain names
+(150K-200K new allocated domains per month in early 1998), we provided
+monthly updates of the database. To rebuild the database each month (based
+on the above time estimate) would require between 3 and 5 machines to be
+dedicated full time (independent of machine architecture).&nbsp; Instead,
+we checkpointed the allocated domain list and rebuild on an incremental
+basis during one weekend of the month. This allowed us to complete the
+update on between 1 and 4 machines (3 Sun SPARCstation 20s and a dual-processor
+Sparcserver 690) without full dedication over a couple of days.&nbsp; Further,
+by coupling incremental updates with periodic refresh of existing data
+(which can be done during another part of the month and doesn't require
+full dedication of machine hardware), older records would be periodically
+updated when the underlying information changes.&nbsp; The tradeoff is
+timeliness and accuracy of data (some data in the database may be old)
+against hardware and processing costs.
+<br>&nbsp;
+<h2>
+<a NAME="4"></a>4. Directory Presentation: Distributed vs Monolithic</h2>
+While a distributed directory is a desirable goal, we maintained our database
+as a monolithic structure.&nbsp; Given past growth, it is not clear at
+what point migrating to a distributed directory becomes actually necessary
+to support customer queries.&nbsp; Our last database contained over 3.25
+million records in a flat ASCII file.&nbsp; Searching was done via a PERL
+script of an inverted tree (also produced by a PERL script).&nbsp; While
+admittedly primitive, this configuration supported over 200,000 database
+queries per month from our production servers.
+<p>Increasing the database size only requires more disk space to hold the
+database and inverted tree. Of course, using database technology would
+probably improve performance and scalability, but we had not reached the
+point where this technology was required.
+<br>&nbsp;
+<h2>
+<a NAME="5"></a>5. Security Considerations</h2>
+The underlying data for the type of directory discussed in this document
+is already generally available through WHOIS, DNS, and other standard interfaces.&nbsp;
+No new information is made available by using these techniques though many
+types of search become much easier.&nbsp; To the extent that easier access
+to this data makes it easier to find specific sites or machines to attack,
+security may be decreased.
+<p>The protocols discussed here do not have built-in security features.
+If one source machine is spoofed while the directory data is being gathered,
+substantial amounts of incorrect and misleading data could be pulled in
+to the directory and be spread to a wider audience.
+<p>In general, building a directory from registry data will not open any
+new security holes since the data is already available to the public. Existing
+security and accuracy problems with the data sources are likely to be amplified.
+<br>&nbsp;
+<h2>
+<a NAME="6"></a>6. Acknowledgments</h2>
+This work described in this document was partially supported by the National
+Science Foundation under Cooperative Agreement NCR-9218179.
+<br>&nbsp;
+<h2>
+<a NAME="7"></a>7. References</h2>
+&nbsp;
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=2 WIDTH="100%" >
+<tr>
+<td ALIGN=LEFT VALIGN=TOP WIDTH="10%"><a NAME="ref1"></a>[1]</td>
+
+<td>M. F. Schwartz, C. Pu.&nbsp; "Applying an Information Gathering Architecture
+to Netfind: A White Pages Tool for a Changing and Growing Internet", University
+of Colorado Technical Report CU-CS-656-93.&nbsp; December 1993, revised
+July 1994.
+<br>URL<a href=":ftp://ftp.cs.colorado.edu/pub/cs/techreports/schwartz/Netfind">:ftp://ftp.cs.colorado.edu/pub/cs/techreports/schwartz/Netfind</a>
+<br><a href=":ftp://ftp.cs.colorado.edu/pub/cs/techreports/schwartz/Netfind"></a>&nbsp;</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP><a NAME="ref2"></a>[2]</td>
+
+<td>Sollins, K., "Plan for Internet Directory Services", <a href="ftp://ftp.is.co.za/rfc/rfc1107.txt">RFC
+1107</a>,&nbsp; July 1989.
+<br>&nbsp;</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP><a NAME="ref3"></a>[3]</td>
+
+<td>Hardcastle-Kille, S., Huizer, E., Cerf, V., Hobby, R. and S. Kent,
+"A Strategic Plan for Deploying an Internet X.500 Directory Service", <a href="ftp://ftp.is.co.za/rfc/rfc1430.txt">RFC
+1430</a>, February 1993.
+<br>&nbsp;</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP><a NAME="ref4"></a>[4]</td>
+
+<td>Postel, J. and&nbsp; C. Anderson, "White Pages Meeting Report", <a href="ftp://ftp.is.co.za/rfc/rfc1588.txt">RFC
+1588</a>, February 1994.
+<br>&nbsp;</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP><a NAME="ref5"></a>[5]</td>
+
+<td>M. Lottor, "Network Wizards Internet Domain Survey", available from
+<a href="http://www.nw.com/zone/WWW/top.html">http://www.nw.com/zone/WWW/top.html</a></td>
+</tr>
+</table>
+
+<br>&nbsp;
+<h2>
+<a NAME="8"></a>8. Authors' Addresses</h2>
+Ryan Moats
+<br>AT&amp;T
+<br>15621 Drexel Circle
+<br>Omaha, NE 68135-2358
+<br>USA
+<p>EMail:&nbsp; <a href="mailto:jayhawk@att.com">jayhawk@att.com</a>
+<br>&nbsp;
+<p>Rick Huber
+<br>AT&amp;T
+<br>Room C3-3B30, 200 Laurel Ave. South
+<br>Middletown, NJ 07748
+<br>USA
+<p>EMail: <a href="mailto:rvh@att.com">rvh@att.com</a>
+<br>&nbsp;
+<h2>
+<a NAME="9"></a>9.&nbsp; Full Copyright Statement</h2>
+Copyright (C) The Internet Society (1999).&nbsp; All Rights Reserved.
+<p>This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it&nbsp;
+or assist in its implementation may be prepared, copied, published and
+distributed, in whole or in part, without restriction of any kind, provided
+that the above copyright notice and this paragraph are included on all
+such copies and derivative works.&nbsp; However, this document itself may
+not be modified in any way, such as by removing the copyright notice or
+references to the Internet Society or other Internet organizations, except
+as needed for the purpose of developing Internet standards in which case
+the procedures for copyrights defined in the Internet Standards process
+must be followed, or as required to translate it into languages other than
+<br>English.
+<p>The limited permissions granted above are perpetual and will not be
+revoked by the Internet Society or its successors or assigns.
+<p>This document and the information contained herein is provided on an
+"AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING TASK
+FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE
+ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR
+A PARTICULAR PURPOSE.
+<br>&nbsp;
+</body>
+</html>

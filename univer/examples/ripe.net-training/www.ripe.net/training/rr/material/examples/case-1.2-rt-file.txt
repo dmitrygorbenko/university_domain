@@ -1,0 +1,6 @@
+! 
+! RtConfig template file for access lists creation
+! for AS4000; their peer is AS2000
+! 
+@RtConfig access_list filter AS2000 
+!

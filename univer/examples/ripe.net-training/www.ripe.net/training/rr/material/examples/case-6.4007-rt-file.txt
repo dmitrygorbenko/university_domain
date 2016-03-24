@@ -1,0 +1,25 @@
+! generating config. for 4007 - MINIMAL
+!
+! generating config for the peering between 4007 and 7034
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT"
+@RtConfig import AS4007 10.4.15.7 AS7034 10.7.0.4
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT"
+@RtConfig export AS4007 10.4.15.7 AS7034 10.7.0.4 
+!
+! generating config for the peering between 4007 and 3007
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT"
+@RtConfig import AS4007 10.4.192.3 AS3007 10.3.15.4
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT"
+@RtConfig export AS4007 10.4.192.3 AS3007 10.3.15.4 
+!
+! generating config for the peering between 4007 and 2030
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT"
+@RtConfig import AS4007 10.4.192.2 AS2030 10.20.0.4
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT"
+@RtConfig export AS4007 10.4.192.2 AS2030 10.20.0.4 

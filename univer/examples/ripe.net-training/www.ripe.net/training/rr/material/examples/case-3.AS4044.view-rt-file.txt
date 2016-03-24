@@ -1,0 +1,24 @@
+!
+! RtConfig template file for the case 5 (multiple peering points)
+! view of the as4044
+! Router7
+!
+! an "import/export" line needed for each physical link
+!
+! full mash - R7->R1 & R7 -> R2 	=> 4 lines in total
+! 
+! Setting max preference to 100
+@RtConfig set cisco_max_preference = 100
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT-%d"
+@RtConfig import AS4044 10.4.0.7 AS3033 10.3.0.1
+!
+@RtConfig set cisco_map_name = "AS%d-IMPORT-%d"
+@RtConfig import AS4044 10.4.0.7 AS3033 10.3.0.2
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT-%d"
+@RtConfig export AS4044 10.4.0.7 AS3033 10.3.0.1
+!
+@RtConfig set cisco_map_name = "AS%d-EXPORT-%d"
+@RtConfig export AS4044 10.4.0.7 AS3033 10.3.0.2
+!

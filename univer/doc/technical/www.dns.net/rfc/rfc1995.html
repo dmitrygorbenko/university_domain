@@ -1,0 +1,468 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.5 [en] (WinNT; I) [Netscape]">
+   <meta name="Author" content="Mark Symons (bliksim9@yahoo.com)">
+   <title>RFC1995: Incremental Zone Transfer in DNS</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+This RFC has been HTMLized by
+hand by <a href="mailto:bliksim9@yahoo.com">Mark Symons</a>, and
+word-for-word correspondence to the source has not been
+<br>verified.&nbsp; A table of contents has been added. The <a href="ftp://ftp.is.co.za/rfc/rfc1995.txt">original
+RFC</a> should be regarded as being authoritative.
+<br>
+<hr WIDTH="100%">
+<br>&nbsp;
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=3 WIDTH="100%" >
+<tr>
+<td>Network Working Group</td>
+
+<td></td>
+
+<td>M. Ohta</td>
+</tr>
+
+<tr>
+<td>Request for Comments: 1995</td>
+
+<td></td>
+
+<td>Tokyo Institute of Technology</td>
+</tr>
+
+<tr>
+<td>Updates: <a href="rfc1035/rfc1035.html">1035</a></td>
+
+<td></td>
+
+<td>August 1996</td>
+</tr>
+
+<tr>
+<td>Category: Standards Track</td>
+
+<td></td>
+
+<td></td>
+</tr>
+</table>
+
+<center>
+<h1>
+Incremental Zone Transfer in DNS</h1></center>
+
+<h2>
+Status of this Memo</h2>
+This document specifies an Internet standards track protocol for the Internet
+community, and requests discussion and suggestions for improvements.&nbsp;
+Please refer to the current edition of the "Internet Official Protocol
+Standards" (STD 1) for the standardization state and status of this protocol.&nbsp;
+Distribution of this memo is unlimited.
+<br>&nbsp;
+<h2>
+Abstract</h2>
+This document proposes extensions to the DNS protocols to provide an incremental
+zone transfer (IXFR) mechanism.
+<br>&nbsp;
+<h2>
+Contents</h2>
+<b><a href="#1">1. Introduction</a></b>
+<br><b><a href="#2">2. Brief Description of the Protocol</a></b>
+<br><b><a href="#3">3. Query Format</a></b>
+<br><b><a href="#4">4. Response Format</a></b>
+<br><b><a href="#5">5. Purging Strategy</a></b>
+<br><b><a href="#6">6. Optional Condensation of Multiple Versions</a></b>
+<br><b><a href="#7">7. Example</a></b>
+<br><b><a href="#8">8. Acknowledgements</a></b>
+<br><b><a href="#9">9. References</a></b>
+<br><b><a href="#10">10. Security Considerations</a></b>
+<br><b><a href="#11">11. Author's Address</a></b>
+<br>&nbsp;
+<h2>
+<a NAME="1"></a>1. Introduction</h2>
+For rapid propagation of changes to a DNS database [STD13], it is necessary
+to reduce latency by actively notifying servers of the change.&nbsp; This
+is accomplished by the NOTIFY extension of the DNS [<a href="rfc1996.html">NOTIFY</a>].
+<p>The current full zone transfer mechanism (AXFR) is not an efficient
+means to propagate changes to a small part of a zone, as it transfers the
+entire zone file.
+<p>Incremental transfer (IXFR) as proposed is a more efficient mechanism,
+as it transfers only the changed portion(s) of a zone.
+<p>In this document, a secondary name server which requests IXFR is called
+an IXFR client and a primary or secondary name server which responds to
+the request is called an IXFR server.
+<br>&nbsp;
+<h2>
+<a NAME="2"></a>2. Brief Description of the Protocol</h2>
+If an IXFR client, which likely has an older version of a zone, thinks
+it needs new information about the zone (typically through SOA refresh
+timeout or the NOTIFY mechanism), it sends an IXFR message containing the
+SOA serial number of its, presumably outdated, copy of the zone.
+<p>An IXFR server should keep record of the newest version of the zone
+and the differences between that copy and several older versions. When
+an IXFR request with an older version number is received, the IXFR server
+needs to send only the differences required to make that version current.&nbsp;
+Alternatively, the server may choose to transfer the entire zone just as
+in a normal full zone transfer.
+<p>When a zone has been updated, it should be saved in stable storage before
+the new version is used to respond to IXFR (or AXFR) queries. Otherwise,
+if the server crashes, data which is no longer available may have been
+distributed to secondary servers, which can cause persistent database inconsistencies.
+<p>If an IXFR query with the same or newer version number than that of
+the server is received, it is replied to with a single SOA record of the
+server's current version, just as in AXFR.
+<p>Transport of a query may be by either UDP or TCP.&nbsp; If an IXFR query
+is via UDP, the IXFR server may attempt to reply using UDP if the entire
+response can be contained in a single DNS packet.&nbsp; If the UDP reply
+does not fit, the query is responded to with a single SOA record of the
+server's current version to inform the client that a TCP query should be
+initiated.
+<p>Thus, a client should first make an IXFR query using UDP.&nbsp; If the
+query type is not recognized by the server, an AXFR (preceded by a UDP
+SOA query) should be tried, ensuring backward compatibility.&nbsp; If the
+query response is a single packet with the entire new zone, or if the server
+does not have a newer version than the client, everything is done.&nbsp;
+Otherwise, a TCP IXFR query should be tried.
+<p>To ensure integrity, servers should use UDP checksums for all UDP responses.&nbsp;
+A cautious client which receives a UDP packet with a checksum value of
+zero should ignore the result and try a TCP IXFR instead.
+<p>The query type value of IXFR assigned by IANA is 251.
+<br>&nbsp;
+<h2>
+<a NAME="3"></a>3. Query Format</h2>
+The IXFR query packet format is the same as that of a normal DNS query,
+but with the query type being IXFR and the authority section containing
+the SOA record of client's version of the zone.
+<br>&nbsp;
+<h2>
+<a NAME="4"></a>4. Response Format</h2>
+If incremental zone transfer is not available, the entire zone is returned.&nbsp;
+The first and the last RR of the response is the SOA record of the zone.&nbsp;
+I.e. the behavior is the same as an AXFR response except the query type
+is IXFR.
+<p>If incremental zone transfer is available, one or more difference sequences
+is returned.&nbsp; The list of difference sequences is preceded and followed
+by a copy of the server's current version of the SOA.
+<p>Each difference sequence represents one update to the zone (one SOA
+serial change) consisting of deleted RRs and added RRs.&nbsp; The first
+RR of the deleted RRs is the older SOA RR and the first RR of the added
+RRs is the newer SOA RR.
+<p>Modification of an RR is performed first by removing the original RR
+and then adding the modified one.
+<p>The sequences of differential information are ordered oldest first newest
+last.&nbsp; Thus, the differential sequences are the history of
+<br>changes made since the version known by the IXFR client up to the server's
+current version.
+<p>RRs in the incremental transfer messages may be partial.&nbsp; That
+is, if a single RR of multiple RRs of the same RR type changes, only the
+changed RR is transferred.
+<p>An IXFR client, should only replace an older version with a newer version
+after all the differences have been successfully processed.
+<p>An incremental response is different from that of a non-incremental
+response in that it begins with two SOA RRs, the server's current SOA followed
+by the SOA of the client's version which is about to be replaced.
+<br>&nbsp;
+<h2>
+<a NAME="5"></a>5. Purging Strategy</h2>
+An IXFR server can not be required to hold all previous versions forever
+and may delete them anytime. In general, there is a trade-off between the
+size of storage space and the possibility of using IXFR.
+<p>Information about older versions should be purged if the total length
+of an IXFR response would be longer than that of an AXFR response. Given
+that the purpose of IXFR is to reduce AXFR overhead, this strategy is quite
+reasonable.&nbsp; The strategy assures that the amount of storage required
+is at most twice that of the current zone information.
+<p>Information older than the SOA expire period may also be purged.
+<br>&nbsp;
+<h2>
+<a NAME="6"></a>6. Optional Condensation of Multiple Versions</h2>
+An IXFR server may optionally condense multiple difference sequences into
+a single difference sequence, thus, dropping information on intermediate
+versions.
+<p>This may be beneficial if a lot of versions, not all of which are useful,
+are generated. For example, if multiple ftp servers share a
+<br>single DNS name and the IP address associated with the name is changed
+once a minute to balance load between the ftp servers, it is not so important
+to keep track of all the history of changes.
+<p>But, this feature may not be so useful if an IXFR client has access
+to two IXFR servers: A and B, with inconsistent&nbsp; condensation results.
+The current version of the IXFR client, received from server A, may be
+unknown to server B. In such a case, server B can not provide incremental
+data from the unknown version and a full zone transfer is necessary.
+<p>Condensation is completely optional. Clients can't detect from the response
+whether the server has condensed the reply or not.
+<p>For interoperability, IXFR servers, including those without the condensation
+feature, should not flag an error even if it receives a
+<br>client's IXFR request with a unknown version number and should, instead,
+attempt to perform a full zone transfer.
+<br>&nbsp;
+<h2>
+<a NAME="7"></a>7. Example</h2>
+Given the following three generations of data with the current serial number
+of 3,
+<p><tt>&nbsp;&nbsp; JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN SOA NS.JAIN.AD.JP. mohta.jain.ad.jp. (</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1 600 600 3600000 604800)</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN NS&nbsp; NS.JAIN.AD.JP.</tt>
+<br><tt>&nbsp;&nbsp; NS.JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN A&nbsp;&nbsp;
+133.69.136.1</tt>
+<br><tt>&nbsp;&nbsp; NEZU.JAIN.AD.JP.&nbsp;&nbsp;&nbsp; IN A&nbsp;&nbsp;
+133.69.136.5</tt>
+<p><tt>NEZU.JAIN.AD.JP. is removed and JAIN-BB.JAIN.AD.JP. is added.</tt>
+<p><tt>&nbsp;&nbsp; jain.ad.jp.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN SOA ns.jain.ad.jp. mohta.jain.ad.jp. (</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2 600 600 3600000 604800)</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN NS&nbsp; NS.JAIN.AD.JP.</tt>
+<br><tt>&nbsp;&nbsp; NS.JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN A&nbsp;&nbsp;
+133.69.136.1</tt>
+<br><tt>&nbsp;&nbsp; JAIN-BB.JAIN.AD.JP. IN A&nbsp;&nbsp; 133.69.136.4</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN A&nbsp;&nbsp; 192.41.197.2</tt>
+<p><tt>One of the IP addresses of JAIN-BB.JAIN.AD.JP. is changed.</tt>
+<p><tt>&nbsp;&nbsp; JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN SOA ns.jain.ad.jp. mohta.jain.ad.jp. (</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+3 600 600 3600000 604800)</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN NS&nbsp; NS.JAIN.AD.JP.</tt>
+<br><tt>&nbsp;&nbsp; NS.JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN A&nbsp;&nbsp;
+133.69.136.1</tt>
+<br><tt>&nbsp;&nbsp; JAIN-BB.JAIN.AD.JP. IN A&nbsp;&nbsp; 133.69.136.3</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN A&nbsp;&nbsp; 192.41.197.2</tt>
+<p><tt>The following IXFR query</tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Header&nbsp;&nbsp;&nbsp;&nbsp; | OPCODE=SQUERY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Question&nbsp;&nbsp; | QNAME=JAIN.AD.JP., QCLASS=IN,
+QTYPE=IXFR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Answer&nbsp;&nbsp;&nbsp;&nbsp; | &lt;empty>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Authority&nbsp; | JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN SOA serial=1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Additional | &lt;empty>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<p><tt>could be replied to with the following full zone transfer message:</tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Header&nbsp;&nbsp;&nbsp;&nbsp; | OPCODE=SQUERY, RESPONSE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Question&nbsp;&nbsp; | QNAME=JAIN.AD.JP., QCLASS=IN,
+QTYPE=IXFR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Answer&nbsp;&nbsp;&nbsp;&nbsp; | JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN SOA serial=3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN NS&nbsp;
+NS.JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| NS.JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN A&nbsp;&nbsp; 133.69.136.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN-BB.JAIN.AD.JP. IN A&nbsp;&nbsp; 133.69.136.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN-BB.JAIN.AD.JP. IN A&nbsp;&nbsp; 192.41.197.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN SOA serial=3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Authority&nbsp; | &lt;empty>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Additional | &lt;empty>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<p><tt>or with the following incremental message:</tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Header&nbsp;&nbsp;&nbsp;&nbsp; | OPCODE=SQUERY, RESPONSE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Question&nbsp;&nbsp; | QNAME=JAIN.AD.JP., QCLASS=IN,
+QTYPE=IXFR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Answer&nbsp;&nbsp;&nbsp;&nbsp; | JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN SOA serial=3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN SOA serial=1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| NEZU.JAIN.AD.JP.&nbsp;&nbsp;&nbsp; IN A&nbsp;&nbsp; 133.69.136.5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN SOA serial=2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN-BB.JAIN.AD.JP. IN A&nbsp;&nbsp; 133.69.136.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN-BB.JAIN.AD.JP. IN A&nbsp;&nbsp; 192.41.197.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN SOA serial=2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN-BB.JAIN.AD.JP. IN A&nbsp;&nbsp; 133.69.136.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN SOA serial=3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN-BB.JAIN.AD.JP. IN A&nbsp;&nbsp; 133.69.136.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN SOA serial=3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Authority&nbsp; | &lt;empty>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Additional | &lt;empty>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<p><tt>or with the following condensed incremental message:</tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Header&nbsp;&nbsp;&nbsp;&nbsp; | OPCODE=SQUERY, RESPONSE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Question&nbsp;&nbsp; | QNAME=JAIN.AD.JP., QCLASS=IN,
+QTYPE=IXFR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Answer&nbsp;&nbsp;&nbsp;&nbsp; | JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN SOA serial=3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN SOA serial=1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| NEZU.JAIN.AD.JP.&nbsp;&nbsp;&nbsp; IN A&nbsp;&nbsp; 133.69.136.5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN SOA serial=3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN-BB.JAIN.AD.JP. IN A&nbsp;&nbsp; 133.69.136.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN-BB.JAIN.AD.JP. IN A&nbsp;&nbsp; 192.41.197.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN SOA serial=3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Authority&nbsp; | &lt;empty>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Additional | &lt;empty>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<p><tt>or, if UDP packet overflow occurs, with the following message:</tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Header&nbsp;&nbsp;&nbsp;&nbsp; | OPCODE=SQUERY, RESPONSE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Question&nbsp;&nbsp; | QNAME=JAIN.AD.JP., QCLASS=IN,
+QTYPE=IXFR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Answer&nbsp;&nbsp;&nbsp;&nbsp; | JAIN.AD.JP.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN SOA serial=3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Authority&nbsp; | &lt;empty>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br><tt>&nbsp;&nbsp; Additional | &lt;empty>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++---------------------------------------------------+</tt>
+<br>&nbsp;
+<h2>
+<a NAME="8"></a>8. Acknowledgements</h2>
+The original idea of IXFR was conceived by Anant Kumar, Steve Hotz and
+Jon Postel.
+<p>For the refinement of the protocol and documentation, many people have
+contributed including, but not limited to, Anant Kumar, Robert Austein,
+Paul Vixie, Randy Bush, Mark Andrews, Robert Elz and the members of the
+IETF DNSIND working group.
+<br>&nbsp;
+<h2>
+<a NAME="9"></a>9. References</h2>
+&nbsp;
+<table BORDER=0 COLS=2 WIDTH="100%" >
+<tr>
+<td ALIGN=LEFT VALIGN=TOP WIDTH="5%">[NOTIFY]</td>
+
+<td>Vixie, P., "DNS NOTIFY: A Mechanism for Prompt Notification of Zone
+Changes", <a href="rfc1996.html">RFC 1996</a>, August 1996.</td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP>[STD 13]</td>
+
+<td>Mockapetris, P., "Domain Name System", STD 13, <a href="ftp://ftp.is.co.za/rfc/rfc1034.txt">RFC
+1034</a> and <a href="rfc1035/rfc1035.html">RFC 1035</a>), November 1987.</td>
+</tr>
+</table>
+
+<h2>
+<a NAME="10"></a>10. Security Considerations</h2>
+Though DNS is related to several security problems, no attempt is made
+to fix them in this document.
+<p>This document is believed to introduce no additional security problems
+to the current DNS protocol.
+<br>&nbsp;
+<h2>
+<a NAME="11"></a>11. Author's Address</h2>
+Masataka Ohta
+<br>Computer Center
+<br>Tokyo Institute of Technology
+<br>2-12-1, O-okayama, Meguro-ku, Tokyo 152, JAPAN
+<p>Phone: +81-3-5734-3299
+<br>Fax: +81-3-5734-3415
+<br>EMail: <a href="mailto:mohta@necom830.hpcl.titech.ac.jp">mohta@necom830.hpcl.titech.ac.jp</a>
+</body>
+</html>

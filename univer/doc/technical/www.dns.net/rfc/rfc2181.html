@@ -1,0 +1,815 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.04 [en] (WinNT; I) [Netscape]">
+   <META NAME="Author" CONTENT="Mark Symons (mark.symons@za.eds.com)">
+   <TITLE>RFC2181: Clarifications to the DNS Specification</TITLE>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#FF0000">
+This RFC has been HTMLized by hand by
+<A HREF="mailto:bliksim9@yahoo.com">Mark Symons</A>,
+and word-for-word correspondence to the source has not been
+<BR>verified.&nbsp; A table of contents has been added.
+The <A HREF="ftp://ftp.is.co.za/rfc/rfc1996.txt">original RFC</A>
+should be regarded as being authoritative.
+<BR>
+<HR WIDTH="100%">
+<BR>&nbsp;
+<BR>&nbsp;
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=3 WIDTH="100%" >
+<TR>
+<TD>Network Working Group</TD>
+
+<TD></TD>
+
+<TD>R. Elz</TD>
+</TR>
+
+<TR>
+<TD>Request for Comments: 2181</TD>
+
+<TD></TD>
+
+<TD>University of Melbourne</TD>
+</TR>
+
+<TR>
+<TD>Updates:1034, 1035, 1123</TD>
+
+<TD></TD>
+
+<TD>R. Bush</TD>
+</TR>
+
+<TR>
+<TD>Category: Standards Track</TD>
+
+<TD></TD>
+
+<TD>RGnet, Inc</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD></TD>
+
+<TD>July 1997</TD>
+</TR>
+</TABLE>
+&nbsp;
+<CENTER>
+<H1>
+Clarifications to the DNS Specification</H1></CENTER>
+&nbsp;
+<H2>
+Status of this Memo</H2>
+This document specifies an Internet standards track protocol for the Internet
+community, and requests discussion and suggestions for improvements.&nbsp;
+Please refer to the current edition of the "Internet Official Protocol
+Standards" (STD 1) for the standardization state and status of this protocol.&nbsp;
+Distribution of this memo is unlimited.
+<BR>&nbsp;
+<H2>
+<A NAME="1. Abstract"></A>1. Abstract</H2>
+This document considers some areas that have been identified as problems
+with the specification of the Domain Name System, and proposes remedies
+for the defects identified.&nbsp; Eight separate issues are considered:
+<BR>&nbsp;
+<UL>
+<LI>
+IP packet header address usage from multi-homed servers,</LI>
+
+<LI>
+TTLs in sets of records with the same name, class, and type,</LI>
+
+<LI>
+correct handling of zone cuts,</LI>
+
+<LI>
+three minor issues concerning SOA records and their use,</LI>
+
+<LI>
+the precise definition of the Time to Live (TTL)</LI>
+
+<LI>
+Use of the TC (truncated) header bit</LI>
+
+<LI>
+the issue of what is an authoritative, or canonical, name,</LI>
+
+<LI>
+and the issue of what makes a valid DNS label.</LI>
+</UL>
+The first six of these are areas where the correct behaviour has been somewhat
+unclear, we seek to rectify that.&nbsp; The other two are already adequately
+specified, however the specifications seem to be sometimes ignored.&nbsp;
+We seek to reinforce the existing specifications.
+<BR>&nbsp;
+<H2>
+Contents</H2>
+<B><A HREF="#1. Abstract">1&nbsp; Abstract</A></B>
+<BR><B><A HREF="#2. Introduction">2&nbsp; Introduction</A></B>
+<BR><B><A HREF="#3. Terminology">3&nbsp; Terminology</A></B>
+<BR><B><A HREF="#4. Server Reply">4&nbsp; Server Reply Source Address Selection</A></B>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#4.1. UDP Source Address">4.1. UDP Source
+Address Selection</A>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#4.2. Port Number">4.2. Port Number Selection</A>
+<BR><B><A HREF="#5. Resource Record Sets">5&nbsp; Resource Record Sets</A></B>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#5.1. Sending RRs">5.1. Sending RRs from
+an RRSet</A>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#5.2. TTLs of RRs">5.2. TTLs of RRs in
+an RRSet</A>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#5.3. DNSSEC Special Cases">5.3. DNSSEC
+Special Cases</A>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#5.3.1. SIG records and RRSets">5.3.1.
+SIG records and RRSets</A>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#5.3.2. NXT RRs">5.3.2.
+NXT RRs</A>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#5.4. Receiving RRSets">5.4. Receiving
+RRSets</A>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#5.4.1. Ranking Data">5.4.1.
+Ranking data</A>
+<BR>&nbsp;&nbsp;&nbsp;<A HREF="#5.5. Sending RRSets"> 5.5. Sending RRSets
+(reprise)</A>
+<BR><B><A HREF="#6. Zone Cuts">6&nbsp; Zone Cuts</A></B>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#6.1. Zone Authority">6.1. Zone authority</A>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#6.2. DNSSEC Issues">6.2. DNSSEC issues</A>
+<BR><B><A HREF="#7. SOA RRs">7&nbsp; SOA RRs</A></B>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#7.1. Placement of SOA RRs">7.1. Placement
+of SOA RRs in authoritative answers</A>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#7.2. TTLs on SOA RRs">7.2. TTLs on SOA
+RRs</A>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#7.3. The SOA.MNAME">7.3. The SOA.MNAME
+field</A>
+<BR><B><A HREF="#8. Time to Live (TTL)">8&nbsp; Time to Live (TTL)</A></B>
+<BR><B><A HREF="#9. The TC">9&nbsp; The TC (truncated) header bit</A></B>
+<BR><B><A HREF="#10. Naming issues">10&nbsp; Naming issues</A></B>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#10.1. CNAME RRs">10.1. CNAME resource
+records</A>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="#10.1.1. CNAME Terminology">10.1.1.
+CNAME terminology</A>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#10.2. PTR Records">10.2. PTR records</A>
+<BR>&nbsp;&nbsp;&nbsp; <A HREF="#10.3. MX and NS Records">10.3. MX and
+NS records</A>
+<BR><B><A HREF="#11. Name Syntax">11&nbsp; Name syntax</A></B>
+<BR><B><A HREF="#12. Security">12&nbsp; Security Considerations</A></B>
+<BR><B><A HREF="#13. References">13&nbsp; References</A></B>
+<BR><B><A HREF="#14. Acknowledgements">14&nbsp; Acknowledgements</A></B>
+<BR><B><A HREF="#15. Authors'">15&nbsp; Authors' Addresses</A></B>
+<BR>&nbsp;
+<H2>
+<A NAME="2. Introduction"></A>2. Introduction</H2>
+Several problem areas in the Domain Name System specification [<A HREF="rfc1034.txt">RFC
+1034</A>, <A HREF="rfc1035/rfc1035.html">RFC 1035</A>] have been noted through
+the years [<A HREF="rfc1123.txt">RFC 1123</A>].&nbsp; This document addresses
+several additional problem areas.&nbsp; The issues here are independent.&nbsp;
+Those issues are the question of which source address a multi-homed DNS
+server should use when replying to a query, the issue of differing TTLs
+for DNS records with the same label, class and type, and the issue of canonical
+names, what they are, how CNAME records relate, what names are legal in
+what parts of the DNS, and what is the valid syntax of a DNS name.
+
+<P>Clarifications to the DNS specification to avoid these problems are
+made in this memo.&nbsp; A minor ambiguity in <A HREF="rfc1034.txt">RFC
+1034</A> concerned with SOA records is also corrected, as is one in the
+definition of the TTL (Time To Live) and some possible confusion in use
+of the TC bit.
+<BR>&nbsp;
+<H2>
+<A NAME="3. Terminology"></A>3. Terminology</H2>
+This memo does not use the oft used expressions MUST, SHOULD, MAY, or their
+negative forms.&nbsp; In some sections it may seem that a specification
+is worded mildly, and hence some may infer that the specification is optional.&nbsp;
+That is not correct.&nbsp; Anywhere that this memo suggests that some action
+should be carried out, or must be carried out, or that some behaviour is
+acceptable, or not, that is to be considered as a fundamental aspect of
+this specification, regardless of the specific words used.&nbsp; If some
+behaviour or action is truly optional, that will be clearly specified by
+the text.
+<BR>&nbsp;
+<H2>
+<A NAME="4. Server Reply"></A>4. Server Reply Source Address Selection</H2>
+Most, if not all, DNS clients, expect the address from which a reply is
+received to be the same address as that to which the query eliciting the
+reply was sent.&nbsp; This is true for servers acting as clients for the
+purposes of recursive query resolution, as well as simple resolver clients.
+The address, along with the identifier (ID) in the reply is used for disambiguating
+replies, and filtering spurious responses.&nbsp; This may, or may not,
+have been intended when the DNS was designed, but is now a fact of life.
+
+<P>Some multi-homed hosts running DNS servers generate a reply using a
+source address that is not the same as the destination address from the
+client's request packet.&nbsp; Such replies will be discarded by the client
+because the source address of the reply does not match that of a host to
+which the client sent the original request.&nbsp; That is, it appears to
+be an unsolicited response.
+<BR>&nbsp;
+<H3>
+<A NAME="4.1. UDP Source Address"></A>4.1. UDP Source Address Selection</H3>
+To avoid these problems, servers when responding to queries using UDP must
+cause the reply to be sent with the source address field in the IP header
+set to the address that was in the destination address field of the IP
+header of the packet containing the query causing the response.&nbsp; If
+this would cause the response to be sent from an IP address that is not
+permitted for this purpose, then the response may be sent from any legal
+IP address allocated to the server.&nbsp; That address should be chosen
+to maximise the possibility that the client will be able to use it for
+further queries.&nbsp; Servers configured in such a way that not all their
+addresses are equally reachable from all potential clients need take particular
+care when responding to queries sent to anycast, multicast, or similar,
+addresses.
+<BR>&nbsp;
+<BR>&nbsp;
+<H3>
+<A NAME="4.2. Port Number"></A>4.2. Port Number Selection</H3>
+Replies to all queries must be directed to the port from which they were
+sent.&nbsp; When queries are received via TCP this is an inherent part
+of the transport protocol.&nbsp; For queries received by UDP the server
+must take note of the source port and use that as the destination port
+in the response.&nbsp; Replies should always be sent from the port to which
+they were directed.&nbsp; Except in
+<BR>extraordinary circumstances, this will be the well known port assigned
+for DNS queries [RFC 1700].
+<BR>&nbsp;
+<H2>
+<A NAME="5. Resource Record Sets"></A>5. Resource Record Sets</H2>
+Each DNS Resource Record (RR) has a label, class, type, and data.&nbsp;
+It is meaningless for two records to ever have label, class, type and data
+all equal - servers should suppress such duplicates if encountered.&nbsp;&nbsp;
+It is however possible for most record types to exist with the same label,
+class and type, but with different data.&nbsp; Such a group of records
+is hereby defined to be
+<BR>a Resource Record Set (RRSet).
+<BR>&nbsp;
+<H3>
+<A NAME="5.1. Sending RRs"></A>5.1. Sending RRs from an RRSet</H3>
+A query for a specific (or non-specific) label, class, and type, will always
+return all records in the associated RRSet - whether that be one or more
+RRs.&nbsp; The response must be marked as "truncated" if the entire RRSet
+will not fit in the response.
+<BR>&nbsp;
+<H3>
+<A NAME="5.2. TTLs of RRs"></A>5.2. TTLs of RRs in an RRSet</H3>
+Resource Records also have a time to live (TTL).&nbsp; It is possible for
+the RRs in an RRSet to have different TTLs.&nbsp; No uses for this have
+been found that cannot be better accomplished in other ways.&nbsp; This
+can, however, cause partial replies (not marked "truncated") from a caching
+server, where the TTLs for some but not all the RRs in the RRSet have expired.
+
+<P>Consequently the use of differing TTLs in an RRSet is hereby deprecated,
+the TTLs of all RRs in an RRSet must be the same.
+
+<P>Should a client receive a response containing RRs from an RRSet with
+differing TTLs, it should treat this as an error.&nbsp; If the RRSet concerned
+is from a non-authoritative source for this data, the client should simply
+ignore the RRSet, and if the values were required, seek to acquire them
+from an authoritative source.&nbsp; Clients that are configured to send
+all queries to one, or more, particular servers should treat those servers
+as authoritative for this purpose. Should an authoritative source send
+such a malformed RRSet, the client should treat the RRs for all purposes
+as if all TTLs in the RRSet had been set to the value of the lowest TTL
+in the RRSet. In no case may a server send an RRSet with TTLs not all equal.
+<BR>&nbsp;
+<H3>
+<A NAME="5.3. DNSSEC Special Cases"></A>5.3. DNSSEC Special Cases</H3>
+Two of the record types added by DNS Security (DNSSEC) [<A HREF="rfc2065.txt">RFC
+2065</A>] require special attention when considering the formation of Resource
+Record Sets.&nbsp; Those are the SIG and NXT records.&nbsp; It should be
+noted that DNS Security is still very new, and there is, as yet, little
+experience with it. Readers should be prepared for the information related
+to DNSSEC contained in this document to become outdated as the DNS Security
+specification matures.
+<BR>&nbsp;
+<H4>
+<A NAME="5.3.1. SIG records and RRSets"></A>5.3.1. SIG records and RRSets</H4>
+A SIG record provides signature (validation) data for another RRSet in
+the DNS.&nbsp; Where a zone has been signed, every RRSet in the zone will
+have had a SIG record associated with it.&nbsp; The data type of the RRSet
+is included in the data of the SIG RR, to indicate with which particular
+RRSet this SIG record is associated.&nbsp; Were the rules above applied,
+whenever a SIG record was included with a response to validate that response,
+the SIG records for all other RRSets associated with the appropriate node
+would also need to be included. In some cases, this could be a very large
+number of records, not helped by their being rather large RRs.
+
+<P>Thus, it is specifically permitted for the authority section to contain
+only those SIG RRs with the "type covered" field equal to the type field
+of an answer being returned.&nbsp; However, where SIG records are being
+returned in the answer section, in response to a query for SIG records,
+or a query for all records associated with a name (type=ANY) the entire
+SIG RRSet must be included, as for any other RR type.
+
+<P>Servers that receive responses containing SIG records in the authority
+section, or (probably incorrectly) as additional data, must understand
+that the entire RRSet has almost certainly not been included.&nbsp; Thus,
+they must not cache that SIG record in a way that would permit it to be
+returned should a query for SIG records be received at that server.&nbsp;
+<A HREF="rfc2065.txt">RFC 2065</A> actually requires that SIG queries be
+directed only to authoritative servers to avoid the problems that could
+be caused here, and while servers exist that do not understand the special
+properties of SIG records, this will remain necessary. However, careful
+design of SIG record processing in new implementations should permit this
+restriction to be relaxed in the future, so resolvers do not need to treat
+SIG record queries specially.
+
+<P>It has been occasionally stated that a received request for a SIG record
+should be forwarded to an authoritative server, rather than being answered
+from data in the cache.&nbsp; This is not necessary - a server that has
+the knowledge of SIG as a special case for processing this way would be
+better to correctly cache SIG records, taking into account their characteristics.&nbsp;
+Then the server can determine when it is safe to reply from the cache,
+and when the answer is not available and the query must be forwarded.
+<BR>&nbsp;
+<H4>
+<A NAME="5.3.2. NXT RRs"></A>5.3.2. NXT RRs</H4>
+Next Resource Records (NXT) are even more peculiar.&nbsp; There will only
+ever be one NXT record in a zone for a particular label, so superficially,
+the RRSet problem is trivial.&nbsp; However, at a zone cut, both the parent
+zone, and the child zone (superzone and subzone in <A HREF="rfc2065.txt">RFC
+2065</A> terminology) will have NXT records for the same name.&nbsp; Those
+two NXT records do not form an RRSet, even where both zones are housed
+at the same server.&nbsp; NXT RRSets always contain just a single RR.&nbsp;
+Where both NXT records are visible, two RRSets exist.&nbsp; However, servers
+are not required to treat this as a special case when receiving NXT records
+in a response.&nbsp; They may elect to notice the existence of two different
+NXT RRSets, and treat that as they would two different RRSets of any other
+type. That is, cache one, and ignore the other.&nbsp; Security aware servers
+will need to correctly process the NXT record in the received response
+though.
+<BR>&nbsp;
+<H3>
+<A NAME="5.4. Receiving RRSets"></A>5.4. Receiving RRSets</H3>
+Servers must never merge RRs from a response with RRs in their cache to
+form an RRSet.&nbsp; If a response contains data that would form an RRSet
+with data in a server's cache the server must either ignore the RRs in
+the response, or discard the entire RRSet currently in the cache, as appropriate.&nbsp;
+Consequently the issue of TTLs varying between the cache and a response
+does not cause concern, one will be ignored.&nbsp; That is, one of the
+data sets is always incorrect if the data from an answer differs from the
+data in the cache.&nbsp; The challenge for the server is to determine which
+of the data sets is correct, if one is, and retain that, while ignoring
+the other.&nbsp; Note that if a server receives an answer containing an
+RRSet that is identical to that in its cache, with the possible exception
+of the TTL value, it may, optionally, update the TTL in its cache with
+the TTL of the received answer.&nbsp; It should do this if the received
+answer would be considered more authoritative (as discussed in the next
+section) than the previously cached answer.
+<BR>&nbsp;
+<H4>
+<A NAME="5.4.1. Ranking Data"></A>5.4.1. Ranking data</H4>
+When considering whether to accept an RRSet in a reply, or retain an RRSet
+already in its cache instead, a server should consider the relative likely
+trustworthiness of the various data.&nbsp; An authoritative answer from
+a reply should replace cached data that had been obtained from additional
+information in an earlier reply. However additional information from a
+reply will be
+<BR>ignored if the cache contains data from an authoritative answer or
+a zone file.
+
+<P>The accuracy of data available is assumed from its source. Trustworthiness
+shall be, in order from most to least:
+<UL>
+<LI>
+Data from a primary zone file, other than glue data</LI>
+
+<LI>
+Data from a zone transfer, other than glue</LI>
+
+<LI>
+The authoritative data included in the answer section of an authoritative
+reply</LI>
+
+<LI>
+Data from the authority section of an authoritative answer</LI>
+
+<LI>
+Glue from a primary zone, or glue from a zone transfer</LI>
+
+<LI>
+Data from the answer section of a non-authoritative answer, and non-authoritative
+data from the answer section of authoritative answers</LI>
+
+<LI>
+Additional information from an authoritative answer, Data from the authority
+section of a non-authoritative answer, Additional information from non-authoritative
+answers.</LI>
+</UL>
+Note that the answer section of an authoritative answer normally contains
+only authoritative data.&nbsp; However when the name sought is an alias
+(see section 10.1.1) only the record describing that alias is necessarily
+authoritative.&nbsp; Clients should assume that other records may have
+come from the server's cache.&nbsp; Where authoritative answers are required,
+the client should query
+<BR>again, using the canonical name associated with the alias.
+
+<P>Unauthenticated RRs received and cached from the least trustworthy of
+those groupings, that is data from the additional data section, and data
+from the authority section of a non-authoritative answer, should not be
+cached in such a way that they would ever be returned as answers to a received
+query.&nbsp; They may be returned as additional information where appropriate.&nbsp;
+Ignoring this would allow the trustworthiness of relatively untrustworthy
+data to be increased without cause or excuse.
+
+<P>When DNS security [<A HREF="rfc2065.txt">RFC 2065</A>] is in use, and
+an authenticated reply has been received and verified, the data thus authenticated
+shall be considered more trustworthy than unauthenticated data of the same
+type.&nbsp; Note that throughout this document, "authoritative" means a
+reply with the AA bit set.&nbsp; DNSSEC uses trusted chains of SIG and
+KEY records to determine the authenticity of data, the AA bit is almost
+irrelevant.&nbsp; However DNSSEC aware servers must still correctly set
+the AA bit in responses to enable correct operation with servers that are
+not security aware (almost all currently).
+
+<P>Note that, glue excluded, it is impossible for data from two correctly
+configured primary zone files, two correctly configured secondary zones
+(data from zone transfers) or data from correctly configured primary and
+secondary zones to ever conflict.&nbsp; Where glue for the same name exists
+in multiple zones, and differs in value, the nameserver should select data
+from a primary zone file in preference to secondary, but otherwise may
+choose any single set of such data. Choosing that which appears to come
+from a source nearer the authoritative data source may make sense where
+that can be determined.&nbsp; Choosing primary data over secondary allows
+the source of incorrect glue data to be discovered more readily, when a
+problem with such data exists.&nbsp; Where a server can detect from two
+zone files that one or more are incorrectly configured, so as to create
+conflicts, it should refuse to load the zones determined to be erroneous,
+and issue suitable diagnostics.
+
+<P>"Glue" above includes any record in a zone file that is not properly
+part of that zone, including nameserver records of delegated sub-zones
+(NS records), address records that accompany those NS records (A, AAAA,
+etc), and any other stray data that might appear.
+<BR>&nbsp;
+<H3>
+<A NAME="5.5. Sending RRSets"></A>5.5. Sending RRSets (reprise)</H3>
+A Resource Record Set should only be included once in any DNS reply. It
+may occur in any of the Answer, Authority, or Additional Information sections,
+as required.&nbsp; However it should not be repeated in the same, or any
+other, section, except where explicitly required by a specification. For
+example, an AXFR response requires the SOA record (always an RRSet containing
+a single RR) be both the first and last record of the reply.&nbsp; Where
+duplicates are required this way, the TTL
+<BR>transmitted in each case must be the same.
+<BR>&nbsp;
+<H2>
+<A NAME="6. Zone Cuts"></A>6. Zone Cuts</H2>
+The DNS tree is divided into "zones", which are collections of domains
+that are treated as a unit for certain management purposes. Zones are delimited
+by "zone cuts".&nbsp; Each zone cut separates a "child" zone (below the
+cut) from a "parent" zone (above the cut). The domain name that appears
+at the top of a zone (just below the cut that separates the zone from its
+parent) is called the zone's "origin".&nbsp; The name of the zone is the
+same as the name of the domain at the zone's origin.&nbsp; Each zone comprises
+that subset of the DNS tree that is at or below the zone's origin, and
+that is above the cuts that separate the zone from its children (if any).&nbsp;
+The existence of a zone cut is indicated in the parent zone by the existence
+of NS records specifying the origin of the child zone.&nbsp; A child zone
+does not contain any explicit reference to its parent.
+<BR>&nbsp;
+<H3>
+<A NAME="6.1. Zone Authority"></A>6.1. Zone authority</H3>
+The authoritative servers for a zone are enumerated in the NS records for
+the origin of the zone, which, along with a Start of Authority (SOA) record
+are the mandatory records in every zone. Such a server is authoritative
+for all resource records in a zone that are not in another zone. The NS
+records that indicate a zone cut are the property of the child zone created,
+as are any other records for the origin of that child zone, or any sub-domains
+of it.&nbsp; A server for a zone should not return authoritative answers
+for queries related to names in another zone, which includes the NS, and
+perhaps A, records at a zone cut, unless it also happens to be a server
+for the other zone.
+
+<P>Other than the DNSSEC cases mentioned immediately below, servers should
+ignore data other than NS records, and necessary A records to locate the
+servers listed in the NS records, that may happen to be configured in a
+zone at a zone cut.
+<BR>&nbsp;
+<H3>
+<A NAME="6.2. DNSSEC Issues"></A>6.2. DNSSEC issues</H3>
+The DNS security mechanisms [<A HREF="rfc2065.txt">RFC 2065</A>] complicate
+this somewhat, as some of the new resource record types added are very
+unusual when compared with other DNS RRs.&nbsp; In particular the NXT ("next")
+RR type contains information about which names exist in a zone, and hence
+which do not, and thus must necessarily relate to the zone in which it
+exists.&nbsp; The same domain name may have different NXT records in the
+parent zone and the child zone, and both are valid, and are not an RRSet.&nbsp;
+See also section 5.3.2.
+
+<P>Since NXT records are intended to be automatically generated, rather
+than configured by DNS operators, servers may, but are not required to,
+retain all differing NXT records they receive regardless of the rules in
+section 5.4.
+
+<P>For a secure parent zone to securely indicate that a subzone is insecure,
+DNSSEC requires that a KEY RR indicating that the subzone is insecure,
+and the parent zone's authenticating SIG RR(s) be present in the parent
+zone, as they by definition cannot be in the subzone.&nbsp; Where a subzone
+is secure, the KEY and SIG records will be present, and authoritative,
+in that zone, but should also always be present in the parent zone (if
+secure).
+
+<P>Note that in none of these cases should a server for the parent zone,
+not also being a server for the subzone, set the AA bit in any response
+for a label at a zone cut.
+<BR>&nbsp;
+<H2>
+<A NAME="7. SOA RRs"></A>7. SOA RRs</H2>
+Three minor issues concerning the Start of Zone of Authority (SOA) Resource
+Record need some clarification.
+<BR>&nbsp;
+<H3>
+<A NAME="7.1. Placement of SOA RRs"></A>7.1. Placement of SOA RRs in authoritative
+answers</H3>
+<A HREF="rfc1034.txt">RFC 1034</A>, in section 3.7, indicates that the
+authority section of an authoritative answer may contain the SOA record
+for the zone from which the answer was obtained.&nbsp; When discussing
+negative caching, <A HREF="rfc1034.txt">RFC 1034</A> section 4.3.4 refers
+to this technique but mentions the additional section of the response.&nbsp;
+The former is correct, as is implied by the example shown in section 6.2.5
+of <A HREF="rfc1034.txt">RFC 1034</A>.&nbsp; SOA records, if added, are
+to be placed in the authority section.
+<BR>&nbsp;
+<H3>
+<A NAME="7.2. TTLs on SOA RRs"></A>7.2. TTLs on SOA RRs</H3>
+It may be observed that in section 3.2.1 of <A HREF="rfc1035/rfc1035.html">RFC1035</A>,
+which defines the format of a Resource Record, that the definition of the
+TTL field contains a throw away line which states that the TTL of an SOA
+record should always be sent as zero to prevent caching.&nbsp; This is
+mentioned nowhere else, and has not generally been implemented. Implementations
+should not assume that SOA records will have a TTL of zero, nor are they
+required to send SOA records with a TTL of zero.
+<BR>&nbsp;
+<H3>
+<A NAME="7.3. The SOA.MNAME"></A>7.3. The SOA.MNAME field</H3>
+It is quite clear in the specifications, yet seems to have been widely
+ignored, that the MNAME field of the SOA record should contain the name
+of the primary (master) server for the zone identified by the SOA.&nbsp;
+It should not contain the name of the zone itself.&nbsp; That information
+would be useless, as to discover it, one needs to start with the domain
+name of the SOA record -
+<BR>that is the name of the zone.
+<BR>&nbsp;
+<H2>
+<A NAME="8. Time to Live (TTL)"></A>8. Time to Live (TTL)</H2>
+The definition of values appropriate to the TTL field in STD 13 is not
+as clear as it could be, with respect to how many significant bits exist,
+and whether the value is signed or unsigned.&nbsp; It is hereby specified
+that a TTL value is an unsigned number, with a minimum value of 0, and
+a maximum value of 2147483647.&nbsp; That is, a maximum of 2^31 - 1.&nbsp;
+When transmitted, this value shall be encoded in the less significant 31
+bits of the 32 bit TTL field, with the most significant, or sign, bit set
+to zero.
+
+<P>Implementations should treat TTL values received with the most significant
+bit set as if the entire value received was zero.
+
+<P>Implementations are always free to place an upper bound on any TTL received,
+and treat any larger values as if they were that upper bound.&nbsp; The
+TTL specifies a maximum time to live, not a mandatory time to live.
+<BR>&nbsp;
+<H2>
+<A NAME="9. The TC"></A>9. The TC (truncated) header bit</H2>
+The TC bit should be set in responses only when an RRSet is required as
+a part of the response, but could not be included in its entirety. The
+TC bit should not be set merely because some extra information could have
+been included, but there was insufficient room.&nbsp; This includes the
+results of additional section processing.&nbsp; In such cases the entire
+RRSet that will not fit in the response should be omitted, and the reply
+sent as is, with the TC bit clear.&nbsp; If the recipient of the reply
+needs the omitted data, it can construct a query for that data and send
+that separately.
+
+<P>Where TC is set, the partial RRSet that would not completely fit may
+be left in the response. When a DNS client receives a reply with TC set,
+it should ignore that response, and query again, using a mechanism, such
+as a TCP connection, that will permit larger replies.
+<BR>&nbsp;
+<H2>
+<A NAME="10. Naming issues"></A>10. Naming issues</H2>
+It has sometimes been inferred from some sections of the DNS specification
+[<A HREF="rfc1034.txt">RFC1034</A>, <A HREF="rfc1035/rfc1035.html">RFC 1035]</A>
+that a host, or perhaps an interface of a host, is permitted exactly one
+authoritative, or official, name, called the canonical name.&nbsp; There
+is no such requirement in the DNS.
+<BR>&nbsp;
+<H3>
+<A NAME="10.1. CNAME RRs"></A>10.1. CNAME resource records</H3>
+The DNS CNAME ("canonical name") record exists to provide the canonical
+name associated with an alias name.&nbsp; There may be only one such canonical
+name for any one alias.&nbsp; That name should generally be a name that
+exists elsewhere in the DNS, though there are some rare applications for
+aliases with the accompanying canonical name undefined in the DNS.&nbsp;
+An alias name (label of a CNAME record) may, if DNSSEC is in use, have
+SIG, NXT, and KEY RRs, but may have no other data.
+
+<P>That is, for any label in the DNS (any domain name) exactly one of the
+following is true:
+<UL>
+<LI>
+one CNAME record exists, optionally accompanied by SIG, NXT, and KEY RRs,</LI>
+
+<LI>
+one or more records exist, none being CNAME records,</LI>
+
+<LI>
+the name exists, but has no associated RRs of any type,</LI>
+
+<LI>
+the name does not exist at all.</LI>
+</UL>
+
+<H4>
+<A NAME="10.1.1. CNAME Terminology"></A>10.1.1. CNAME terminology</H4>
+It has been traditional to refer to the label of a CNAME record as "a CNAME".&nbsp;
+This is unfortunate, as "CNAME" is an abbreviation of "canonical name",
+and the label of a CNAME record is most certainly not a canonical name.&nbsp;
+It is, however, an entrenched usage.&nbsp; Care must therefore be taken
+to be very clear whether the label, or the value (the canonical name) of
+a
+<BR>CNAME resource record is intended. In this document, the label of a
+CNAME resource record will always be referred to as an alias.
+<BR>&nbsp;
+<H3>
+<A NAME="10.2. PTR Records"></A>10.2. PTR records</H3>
+Confusion about canonical names has lead to a belief that a PTR record
+should have exactly one RR in its RRSet.&nbsp; This is incorrect, the relevant
+section of <A HREF="rfc1034.txt">RFC1034</A> (section 3.6.2) indicates
+that the value of a PTR record should be a canonical name.&nbsp; That is,
+it should not be an alias.&nbsp; There is no implication in that section
+that only one PTR record is permitted for a name.&nbsp; No such restriction
+should be inferred.
+
+<P>Note that while the value of a PTR record must not be an alias, there
+is no requirement that the process of resolving a PTR record not encounter
+any aliases.&nbsp; The label that is being looked up for a PTR value might
+have a CNAME record.&nbsp; That is, it might be an alias.&nbsp; The value
+of that CNAME RR, if not another alias, which it should not be, will give
+the location where the PTR record is found.&nbsp; That record gives the
+result of the PTR type lookup.&nbsp; This final result, the value of the
+PTR RR, is the label which must not be an alias.
+<BR>&nbsp;
+<H3>
+<A NAME="10.3. MX and NS Records"></A>10.3. MX and NS records</H3>
+The domain name used as the value of a NS resource record, or part of the
+value of a MX resource record must not be an alias.&nbsp; Not only is the
+specification clear on this point, but using an alias in either of these
+positions neither works as well as might be hoped, nor well fulfills the
+ambition that may have led to this approach.&nbsp; This domain name must
+have as its value one or more address records. Currently those will be
+A records, however in the future other record types giving addressing information
+may be acceptable.&nbsp; It can also have other RRs, but never a CNAME
+RR.
+
+<P>Searching for either NS or MX records causes "additional section processing"
+in which address records associated with the value of the record sought
+are appended to the answer.&nbsp; This helps avoid needless extra queries
+that are easily anticipated when the first was made.
+
+<P>Additional section processing does not include CNAME records, let alone
+the address records that may be associated with the canonical name derived
+from the alias.&nbsp; Thus, if an alias is used as the value of an NS or
+MX record, no address will be returned with the NS or MX value.&nbsp; This
+can cause extra queries, and extra network burden, on every query.&nbsp;
+It is trivial for the DNS administrator to avoid this by resolving the
+alias and placing the canonical name directly in the affected record just
+once when it is updated or installed.&nbsp; In some particular hard cases
+the lack of the additional section address records in the results of a
+NS lookup can cause the request to fail.
+<BR>&nbsp;
+<H2>
+<A NAME="11. Name Syntax"></A>11. Name syntax</H2>
+Occasionally it is assumed that the Domain Name System serves only the
+purpose of mapping Internet host names to data, and mapping Internet addresses
+to host names.&nbsp; This is not correct, the DNS is a general (if somewhat
+limited) hierarchical database, and can store almost any kind of data,
+for almost any purpose.
+
+<P>The DNS itself places only one restriction on the particular labels
+that can be used to identify resource records.&nbsp; That one restriction
+relates to the length of the label and the full name. The length of any
+one label is limited to between 1 and 63 octets.&nbsp; A full domain name
+is limited to 255 octets (including the separators).&nbsp; The zero length
+full name is defined as representing the root of the DNS tree, and is typically
+written and displayed as ".".&nbsp; Those restrictions aside, any binary
+string whatever can be used as the label of any resource record.&nbsp;
+Similarly, any binary string can serve as the value of any record that
+includes a domain name as some or all of its value (SOA, NS, MX, PTR, CNAME,
+and any others that may be added). Implementations of the DNS protocols
+must not place any restrictions on the labels that can be used.&nbsp; In
+particular, DNS servers must not refuse to serve a zone because it contains
+labels that might not be acceptable to some DNS client programs.&nbsp;
+A DNS server may be configurable to issue warnings when loading, or even
+to refuse to load, a primary zone containing labels that might be considered
+questionable, however this should not happen by default.
+
+<P>Note however, that the various applications that make use of DNS data
+can have restrictions imposed on what particular values are acceptable
+in their environment.&nbsp; For example, that any binary label can have
+an MX record does not imply that any binary name can be used as the host
+part of an e-mail address.&nbsp; Clients of the DNS can impose whatever
+restrictions are appropriate
+<BR>o their circumstances on the values they use as keys for DNS lookup
+requests, and on the values returned by the DNS.&nbsp; If the client has
+such restrictions, it is solely responsible for validating the data from
+the DNS to ensure that it conforms before it makes any use of that data.
+
+<P>See also [<A HREF="rfc1123.txt">RFC 1123</A>] section 6.1.3.5.
+<BR>&nbsp;
+<H2>
+<A NAME="12. Security"></A>12. Security Considerations</H2>
+This document does not consider security.
+
+<P>In particular, nothing in section 4 is any way related to, or useful
+for, any security related purposes.
+
+<P>Section 5.4.1 is also not related to security.&nbsp; Security of DNS
+data will be obtained by the Secure DNS [<A HREF="rfc2065.txt">RFC 2065</A>],
+which is mostly orthogonal to this memo.
+
+<P>It is not believed that anything in this document adds to any security
+issues that may exist with the DNS, nor does it do anything to that will
+necessarily lessen them.&nbsp; Correct implementation of the clarifications
+in this document might play some small part in limiting the spread of non-malicious
+bad data in the DNS, but only DNSSEC can help with deliberate attempts
+to subvert DNS data.
+<BR>&nbsp;
+<H2>
+<A NAME="13. References"></A>13. References</H2>
+&nbsp;
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 COLS=2 WIDTH="100%" >
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD WIDTH="10%">[RFC 1034]</TD>
+
+<TD>Mockapetris, P., "Domain Names - Concepts and Facilities", STD 13,
+RFC 1034, November 1987.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD ALIGN=LEFT VALIGN=TOP>[RFC 1035]</TD>
+
+<TD>Mockapetris, P., "Domain Names - Implementation and Specification",
+STD 13, RFC 1035, November 1987.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[RFC 1123]</TD>
+
+<TD>Braden, R., "Requirements for Internet Hosts - Application and Support",
+STD 3, RFC 1123, October 1989.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[RFC 1700]</TD>
+
+<TD>Reynolds, J., Postel, J., "Assigned Numbers", STD 2, RFC 1700, October
+1994.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>[RFC 2065]</TD>
+
+<TD>Eastlake, D., Kaufman, C., "Domain Name System Security Extensions",
+RFC 2065, January 1997.&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<H2>
+<A NAME="14. Acknowledgements"></A>14. Acknowledgements</H2>
+This memo arose from discussions in the DNSIND working group of the IETF
+in 1995 and 1996, the members of that working group are largely responsible
+for the ideas captured herein.&nbsp; Particular thanks to Donald E. Eastlake,
+3rd, and Olafur Gudmundsson, for help with the DNSSEC issues in this document,
+and to John Gilmore for pointing out where the clarifications were not
+necessarily clarifying.&nbsp; Bob Halley suggested clarifying the placement
+of SOA records in authoritative answers, and provided the references.&nbsp;
+Michael Patton, as usual, and Mark Andrews, Alan Barrett and Stan Barber
+provided much assistance with many details.&nbsp; Josh Littlefield helped
+make sure that the clarifications didn't cause problems in some irritating
+corner cases.
+<BR>&nbsp;
+<H2>
+<A NAME="15. Authors'"></A>15. Authors' Addresses</H2>
+Robert Elz
+<BR>Computer Science
+<BR>University of Melbourne
+<BR>Parkville, Victoria, 3052
+<BR>Australia.
+
+<P>EMail: <A HREF="mailto:kre@munnari.OZ.AU">kre@munnari.OZ.AU</A>
+<BR>&nbsp;
+
+<P>Randy Bush
+<BR>RGnet, Inc.
+<BR>5147 Crystal Springs Drive NE
+<BR>Bainbridge Island, Washington,&nbsp; 98110
+<BR>United States.
+
+<P>EMail: <A HREF="mailto:randy@psg.com">randy@psg.com</A>
+</BODY>
+</HTML>

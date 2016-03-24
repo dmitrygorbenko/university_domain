@@ -1,0 +1,27 @@
+
+# listen_ip and listen_port - Server IP and port
+
+listen_ip = 192.168.1.19
+listen_port = 7777
+
+# Allow_from - Clients IP which will be allowed to contact with program
+# Any TCP connections from another IP addresses will be refused
+# example : 192.168.1.1, 192.168.1.2
+
+allow_from = 192.168.1.1, 192.168.1.19
+
+named_zone_file_list = /home/bazil/domain/system/dns/zones
+#named_zone_file_list = /hosting/system/bind/etc/zones
+
+named_zone_dir = /home/bazil/domain/system/dns/
+#named_zone_dir = /hosting/system/bind/zones/
+
+ns_server = ns.hosting.ai.
+ns2_server = ns2.hosting.ai.
+
+mx_server = mx.hosting.ai.
+mx2_server = mx2.hosting.ai.
+
+soa_email_addr = hostmaster.hosting.ai.
+
+primary_ip = 192.168.1.19
